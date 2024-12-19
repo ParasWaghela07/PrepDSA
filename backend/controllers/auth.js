@@ -112,5 +112,27 @@ exports.login = async (req, res) => {
       console.error("Error in login:", error);
       res.status(500).json("fail");
     }
-  };
-  
+};
+
+exports.isloggedin=async(req,res)=>{
+  return res.status(200).json({
+    success:true,
+    message:"User Logged In"
+  })
+}
+
+exports.logout=async(req,res)=>{
+  try{
+    return res.clearCookie('token').json({
+        success: true,
+        message: "User Logged Out Successfully"
+    });
+    
+  }
+  catch(e){
+      return res.json({
+          success:false,
+          message:"Errors while logging out"
+      })
+  }
+}

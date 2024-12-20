@@ -4,10 +4,10 @@ const Sheet=require('../models/sheet');
 
 
 exports.addquestion = async (req, res) => {
-    const { question_title, difficulty, companies, redirect_links, solution_links } = req.body;
+    const { question_title, difficulty, companies, redirect_links, solution_links,time_complexity } = req.body;
   
     try {
-      if (!question_title || !difficulty || !redirect_links || !solution_links) {
+      if (!question_title || !difficulty || !redirect_links || !solution_links||!time_complexity) {
         return res.status(400).json({
           success: false,
           message: "All fields are required.",
@@ -20,6 +20,7 @@ exports.addquestion = async (req, res) => {
         companies: companies || [], 
         redirect_links,
         solution_links,
+        time_complexity
       });
   
       await newQuestion.save();

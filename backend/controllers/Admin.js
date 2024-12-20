@@ -1,5 +1,7 @@
 const Company = require("../models/company");
 const Question = require("../models/question");
+const Sheet=require('../models/sheet');
+
 
 exports.addquestion = async (req, res) => {
     const { question_title, difficulty, companies, redirect_links, solution_links } = req.body;
@@ -79,3 +81,34 @@ exports.addcompany = async (req, res) => {
     }
   };
   
+
+  exports.addsheet=async(req,res)=>{
+    try{
+      const {sheetname,questions}=req.body;
+      if(!sheetname || !questions){
+        return res.status(400).json({
+          success:false,
+          message:"All fields are required"
+        })
+      }
+
+      
+
+      await Sheet.create({
+        sheet_name:sheetname,
+        question_ids:questions
+      })
+
+      return res.status(200).json({
+        success:true,
+        message:"Sheet added successfully"
+      })
+    }
+    catch(error){
+      console.error("Error in company creation:", error);
+      return res.status(500).json({
+        success: false,
+        message: "An error occurred while creating the sheet. Please try again later.",
+      });
+    }
+  }

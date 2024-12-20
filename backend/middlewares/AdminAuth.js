@@ -1,8 +1,42 @@
 const jwt=require('jsonwebtoken');
-const userschema=require('../models/user')
-const adminschema=require('../models/admin');
 require('dotenv').config();
 
-exports.adminauth=async(req,res,next)=>{
-    next();
+exports.isAdmin=async(req,res,next)=>{
+    try{
+
+        let token=req.cookies.token;
+        
+        if(!token){
+            return res.status(401).json({
+                success:false,
+                message:'Token Missing',
+            });
+        }
+
+        try{
+            const payload=jwt.verify(token,process.env.JWT_SECRET);
+            if(payload.role!=='admin'){
+                return res.status(400).json({
+                    success:false,
+                    message:"Only Admins are allowed !"
+                })
+            }
+            req.payload=payload;
+        }
+        catch(e){
+            console.log(e);
+            return res.status(401).json({
+                success:false,
+                message:'token is invalid',
+            });
+        }
+        next();
+    }
+    catch(e){
+        return res.status(401).json({
+            success:false,
+            message:'Something went wrong, while verifying the token',
+            error:error.message,
+        });
+    }
 }

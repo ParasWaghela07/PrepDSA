@@ -16,6 +16,7 @@ const userSchema = new mongoose.Schema(
     hard_question_count: { type: Number, default: 0 },
     daily_streak: { type: Number, default: 0 },
     solved_question_ids: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Question' }],
+    bookmarkedquestions:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Question' }],
   },
   { timestamps: true }
 );

@@ -80,7 +80,7 @@ exports.adminsignup = async (req, res) => {
     const existingUser = await Admin.findOne({
       $or: [{ email: email }, { username: username }],
     });
-
+    
     if (existingUser) {
       return res.status(400).json({
         success: false,

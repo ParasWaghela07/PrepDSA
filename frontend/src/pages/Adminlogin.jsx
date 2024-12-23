@@ -7,25 +7,27 @@ import { IoMdEyeOff } from "react-icons/io";
 import { AppContext } from "../context/AppContext";
 import App from "../App";
 
-function Login() {
+function Adminlogin() {
     const navigate = useNavigate();
     const {setloader}=useContext(AppContext);
     const [email,setEmail] = useState("");
-    const [password, setPassword] = useState('');
+    const [password1, setPassword1] = useState('');
+    const [password2, setPassword2] = useState('');
     const[eye,setEye] = useState(true);
 
     const submit = async (e) => {
             e.preventDefault();
             setloader(true);
         try {
-            const response = await fetch('http://localhost:4000/login', {
+            const response = await fetch('http://localhost:4000/adminlogin', {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
                     email: email,
-                    password: password
+                    password1: password1,
+                    password2:password2
                 }),
                 credentials: "include"
             });
@@ -33,7 +35,7 @@ function Login() {
             console.log(res);
             if (res.success) {
                 toast.success(res.message);
-                navigate("/landing", { state: { id: email } });
+                navigate("/adminpanel", { state: { id: email } });
             } else{
                 toast.error(res.message);
             }
@@ -62,14 +64,33 @@ function Login() {
                         />
                     </div>
                     <div className="mb-4 relative">
-                        <label className="block text-sm font-medium mb-1" htmlFor="password">Password</label>
+                        <label className="block text-sm font-medium mb-1" htmlFor="password">Password-1</label>
                         <input
                             id="password"
                             type={eye?"password":"text"}
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            value={password1}
+                            onChange={(e) => setPassword1(e.target.value)}
 
-                            placeholder="Password"
+                            placeholder="Password-1"
+                            required
+                            className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                        
+                        {eye?<IoMdEye className="text-xl absolute right-2 bottom-3" onClick={()=>{
+                            setEye(false)
+                        }}/>:<IoMdEyeOff className="text-xl absolute right-2 bottom-3" onClick={()=>{
+                            setEye(true);
+                        }}/>}
+                    </div>
+                    <div className="mb-4 relative">
+                        <label className="block text-sm font-medium mb-1" htmlFor="password">Password-2</label>
+                        <input
+                            id="password"
+                            type={eye?"password":"text"}
+                            value={password2}
+                            onChange={(e) => setPassword2(e.target.value)}
+
+                            placeholder="Password-2"
                             required
                             className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
@@ -97,4 +118,4 @@ function Login() {
     );
 }
 
-export default Login;
+export default Adminlogin;

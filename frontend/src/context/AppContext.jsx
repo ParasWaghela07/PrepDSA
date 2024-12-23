@@ -3,10 +3,10 @@ import { createContext,useState } from "react";
 export const AppContext=createContext();
 
 export default function AppContextProvider({children}){
-    const [sample,setsample]=useState("");
-    
+    const [loader,setloader]=useState(false);
+    const [email, setEmail] = useState("");
     const value={
-        sample,setsample
+      email,setEmail,loader,setloader
     };
 
     return <AppContext.Provider value={value}>

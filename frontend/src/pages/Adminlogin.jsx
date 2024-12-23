@@ -5,7 +5,7 @@ import {toast} from "react-hot-toast";
 import { IoMdEye } from "react-icons/io";
 import { IoMdEyeOff } from "react-icons/io";
 import { AppContext } from "../context/AppContext";
-import App from "../App";
+
 
 function Adminlogin() {
     const navigate = useNavigate();
@@ -13,7 +13,8 @@ function Adminlogin() {
     const [email,setEmail] = useState("");
     const [password1, setPassword1] = useState('');
     const [password2, setPassword2] = useState('');
-    const[eye,setEye] = useState(true);
+    const[eye1,setEye1] = useState(true);
+    const[eye2,setEye2] = useState(true);
 
     const submit = async (e) => {
             e.preventDefault();
@@ -67,7 +68,7 @@ function Adminlogin() {
                         <label className="block text-sm font-medium mb-1" htmlFor="password">Password-1</label>
                         <input
                             id="password"
-                            type={eye?"password":"text"}
+                            type={eye1?"password":"text"}
                             value={password1}
                             onChange={(e) => setPassword1(e.target.value)}
 
@@ -76,17 +77,17 @@ function Adminlogin() {
                             className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                         
-                        {eye?<IoMdEye className="text-xl absolute right-2 bottom-3" onClick={()=>{
-                            setEye(false)
+                        {eye1?<IoMdEye className="text-xl absolute right-2 bottom-3" onClick={()=>{
+                            setEye1(false)
                         }}/>:<IoMdEyeOff className="text-xl absolute right-2 bottom-3" onClick={()=>{
-                            setEye(true);
+                            setEye1(true);
                         }}/>}
                     </div>
                     <div className="mb-4 relative">
                         <label className="block text-sm font-medium mb-1" htmlFor="password">Password-2</label>
                         <input
                             id="password"
-                            type={eye?"password":"text"}
+                            type={eye2?"password":"text"}
                             value={password2}
                             onChange={(e) => setPassword2(e.target.value)}
 
@@ -95,10 +96,10 @@ function Adminlogin() {
                             className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                         
-                        {eye?<IoMdEye className="text-xl absolute right-2 bottom-3" onClick={()=>{
-                            setEye(false)
+                        {eye2?<IoMdEye className="text-xl absolute right-2 bottom-3" onClick={()=>{
+                            setEye2(false)
                         }}/>:<IoMdEyeOff className="text-xl absolute right-2 bottom-3" onClick={()=>{
-                            setEye(true);
+                            setEye2(true);
                         }}/>}
                     </div>
                     <button

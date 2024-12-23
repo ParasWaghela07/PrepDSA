@@ -1,7 +1,7 @@
 function Landing(){
   return(
     <div>
-        Lanfing
+        Landing
     </div>
   )
 }

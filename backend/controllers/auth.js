@@ -190,55 +190,67 @@ exports.login = async (req, res) => {
 };
 
 exports.adminlogin = async (req, res) => {
-  
   try {
-    const { email, password } = req.body;
+    const { email, password1, password2 } = req.body;
 
-    if(!email || !password){
-      return res.status(333).json({
-          success:false,
-          message:"All fields are required"
-      })
-  }
-
-
-    const user = await Admin.findOne({ email });
-    if(!user){
-        return res.status(404).json({
-            success:false,
-            message:"Email id is not registered"
-        })
+    // Check if all fields are provided
+    if (!email || !password1 || !password2) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required",
+      });
     }
 
-    if(await bcrypt.compare(password,user.password1) || await bcrypt.compare(password,user.password2)){
-      const payload={
-          id:user._id,
-          name:user.name,
-          email:user.email,
-          role:"admin"
-      }
+    // Find admin by email
+    const user = await Admin.findOne({ email });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Email ID is not registered",
+      });
+    }
 
-      let token=jwt.sign(payload,process.env.JWT_SECRET);
+    const isPassword1Valid = await bcrypt.compare(password1, user.password1);
+    const isPassword2Valid = await bcrypt.compare(password2, user.password2);
 
-      const options={
-          expires:new Date(Date.now()+3*24*60*60*1000),
-          httpOnly:true,
-      }
-      return res.cookie('token',token,options).status(200).json({
-          success:true,
-          message:"Login Successful"
-      })
-  }
-  else{
+    if (isPassword1Valid && isPassword2Valid) {
+      // Create payload for JWT
+      const payload = {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: "admin",
+      };
+
+      // Generate JWT token
+      const token = jwt.sign(payload, process.env.JWT_SECRET, {
+        expiresIn: "3d", 
+      });
+
+      const options = {
+        expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), 
+        httpOnly: true, 
+      };
+
+      return res
+        .cookie("token", token, options)
+        .status(200)
+        .json({
+          success: true,
+          message: "Login successful",
+        });
+    } else {
       return res.status(400).json({
-          success:false,
-          message:"Incorrect Password"
-      })
-  }
-
+        success: false,
+        message: "Incorrect passwords",
+      });
+    }
   } catch (error) {
     console.error("Error in login:", error);
-    res.status(500).json("fail");
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred during login. Please try again later.",
+    });
   }
 };
 

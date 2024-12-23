@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
-const sheetSchema = new mongoose.Schema({
+const topicschema = new mongoose.Schema({
     //sheet_id: { type: String, required: true },
-    sheet_name: { type: String, required: true },
+    topic_name: { type: String, required: true },
     question_list: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Question' }],
 });
-const Sheet = mongoose.model('Sheet', sheetSchema);
-module.exports = Sheet;
+const Topic = mongoose.model('Topic', topicschema);
+module.exports = Topic;

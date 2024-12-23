@@ -1,4 +1,6 @@
 const Question = require("../models/question");
+const Company=require("../models/company");
+const Topic=require("../models/topic");
 const User = require("../models/user");
 
 exports.bookmark = async (req, res) => {
@@ -30,7 +32,7 @@ exports.bookmark = async (req, res) => {
     return res.status(201).json({
       success: true,
       message: "Question bookmarked successfully.",
-      data: updatedUser.bookmarkedquestion, 
+      data: updatedUser.bookmarkedquestions, 
     });
   } catch (error) {
     console.error("Error in bookmarking question:", error);
@@ -70,7 +72,7 @@ exports.solved = async (req, res) => {
       return res.status(201).json({
         success: true,
         message: "Question solved successfully.",
-        data: updatedUser.bookmarkedquestion, 
+        data: updatedUser.solved_question_ids, 
       });
     } catch (error) {
       console.error("Error in solving question:", error);
@@ -79,24 +81,61 @@ exports.solved = async (req, res) => {
         message: "An error occurred during solving. Please try again later.",
       });
     }
-  };
+};
   
+exports.getAllQuestions = async (req, res) => {
+  try {
+      const questions = await Question.find({})
+          .populate('companies') 
+          .populate('topics'); 
 
-  exports.getAllQuestions = async (req, res) => {
-    try {
-      const questions = await Question.find({});
       return res.status(200).json({
-        success: true,
-        message: "Questions retrieved successfully.",
-        data: questions
+          success: true,
+          message: "Questions retrieved successfully.",
+          data: questions
       });
-    } catch (error) {
+  } catch (error) {
       console.error("Error in finding questions:", error);
       return res.status(500).json({
-        success: false,
-        message: "An error occurred while retrieving questions. Please try again later."
+          success: false,
+          message: "An error occurred while retrieving questions. Please try again later."
       });
-    }
-  };
+  }
+};
+
+
+exports.getAllCompanies=async(req,res)=>{
+  try{
+    const companies=await Company.find({}).populate('question_list');
+    return res.status(200).json({
+      success:true,
+      message:"All Companies retrieved successfully.",
+      data:companies
+    });
+  }catch(error){
+    console.error("Error in finding companies:",error);
+    return res.status(500).json({
+      success:false,
+      message:"An error occurred while retrieving companies. Please try again later."
+    });
+  }
+};
+
+exports.getAllTopics=async(req,res)=>{
+  try{
+    const topics=await Topic.find({}).populate('question_list');
+    return res.status(200).json({
+      success:true,
+      message:"All Topics retrieved successfully.",
+      data:topics
+    });
+  }catch(error){
+    console.error("Error in finding topics:",error);
+    return res.status(500).json({
+      success:false,
+      message:"An error occurred while retrieving topics. Please try again later."
+    });
+  }
+}
   
   

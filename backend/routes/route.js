@@ -4,7 +4,7 @@ const {signup,login,isloggedin,logout,adminlogin,adminsignup}=require('../contro
 const {auth}=require('../middlewares/Auth');
 const {isAdmin}=require('../middlewares/AdminAuth');
 const { addquestion, addcompany ,addsheet,addtopic} = require('../controllers/Admin');
-const { bookmark, solved, getAllQuestions,getAllCompanies,getAllTopics} = require('../controllers/userauth');
+const { bookmark, solved, getAllQuestions,getAllCompanies,getAllTopics} = require('../controllers/User_fn');
 
 
 //USER'S ROUTES

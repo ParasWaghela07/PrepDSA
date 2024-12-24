@@ -7,6 +7,7 @@ import Profile from './pages/Profile';
 import Question from './pages/Question';
 import Adminlogin from './pages/Adminlogin';
 import Adminpanel from './pages/Adminpanel';
+import HomePage from './pages/Homepage';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="Question" element={<Question/>}/>
           <Route path="/adminlogin" element={<Adminlogin/>}/>
           <Route path="/adminpanel" element={<Adminpanel/>}/>
+          <Route path="/home" element={<HomePage/>}></Route>
         </Routes>
     </div>
   );

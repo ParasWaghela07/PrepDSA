@@ -6,6 +6,7 @@ import Landing from './pages/Landing';
 import Profile from './pages/Profile';
 import Question from './pages/Question';
 import Adminlogin from './pages/Adminlogin';
+import Adminpanel from './pages/Adminpanel';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/profile" element={<Profile/>}/>
           <Route path="Question" element={<Question/>}/>
           <Route path="/adminlogin" element={<Adminlogin/>}/>
+          <Route path="/adminpanel" element={<Adminpanel/>}/>
         </Routes>
     </div>
   );

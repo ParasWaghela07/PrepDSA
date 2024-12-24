@@ -1,3 +1,6 @@
+
+  
+   
 import { useState, useEffect } from "react";
 import Questionbox from "../components/Questionbox";
 
@@ -141,5 +144,6 @@ function Landing() {
     </div>
   );
 }
+
 
 export default Landing;

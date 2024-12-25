@@ -34,6 +34,13 @@ function HomePage() {
             >
               <Link to="/login">Login</Link>
             </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              className="bg-gray-700 text-teal-400 px-6 py-3 rounded-lg text-lg font-semibold shadow-lg"
+             
+            >
+              <Link to="/adminlogin">Admin Login</Link>
+            </motion.button>
           </div>
         </motion.div>
 

@@ -3,7 +3,12 @@ const Topic = require("../models/topic");
 const Question = require("../models/question");
 const Sheet=require('../models/sheet');
 
-
+exports.isAdminloggedin=async(req,res)=>{
+  return res.status(200).json({
+    success:true,
+    message:"User Logged In"
+  })
+};
 exports.addquestion = async (req, res) => {
     const { question_title, difficulty, companies, redirect_links, solution_links,time_complexity,topics } = req.body;
   
@@ -19,7 +24,7 @@ exports.addquestion = async (req, res) => {
         question_title,
         difficulty,
         companies: companies || [], 
-        redirect_links,
+        redirectLinks:redirect_links,
         solution_links,
         time_complexity,
         topics: topics || [],

@@ -10,6 +10,7 @@ import Adminpanel from './pages/Adminpanel';
 import HomePage from './pages/Homepage';
 import { useEffect ,useState} from 'react';
 import { use } from 'react';
+import Addquestion from './pages/Addquestion';
 
 function App() {
     const [allquestions,setallquestions] = useState([]);
@@ -59,37 +60,13 @@ function App() {
         console.error("Error fetching topics:", error);
       }
     }
-
-    async function isLoggedIn() {
-      
-      try {
-          const response = await fetch('http://localhost:4000/isloggedin', {
-              method: 'GET',
-              headers: {
-                  "Content-Type": "application/json"
-              },
-              credentials: "include"
-          });
-
-          const res = await response.json();
-
-          if (res.success) {
-              navigate('/landing');
-          }
-          else{
-            navigate('/home');
-          }
-      } catch (e) {
-          console.log(e);
-      }
-      
-  }
+  
 
   useEffect(() => {
     getallquestions();
     getallcompanies();
     getalltopics();
-    isLoggedIn();
+//    isLoggedIn();
   },[]);
 
   return (
@@ -102,7 +79,8 @@ function App() {
           <Route path="/Question" element={<Question/>}/>
           <Route path="/adminlogin" element={<Adminlogin/>}/>
           <Route path="/adminpanel" element={<Adminpanel/>}/>
-          <Route path="/home" element={<HomePage/>}></Route>
+          <Route path="/addquestion" element={<Addquestion allcompanies={allcompanies} allquestions={allquestions} alltopics={alltopics}/>}/>
+          <Route path="/home" element={<HomePage/>}/>
         </Routes>
     </div>
   );

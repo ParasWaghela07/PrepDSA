@@ -1,15 +1,41 @@
 import { useState, useEffect } from "react";
 import Questionbox from "../components/Questionbox";
+import { BrowserRouter as Router, Routes, Route ,useNavigate} from "react-router-dom";
 
 function Landing({ allquestions, allcompanies, alltopics }) {
   const [difficulty, setDifficulty] = useState([]);
   const [companies, setCompanies] = useState([]);
   const [topics, setTopics] = useState([]);
   const [questions, setQuestions] = useState(allquestions);
-
+  const navigate=useNavigate();
   const [loading, setLoading] = useState(false);
+  async function isLoggedIn() {
+      
+    try {
+        const response = await fetch('http://localhost:4000/isloggedin', {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include"
+        });
 
+        const res = await response.json();
+
+        if (res.success) {
+            console.log("hello");
+            navigate('/landing');
+        }
+        else{
+          navigate('/home');
+        }
+    } catch (e) {
+        console.log(e);
+    }
+    
+}
   useEffect(() => {
+    isLoggedIn();
     setQuestions(allquestions);
   }, [allquestions]);
 

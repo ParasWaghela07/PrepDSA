@@ -323,16 +323,10 @@ exports.resetpasswordtoken=async(req,res)=>{
 
 exports.resetpassword=async(req,res)=>{
   try{
-    const {password,confirmPassword,token}=req.body;
+    const {password,token}=req.body;
+    const tokenString = token.token;
+    const user=await User.findOne({resetToken:tokenString});
 
-    if(password!==confirmPassword){
-      return res.status(400).json({
-        success:false,
-        message:"Passwords are not matching"
-      });
-    }
-
-    const user=await User.findOne({resetToken:token});
 
     if(!user){
       return res.status(400).json({
@@ -351,7 +345,7 @@ exports.resetpassword=async(req,res)=>{
     const hashedPassword=await bcrypt.hash(password,10);
 
     await User.findOneAndUpdate(
-      {resetToken:token},
+      {resetToken:tokenString},
       {password:hashedPassword},
       {new:true},
   );

@@ -8,15 +8,19 @@ import Question from './pages/Question';
 import Adminlogin from './pages/Adminlogin';
 import Adminpanel from './pages/Adminpanel';
 import HomePage from './pages/Homepage';
-import { useEffect ,useState} from 'react';
-import { use } from 'react';
+import { useContext, useEffect ,useState} from 'react';
 import Addquestion from './pages/Addquestion';
+import Sendmail from './pages/Sendmail';
+import UpdatePassword from './pages/Updatepassword';
+import Loader from './components/Loader';
+import { AppContext } from './context/AppContext';
 
 function App() {
     const [allquestions,setallquestions] = useState([]);
     const [allcompanies,setallcompanies] = useState([]);
     const [alltopics,setalltopics] = useState([]);
     const navigate=useNavigate();
+    const {loader}=useContext(AppContext)
 
 
 
@@ -66,7 +70,7 @@ function App() {
     getallquestions();
     getallcompanies();
     getalltopics();
-//    isLoggedIn();
+  //  isLoggedIn();
   },[]);
 
   return (
@@ -81,7 +85,11 @@ function App() {
           <Route path="/adminpanel" element={<Adminpanel/>}/>
           <Route path="/addquestion" element={<Addquestion allcompanies={allcompanies} allquestions={allquestions} alltopics={alltopics}/>}/>
           <Route path="/home" element={<HomePage/>}/>
+          <Route path="/sendmail" element={<Sendmail/>}/>
+          <Route path="/update-password/:token" element={<UpdatePassword/>}/>
         </Routes>
+
+        {loader && <div className="fixed top-0 right-0 left-0  flex justify-center items-center h-full bg-black bg-opacity-50 z-50"><Loader/></div>}
     </div>
   );
 }

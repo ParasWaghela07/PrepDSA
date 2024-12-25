@@ -45,7 +45,6 @@ function Login() {
       <div className="w-full max-w-sm bg-gray-700 shadow-lg rounded-lg p-6">
         <h1 className="text-2xl font-bold text-gray-200 text-center mb-4">Login</h1>
         <form onSubmit={submit}>
-          {/* Email Field */}
           <div className="mb-4">
             <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1">
               Email
@@ -60,8 +59,6 @@ function Login() {
               required
             />
           </div>
-
-          {/* Password Field */}
           <div className="mb-4 relative">
             <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-1">
               Password
@@ -87,8 +84,11 @@ function Login() {
               />
             )}
           </div>
-
-          {/* Submit Button */}
+          <div className="mb-4 text-left">
+            <Link to="/sendmail" className="text-blue-400 font-medium hover:underline">
+              Forgot Password?
+            </Link>
+          </div>
           <button
             type="submit"
             className="w-full py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
@@ -96,8 +96,6 @@ function Login() {
             Login
           </button>
         </form>
-
-        {/* Signup Redirect */}
         <div className="mt-4 text-center">
           <p className="text-sm text-gray-400">Don't have an account?</p>
           <Link to="/signup" className="text-blue-400 font-medium hover:underline">

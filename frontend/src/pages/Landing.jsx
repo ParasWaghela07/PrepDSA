@@ -23,7 +23,6 @@ function Landing({ allquestions, allcompanies, alltopics }) {
         const res = await response.json();
 
         if (res.success) {
-            console.log("hello");
             navigate('/landing');
         }
         else{

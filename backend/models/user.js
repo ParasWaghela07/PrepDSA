@@ -17,6 +17,8 @@ const userSchema = new mongoose.Schema(
     daily_streak: { type: Number, default: 0 },
     solved_question_ids: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Question' }],
     bookmarkedquestions:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Question' }],
+    resetToken: { type: String },
+    resetTokenExpiration: { type: Date },
   },
   { timestamps: true }
 );

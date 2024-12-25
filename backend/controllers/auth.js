@@ -2,6 +2,7 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Admin=require('../models/admin');
+const mailsender=require('../util/mailSender')
 
 exports.signup = async (req, res) => {
   const { username, password, name, email } = req.body;
@@ -277,4 +278,94 @@ exports.logout=async(req,res)=>{
   }
 };
 
+exports.resetpasswordtoken=async(req,res)=>{
+  try{
+    const {email}=req.body;
+
+    if(!email){
+      return res.status(400).json({
+        success:false,
+        message:"Email is required"
+      });
+    }
+
+    const user=await User.findOne({email});
+
+    if(!user){
+      return res.status(400).json({
+        success:false,
+        message:"Email is not registered"
+      });
+    }
+
+    const token=crypto.randomUUID();
+    await User.findOneAndUpdate({email:email},{
+      resetToken:token,
+      resetTokenExpiration:Date.now()+5*60*1000
+    },{new:true});
+    
+    const url=`http://localhost:3000/update-password/${token}`;
+
+    await mailsender(email,"Password Reset Link",url);
+
+    return res.status(200).json({
+      success:true,
+      message:"Email sent successfully, please check email and change password"
+    });
+  }
+  catch(e){
+    return res.status(500).json({
+      success:false,
+      message:"Errors while sending reset password password link"
+    })
+  }
+}
+
+exports.resetpassword=async(req,res)=>{
+  try{
+    const {password,confirmPassword,token}=req.body;
+
+    if(password!==confirmPassword){
+      return res.status(400).json({
+        success:false,
+        message:"Passwords are not matching"
+      });
+    }
+
+    const user=await User.findOne({resetToken:token});
+
+    if(!user){
+      return res.status(400).json({
+        success:false,
+        message:"Token is invalid"
+      });
+    }
+
+    if(user.resetPasswordExpires<Date.now()){
+      return res.status(400).json({
+        success:false,
+        message:"Token is expired"
+      });
+    }
+
+    const hashedPassword=await bcrypt.hash(password,10);
+
+    await User.findOneAndUpdate(
+      {resetToken:token},
+      {password:hashedPassword},
+      {new:true},
+  );
+
+    return res.status(200).json({
+      success:true,
+      message:"Password reset successfully"
+    });
+  }
+  catch(e){
+    return res.status(500).json({
+      success:false,
+      message:"Errors while resetting password"
+    })
+  }
+}
 

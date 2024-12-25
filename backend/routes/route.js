@@ -1,6 +1,6 @@
 const express=require('express');
 const router=express.Router();
-const {signup,login,isloggedin,logout,adminlogin,adminsignup}=require('../controllers/auth');
+const {signup,login,isloggedin,logout,adminlogin,adminsignup,resetpassword,resetpasswordtoken}=require('../controllers/auth');
 const {auth}=require('../middlewares/Auth');
 const {isAdmin}=require('../middlewares/AdminAuth');
 const { addquestion, addcompany ,addsheet,addtopic} = require('../controllers/Admin');
@@ -12,6 +12,9 @@ router.post('/signup',signup);
 router.post('/login',login)
 router.get('/isloggedin',auth,isloggedin);
 router.get('/logout',logout);
+
+router.post('/resetpasswordtoken',auth,resetpasswordtoken);
+router.post('/resetpassword',auth,resetpassword);
 
 router.post('/bookmark',auth,bookmark)
 router.post('/solved',auth,solved);

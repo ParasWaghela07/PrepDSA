@@ -135,7 +135,7 @@ exports.checksolvestatus=async(req,res)=>{
     }
     const user = await User.findById(userId);
     const question = await Question.findById(questionid); 
-     console.log(question);
+    //  console.log(question);
     if (!user||!question) {
       return res.status(404).json({
         success: false,
@@ -183,7 +183,7 @@ exports.checkbookmarkstatus=async(req,res)=>{
     }
     const user = await User.findById(userId);
     const question = await Question.findById(questionid); 
-     console.log(question);
+    //  console.log(question);
     if (!user||!question) {
       return res.status(404).json({
         success: false,

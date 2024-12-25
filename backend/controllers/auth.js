@@ -341,10 +341,10 @@ exports.resetpassword=async(req,res)=>{
       });
     }
 
-    if(user.resetPasswordExpires<Date.now()){
+    if(user.resetTokenExpiration<Date.now()){
       return res.status(400).json({
         success:false,
-        message:"Token is expired"
+        message:"Token is expired"  
       });
     }
 

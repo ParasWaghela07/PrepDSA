@@ -5,6 +5,7 @@ function Adminpanel(){
      const { isAdmin } = useContext(AppContext);
 
     useEffect(()=>{
+        console.log("adminpanel")
         isAdmin();
     },[])
     return (

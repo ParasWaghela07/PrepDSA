@@ -1,8 +1,38 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { AppContext } from "../context/AppContext";
 
 function HomePage() {
+
+    const {setloader} = useContext(AppContext);
+    const navigate=useNavigate(); 
+
+      async function isLoggedIn() {
+        setloader(true);
+        try {
+            const response = await fetch('http://localhost:4000/isloggedin', {
+                method: 'GET',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include"
+            });
+  
+            const res = await response.json();
+  
+            if (res.success) {
+                navigate('/landing');
+            }
+        } catch (e) {
+            console.log(e);
+        }
+        setloader(false);
+    }
+
+  useEffect(()=>{
+    isLoggedIn();
+  },[]);
   return (
     <div className="min-h-screen bg-gradient-to-r from-gray-900 to-gray-800 text-gray-100 overflow-x-hidden">
       {/* Hero Section */}

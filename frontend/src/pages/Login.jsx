@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState,useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "../index.css";
 import { toast } from "react-hot-toast";
@@ -39,6 +39,32 @@ function Login() {
     }
     setloader(false);
   };
+
+        async function isLoggedIn() {
+          setloader(true);
+          try {
+              const response = await fetch('http://localhost:4000/isloggedin', {
+                  method: 'GET',
+                  headers: {
+                      "Content-Type": "application/json"
+                  },
+                  credentials: "include"
+              });
+    
+              const res = await response.json();
+    
+              if (res.success) {
+                  navigate('/landing');
+              }
+          } catch (e) {
+              console.log(e);
+          }
+          setloader(false);
+      }
+  
+    useEffect(()=>{
+      isLoggedIn();
+    },[]);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 px-4">

@@ -12,7 +12,7 @@ export default function AppContextProvider({children}){
     async function isLoggedIn() {
       setloader(true);
       try {
-          const response = await fetch('http://localhost:4000/isadminloggedin', {
+          const response = await fetch('http://localhost:4000/isloggedin', {
               method: 'GET',
               headers: {
                   "Content-Type": "application/json"
@@ -25,8 +25,6 @@ export default function AppContextProvider({children}){
           if (!res.success) {
               navigate('/');
               toast.warn('You need to login first');
-          } else {
-              navigate('/addquestion');
           }
       } catch (e) {
           console.log(e);

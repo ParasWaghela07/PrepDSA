@@ -12,14 +12,19 @@ router.post('/signup',signup);
 router.post('/login',login)
 router.get('/isloggedin',auth,isloggedin);
 router.get('/logout',logout);
+
 router.post('/bookmark',auth,bookmark)
 router.post('/solved',auth,solved);
+
 router.get('/getallquestions',getAllQuestions);
 router.get('/getallcompanies',getAllCompanies);
 router.get('/getalltopics',getAllTopics);
+
 router.post('/checksolvestatus',auth,checksolvestatus);
 router.post('/checkbookmarkstatus',auth,checkbookmarkstatus);
 router.post('/popfrombookmark',auth,popfrombookmark);
+
+
 //ADMIN'S ROUTES
 router.post('/addquestion',isAdmin,addquestion);
 router.post('/addcompany',isAdmin,addcompany);

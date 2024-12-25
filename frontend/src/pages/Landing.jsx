@@ -1,51 +1,42 @@
 import { useState, useEffect } from "react";
 import Questionbox from "../components/Questionbox";
 
-function Landing({allquestions,allcompanies,alltopics}) {
+function Landing({ allquestions, allcompanies, alltopics }) {
   const [difficulty, setDifficulty] = useState([]);
   const [companies, setCompanies] = useState([]);
   const [topics, setTopics] = useState([]);
-  const [questions, setQuestions] = useState(allquestions); 
+  const [questions, setQuestions] = useState(allquestions);
 
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
 
-  useEffect(()=>{
+  useEffect(() => {
     setQuestions(allquestions);
-  },[allquestions]);
+  }, [allquestions]);
 
-  const toggleSelection = (arr,setArray, value) => {
-
-    
-    setArray((prev) => {
-      if (prev.includes(value)) {
-        return prev.filter((item) => item !== value);
-      } else {
-        return [...prev, value];
-      }
-    });
+  const toggleSelection = (arr, setArray, value) => {
+    setArray((prev) =>
+      prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value]
+    );
   };
 
-  function checkTopic(question, topics){
-    let count=topics.length;
-    for(let i=0;i<question.topics.length;i++){
-      console.log(typeof question.topics[i],question.topics[i])
-      if(topics.includes(question.topics[i].topic_name)){
+  function checkTopic(question, topics) {
+    let count = topics.length;
+    for (let i = 0; i < question.topics.length; i++) {
+      if (topics.includes(question.topics[i].topic_name)) {
         count--;
       }
     }
-
-    return count===0;
+    return count === 0;
   }
 
-  function checkCompany(question, companies){
-    let count=companies.length;
-    for(let i=0;i<question.companies.length;i++){
-      if(companies.includes(question.companies[i].company_name)){
+  function checkCompany(question, companies) {
+    let count = companies.length;
+    for (let i = 0; i < question.companies.length; i++) {
+      if (companies.includes(question.companies[i].company_name)) {
         count--;
       }
     }
-
-    return count===0;
+    return count === 0;
   }
 
   function filterQuestions(difficulty, topics, companies) {
@@ -53,49 +44,47 @@ function Landing({allquestions,allcompanies,alltopics}) {
     let filteredQuestions = allquestions;
 
     if (difficulty.length > 0) {
-      filteredQuestions = filteredQuestions.filter((question) => difficulty.includes(question.difficulty));
+      filteredQuestions = filteredQuestions.filter((question) =>
+        difficulty.includes(question.difficulty)
+      );
     }
 
-    
     if (topics.length > 0) {
-      filteredQuestions = filteredQuestions.filter((question) => {
-        return checkTopic(question,topics);
-      });
+      filteredQuestions = filteredQuestions.filter((question) =>
+        checkTopic(question, topics)
+      );
     }
 
-    
     if (companies.length > 0) {
-      filteredQuestions = filteredQuestions.filter((question) => {
-        return checkCompany(question,companies);
-      });
+      filteredQuestions = filteredQuestions.filter((question) =>
+        checkCompany(question, companies)
+      );
     }
 
-
-    if(filteredQuestions.length===0){
-      setQuestions([]);
-    }
-    else setQuestions(filteredQuestions);
-
+    setQuestions(filteredQuestions.length === 0 ? [] : filteredQuestions);
     setLoading(false);
   }
 
   return (
-    <div className="h-screen w-screen overflow-x-hidden ">
-      <div className="w-full h-52 bg-slate-600"></div>
-      <div className="bg-gray-100">
-        <div className="w-full bg-white shadow-md p-4 flex items-center justify-around">
+    <div className="min-h-screen w-full bg-gray-900 text-gray-100 overflow-x-hidden">
+      {/* Hero Section */}
+      <div className="w-full h-52 bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-600 flex items-center justify-center shadow-lg">
+        <h1 className="text-3xl font-bold text-white">Explore Questions</h1>
+      </div>
+
+      {/* Filters Section */}
+      <div className="bg-gray-800 py-6 shadow-md">
+        <div className="container mx-auto flex flex-wrap gap-6 justify-center lg:justify-between px-4">
           {/* Difficulty Dropdown */}
-          <div className="relative">
-            <label htmlFor="difficulty" className="block text-gray-700 font-medium">
+          <div className="relative w-full sm:w-1/2 md:w-1/3 lg:w-1/4">
+            <label htmlFor="difficulty" className="block text-sm font-medium">
               Difficulty
             </label>
             <select
               id="difficulty"
-              className="block w-40 mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-200"
-              onChange={(e) =>{
-                toggleSelection(difficulty,setDifficulty,parseInt(e.target.value))
-                   
-                }
+              className="block w-full mt-1 p-2 bg-gray-700 text-gray-100 border border-gray-600 rounded-md focus:ring-indigo-500"
+              onChange={(e) =>
+                toggleSelection(difficulty, setDifficulty, parseInt(e.target.value))
               }
             >
               <option value="">Select Difficulty</option>
@@ -106,14 +95,14 @@ function Landing({allquestions,allcompanies,alltopics}) {
           </div>
 
           {/* Topics Dropdown */}
-          <div className="relative">
-            <label htmlFor="topics" className="block text-gray-700 font-medium">
+          <div className="relative w-full sm:w-1/2 md:w-1/3 lg:w-1/4">
+            <label htmlFor="topics" className="block text-sm font-medium">
               Topics
             </label>
             <select
               id="topics"
-              className="block w-40 mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-200"
-              onChange={(e) => toggleSelection(topics,setTopics, e.target.value)}
+              className="block w-full mt-1 p-2 bg-gray-700 text-gray-100 border border-gray-600 rounded-md focus:ring-indigo-500"
+              onChange={(e) => toggleSelection(topics, setTopics, e.target.value)}
             >
               {alltopics.map((topic) => (
                 <option key={topic._id} value={topic.topic_name}>
@@ -123,15 +112,15 @@ function Landing({allquestions,allcompanies,alltopics}) {
             </select>
           </div>
 
-          {/* Companies Typable Input */}
-          <div className="relative">
-            <label htmlFor="companies" className="block text-gray-700 font-medium">
+          {/* Companies Dropdown */}
+          <div className="relative w-full sm:w-1/2 md:w-1/3 lg:w-1/4">
+            <label htmlFor="companies" className="block text-sm font-medium">
               Companies
             </label>
             <select
-              id="topics"
-              className="block w-40 mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-200"
-              onChange={(e) => toggleSelection(companies,setCompanies, e.target.value)}
+              id="companies"
+              className="block w-full mt-1 p-2 bg-gray-700 text-gray-100 border border-gray-600 rounded-md focus:ring-indigo-500"
+              onChange={(e) => toggleSelection(companies, setCompanies, e.target.value)}
             >
               {allcompanies.map((company) => (
                 <option key={company._id} value={company.company_name}>
@@ -142,47 +131,56 @@ function Landing({allquestions,allcompanies,alltopics}) {
           </div>
 
           {/* Filter Button */}
-          <div className="relative border-2 p-2 rounded-xl">
-            <button
-              onClick={() => {
-                filterQuestions(difficulty, topics, companies);
-              }}
-            >
-              Filter
-            </button>
-          </div>
+          <button
+            className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md shadow-lg w-full sm:w-auto"
+            onClick={() => filterQuestions(difficulty, topics, companies)}
+          >
+            Apply Filters
+          </button>
         </div>
+      </div>
 
-        <div className="p-4 mt-4 bg-white shadow-md">
-          <h3 className="text-lg font-semibold text-gray-700">Selected Filters:</h3>
-          <div className="mt-2">
-            <p className="text-gray-600">
-              <strong>Difficulty:</strong> {difficulty.length > 0 ? difficulty.map((d)=>{
-                if(d===1) return "Easy ";
-                else if(d===2) return "Medium ";
-                else return "Hard ";
-              }): "None"}
+      {/* Selected Filters */}
+      <div className="bg-gray-700 py-4">
+        <div className="container mx-auto text-sm px-4">
+          <h3 className="text-lg font-semibold">Selected Filters:</h3>
+          <div className="flex gap-6 mt-2 flex-wrap">
+            <p>
+              <strong>Difficulty:</strong>{" "}
+              {difficulty.length > 0
+                ? difficulty
+                    .map((d) =>
+                      d === 1 ? "Easy" : d === 2 ? "Medium" : "Hard"
+                    )
+                    .join(", ")
+                : "None"}
             </p>
-            <p className="text-gray-600">
+            <p>
               <strong>Topics:</strong> {topics.length > 0 ? topics.join(", ") : "None"}
             </p>
-            <p className="text-gray-600">
-              <strong>Companies:</strong> {companies.length > 0 ? companies.join(", ") : "None"}
+            <p>
+              <strong>Companies:</strong>{" "}
+              {companies.length > 0 ? companies.join(", ") : "None"}
             </p>
           </div>
         </div>
       </div>
-      <div>
-        {/* Loading State */}
+
+      {/* Questions Section */}
+      <div className="container mx-auto p-6">
         {loading ? (
-          <p>Loading questions...</p>
+          <p className="text-center text-gray-400">Loading questions...</p>
         ) : (
-          <Questionbox questions={questions} difficulty={difficulty} companies={companies} topics={topics} />
+          <Questionbox
+            questions={questions}
+            difficulty={difficulty}
+            companies={companies}
+            topics={topics}
+          />
         )}
       </div>
     </div>
   );
 }
-
 
 export default Landing;

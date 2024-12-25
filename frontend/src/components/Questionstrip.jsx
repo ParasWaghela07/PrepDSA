@@ -1,21 +1,20 @@
 import { useEffect, useState } from "react";
 
 function Questionstrip({ questionid1, difficulty, title }) {
-    console.log(questionid1);
     const [isChecked, setIsChecked] = useState(false);
     const [isBookmarked, setIsBookmarked] = useState(false);
 
     async function pushtosolved() {
         try {
-            await fetch('http://localhost:4000/solved', {
-                method: 'POST',
+            await fetch("http://localhost:4000/solved", {
+                method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    questionid: questionid1
+                    questionid: questionid1,
                 }),
-                credentials: "include"
+                credentials: "include",
             });
         } catch (error) {
             console.error("Error marking question as solved:", error);
@@ -24,15 +23,15 @@ function Questionstrip({ questionid1, difficulty, title }) {
 
     async function checkstatus() {
         try {
-            const response = await fetch('http://localhost:4000/checksolvestatus', {
-                method: 'POST',
+            const response = await fetch("http://localhost:4000/checksolvestatus", {
+                method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    questionid: questionid1
+                    questionid: questionid1,
                 }),
-                credentials: "include"
+                credentials: "include",
             });
 
             const responseData = await response.json();
@@ -40,7 +39,6 @@ function Questionstrip({ questionid1, difficulty, title }) {
             if (responseData.data) {
                 setIsChecked(true);
             }
-            console.log(responseData.data);
         } catch (error) {
             console.error("Error fetching solve status:", error);
         }
@@ -48,15 +46,15 @@ function Questionstrip({ questionid1, difficulty, title }) {
 
     async function checkbookmarkstatus() {
         try {
-            const response = await fetch('http://localhost:4000/checkbookmarkstatus', {
-                method: 'POST',
+            const response = await fetch("http://localhost:4000/checkbookmarkstatus", {
+                method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    questionid: questionid1
+                    questionid: questionid1,
                 }),
-                credentials: "include"
+                credentials: "include",
             });
 
             const responseData = await response.json();
@@ -64,43 +62,45 @@ function Questionstrip({ questionid1, difficulty, title }) {
             if (responseData.data) {
                 setIsBookmarked(true);
             }
-            console.log(responseData.data);
         } catch (error) {
-            console.error("Error fetching solve status:", error);
+            console.error("Error fetching bookmark status:", error);
         }
     }
+
     async function pushtobookmark() {
         try {
-            const response = await fetch('http://localhost:4000/bookmark', {
-                method: 'POST',
+            await fetch("http://localhost:4000/bookmark", {
+                method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    questionid: questionid1
+                    questionid: questionid1,
                 }),
-                credentials: "include"
+                credentials: "include",
             });
         } catch (error) {
-            console.error("Error fetching solve status:", error);
+            console.error("Error bookmarking question:", error);
         }
     }
+
     async function popfrombookmark() {
         try {
-            const response = await fetch('http://localhost:4000/popfrombookmark', {
-                method: 'POST',
+            await fetch("http://localhost:4000/popfrombookmark", {
+                method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    questionid: questionid1
+                    questionid: questionid1,
                 }),
-                credentials: "include"
+                credentials: "include",
             });
         } catch (error) {
-            console.error("Error fetching solve status:", error);
+            console.error("Error removing bookmark:", error);
         }
     }
+
     useEffect(() => {
         checkstatus();
         checkbookmarkstatus();
@@ -108,38 +108,37 @@ function Questionstrip({ questionid1, difficulty, title }) {
 
     return (
         <div
-            className={`flex justify-between items-center p-2 ${
-                isChecked ? "bg-green-200/50" : "bg-transparent"
-            }`}
+            className={`flex justify-between overflow-x-hidden items-center p-4 rounded-lg shadow-md transition-all ${
+                isChecked ? "bg-green-900/50 text-white" : "bg-gray-800 text-gray-300"
+            } hover:shadow-lg`}
         >
-            {/* Checkbox */}
-            <div className="flex items-center gap-2">
+            {/* Checkbox and Bookmark */}
+            <div className="flex items-center gap-4">
                 <input
                     type="checkbox"
                     checked={isChecked}
                     onChange={(e) => {
                         if (!isChecked) {
                             setIsChecked(true);
+                            pushtosolved(questionid1);
                         }
-                        pushtosolved(questionid1);
                     }}
+                    className="w-6 h-6 cursor-pointer accent-green-500"
                 />
-                {/* Bookmark Icon */}
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill={isBookmarked ? "currentColor" : "none"}
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className={`w-6 h-6 ${
-                        isBookmarked ? "text-green-600" : "text-gray-600"
-                    } cursor-pointer hover:text-gray-900`}
+                    className={`w-6 h-6 cursor-pointer ${
+                        isBookmarked ? "text-yellow-400" : "text-gray-500"
+                    } hover:text-yellow-300`}
                     onClick={() => {
                         if (!isBookmarked) {
-                            setIsBookmarked(true); 
-                            pushtobookmark();// Mark as bookmarked
-                        }
-                        else{
+                            setIsBookmarked(true);
+                            pushtobookmark();
+                        } else {
                             setIsBookmarked(false);
                             popfrombookmark();
                         }
@@ -154,10 +153,20 @@ function Questionstrip({ questionid1, difficulty, title }) {
             </div>
 
             {/* Title */}
-            <h3 className="flex-grow">{title}</h3>
+            <h3 className="flex-grow font-medium">{title}</h3>
 
             {/* Difficulty */}
-            <p>Difficulty: {difficulty}</p>
+            <p
+                className={`text-sm font-semibold ${
+                    difficulty === "Hard"
+                        ? "text-red-500"
+                        : difficulty === "Medium"
+                        ? "text-yellow-500"
+                        : "text-green-500"
+                }`}
+            >
+                {difficulty}
+            </p>
         </div>
     );
 }

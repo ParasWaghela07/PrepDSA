@@ -76,6 +76,9 @@ function App() {
           if (res.success) {
               navigate('/landing');
           }
+          else{
+            navigate('/home');
+          }
       } catch (e) {
           console.log(e);
       }
@@ -86,7 +89,6 @@ function App() {
     getallquestions();
     getallcompanies();
     getalltopics();
-
     isLoggedIn();
   },[]);
 

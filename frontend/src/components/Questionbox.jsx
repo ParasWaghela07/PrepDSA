@@ -6,6 +6,7 @@ function Questionbox({ questions, difficulty, companies, topics }) {
       {questions.map((question, index) => (
         <Questionstrip
           key={index} 
+          questionid1={question._id}
           difficulty={question.difficulty}
           title={question.question_title}
         />

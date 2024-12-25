@@ -4,7 +4,7 @@ const {signup,login,isloggedin,logout,adminlogin,adminsignup}=require('../contro
 const {auth}=require('../middlewares/Auth');
 const {isAdmin}=require('../middlewares/AdminAuth');
 const { addquestion, addcompany ,addsheet,addtopic} = require('../controllers/Admin');
-const { bookmark, solved, getAllQuestions,getAllCompanies,getAllTopics} = require('../controllers/User_fn');
+const { bookmark, solved, getAllQuestions,getAllCompanies,getAllTopics, checksolvestatus, checkbookmarkstatus, popfrombookmark} = require('../controllers/User_fn');
 
 
 //USER'S ROUTES
@@ -17,7 +17,9 @@ router.post('/solved',auth,solved);
 router.get('/getallquestions',getAllQuestions);
 router.get('/getallcompanies',getAllCompanies);
 router.get('/getalltopics',getAllTopics);
-
+router.post('/checksolvestatus',auth,checksolvestatus);
+router.post('/checkbookmarkstatus',auth,checkbookmarkstatus);
+router.post('/popfrombookmark',auth,popfrombookmark);
 //ADMIN'S ROUTES
 router.post('/addquestion',isAdmin,addquestion);
 router.post('/addcompany',isAdmin,addcompany);

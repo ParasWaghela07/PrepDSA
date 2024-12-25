@@ -1,17 +1,21 @@
-
-  
-   
 import { useState, useEffect } from "react";
 import Questionbox from "../components/Questionbox";
 
-function Landing() {
-  const [difficulty, setDifficulty] = useState("");
+function Landing({allquestions,allcompanies,alltopics}) {
+  const [difficulty, setDifficulty] = useState([]);
   const [companies, setCompanies] = useState([]);
   const [topics, setTopics] = useState([]);
-  const [questions, setQuestions] = useState([]); // State for questions
-  const [loading, setLoading] = useState(true); // State for loading
+  const [questions, setQuestions] = useState(allquestions); 
 
-  const toggleSelection = (array, setArray, value) => {
+  const [loading, setLoading] = useState(false); 
+
+  useEffect(()=>{
+    setQuestions(allquestions);
+  },[allquestions]);
+
+  const toggleSelection = (arr,setArray, value) => {
+
+    
     setArray((prev) => {
       if (prev.includes(value)) {
         return prev.filter((item) => item !== value);
@@ -21,22 +25,59 @@ function Landing() {
     });
   };
 
-  useEffect(() => {
-    // Fetch questions when the component mounts
-    const getQuestions = async () => {
-      try {
-        const response = await fetch("http://localhost:4000/getallquestions");
-        const data = await response.json();
-        setQuestions(data.data); // Assuming the questions are in `data.data`
-      } catch (error) {
-        console.error("Error fetching questions:", error);
-      } finally {
-        setLoading(false);
+  function checkTopic(question, topics){
+    let count=topics.length;
+    for(let i=0;i<question.topics.length;i++){
+      console.log(typeof question.topics[i],question.topics[i])
+      if(topics.includes(question.topics[i].topic_name)){
+        count--;
       }
-    };
+    }
 
-    getQuestions();
-  }, []);
+    return count===0;
+  }
+
+  function checkCompany(question, companies){
+    let count=companies.length;
+    for(let i=0;i<question.companies.length;i++){
+      if(companies.includes(question.companies[i].company_name)){
+        count--;
+      }
+    }
+
+    return count===0;
+  }
+
+  function filterQuestions(difficulty, topics, companies) {
+    setLoading(true);
+    let filteredQuestions = allquestions;
+
+    if (difficulty.length > 0) {
+      filteredQuestions = filteredQuestions.filter((question) => difficulty.includes(question.difficulty));
+    }
+
+    
+    if (topics.length > 0) {
+      filteredQuestions = filteredQuestions.filter((question) => {
+        return checkTopic(question,topics);
+      });
+    }
+
+    
+    if (companies.length > 0) {
+      filteredQuestions = filteredQuestions.filter((question) => {
+        return checkCompany(question,companies);
+      });
+    }
+
+
+    if(filteredQuestions.length===0){
+      setQuestions([]);
+    }
+    else setQuestions(filteredQuestions);
+
+    setLoading(false);
+  }
 
   return (
     <div className="h-screen w-screen overflow-x-hidden ">
@@ -51,13 +92,16 @@ function Landing() {
             <select
               id="difficulty"
               className="block w-40 mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-200"
-              onChange={(e) => setDifficulty(e.target.value)}
-              value={difficulty}
+              onChange={(e) =>{
+                toggleSelection(difficulty,setDifficulty,parseInt(e.target.value))
+                   
+                }
+              }
             >
               <option value="">Select Difficulty</option>
-              <option value="easy">Easy</option>
-              <option value="medium">Medium</option>
-              <option value="hard">Hard</option>
+              <option value="1">Easy</option>
+              <option value="2">Medium</option>
+              <option value="3">Hard</option>
             </select>
           </div>
 
@@ -69,19 +113,13 @@ function Landing() {
             <select
               id="topics"
               className="block w-40 mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-200"
-              onChange={(e) => toggleSelection(topics, setTopics, e.target.value)}
+              onChange={(e) => toggleSelection(topics,setTopics, e.target.value)}
             >
-              <option value="">Select Topic</option>
-              <option value="array">Array</option>
-              <option value="string">String</option>
-              <option value="linked-list">Linked List</option>
-              <option value="binary-tree">Binary Tree</option>
-              <option value="graph">Graph</option>
-              <option value="dynamic-programming">Dynamic Programming</option>
-              <option value="sorting">Sorting</option>
-              <option value="searching">Searching</option>
-              <option value="math">Math</option>
-              <option value="recursion">Recursion</option>
+              {alltopics.map((topic) => (
+                <option key={topic._id} value={topic.topic_name}>
+                  {topic.topic_name}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -90,27 +128,24 @@ function Landing() {
             <label htmlFor="companies" className="block text-gray-700 font-medium">
               Companies
             </label>
-            <input
-              id="companies"
-              type="text"
-              placeholder="Type company name"
-              className="block w-60 mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-200"
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && e.target.value.trim()) {
-                  toggleSelection(companies, setCompanies, e.target.value.trim());
-                  e.target.value = "";
-                }
-              }}
-            />
+            <select
+              id="topics"
+              className="block w-40 mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-200"
+              onChange={(e) => toggleSelection(companies,setCompanies, e.target.value)}
+            >
+              {allcompanies.map((company) => (
+                <option key={company._id} value={company.company_name}>
+                  {company.company_name}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Filter Button */}
           <div className="relative border-2 p-2 rounded-xl">
             <button
               onClick={() => {
-                console.log("Difficulty:", difficulty);
-                console.log("Topics:", topics);
-                console.log("Companies:", companies);
+                filterQuestions(difficulty, topics, companies);
               }}
             >
               Filter
@@ -122,7 +157,11 @@ function Landing() {
           <h3 className="text-lg font-semibold text-gray-700">Selected Filters:</h3>
           <div className="mt-2">
             <p className="text-gray-600">
-              <strong>Difficulty:</strong> {difficulty || "None"}
+              <strong>Difficulty:</strong> {difficulty.length > 0 ? difficulty.map((d)=>{
+                if(d===1) return "Easy ";
+                else if(d===2) return "Medium ";
+                else return "Hard ";
+              }): "None"}
             </p>
             <p className="text-gray-600">
               <strong>Topics:</strong> {topics.length > 0 ? topics.join(", ") : "None"}

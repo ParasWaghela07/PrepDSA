@@ -42,6 +42,45 @@ exports.bookmark = async (req, res) => {
     });
   }
 };
+exports.popfrombookmark = async (req, res) => {
+  const { questionid } = req.body; 
+  const userId = req.payload.id;  
+
+  try {
+    if (!questionid) {
+      return res.status(400).json({
+        success: false,
+        message: "Question ID is required.",
+      });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $pull: { bookmarkedquestions: questionid } }, 
+      { new: true } 
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Question removed from bookmarks successfully.",
+      data: updatedUser.bookmarkedquestions, 
+    });
+  } catch (error) {
+    console.error("Error in removing bookmark:", error);
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while removing the bookmark. Please try again later.",
+    });
+  }
+};
+
 
 exports.solved = async (req, res) => {
     const { questionid } = req.body; 
@@ -82,7 +121,104 @@ exports.solved = async (req, res) => {
       });
     }
 };
-  
+exports.checksolvestatus=async(req,res)=>{
+  const { questionid } = req.body;
+
+  const userId =req.payload.id;
+  try {
+    if (!questionid) {
+      return res.status(400).json({
+        success: false,
+        message: "Question ID is required.",
+        });
+
+    }
+    const user = await User.findById(userId);
+    const question = await Question.findById(questionid); 
+     console.log(question);
+    if (!user||!question) {
+      return res.status(404).json({
+        success: false,
+        message: "User or question not found.",
+        });
+    }
+    const solved = user.solved_question_ids.includes(questionid);
+    if(solved){
+      return res.status(200).json({
+        success: true,
+        message: "Question already solved.",
+        data:true
+        });
+    }
+    else{
+      return res.status(200).json({
+        success: false,
+        message: "Question not solved.",
+        data:false
+        });
+    }
+
+}
+
+catch (error) {
+  console.error("Error in checking solve status:", error);
+  return res.status(500).json({
+    success: false,
+    message: "An error occurred during checking solve status. Please try again later.",
+  });
+}
+}
+
+exports.checkbookmarkstatus=async(req,res)=>{
+  const { questionid } = req.body;
+
+  const userId =req.payload.id;
+  try {
+    if (!questionid) {
+      return res.status(400).json({
+        success: false,
+        message: "Question ID is required.",
+        });
+
+    }
+    const user = await User.findById(userId);
+    const question = await Question.findById(questionid); 
+     console.log(question);
+    if (!user||!question) {
+      return res.status(404).json({
+        success: false,
+        message: "User or question not found.",
+        });
+    }
+    const solved = user.bookmarkedquestions.includes(questionid);
+    if(solved){
+      return res.status(200).json({
+        success: true,
+        message: "boolmark already solved.",
+        data:true
+        });
+    }
+    else{
+      return res.status(200).json({
+        success: false,
+        message: "bookmark not solved.",
+        data:false
+        });
+    }
+
+}
+
+catch (error) {
+  console.error("Error in checking bookmark status:", error);
+  return res.status(500).json({
+    success: false,
+    message: "An error occurred during checking bookmark status. Please try again later.",
+  });
+}
+}
+
+
+
 exports.getAllQuestions = async (req, res) => {
   try {
       const questions = await Question.find({})

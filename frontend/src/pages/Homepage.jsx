@@ -1,9 +1,8 @@
 import React from "react";
-import { motion } from "framer-motion"; // Add animations
-import { useNavigate, Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 function HomePage() {
-    const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-gradient-to-r from-gray-900 to-gray-800 text-gray-100 overflow-x-hidden">
       {/* Hero Section */}
@@ -21,26 +20,22 @@ function HomePage() {
             Building a better future with solid foundations.
           </p>
           <div className="space-x-4">
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              className="bg-teal-400 text-gray-900 px-6 py-3 rounded-lg text-lg font-semibold shadow-lg"
-            >
-             <Link to="/signup">Get started</Link>
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              className="bg-gray-700 text-teal-400 px-6 py-3 rounded-lg text-lg font-semibold shadow-lg"
-             
-            >
-              <Link to="/login">Login</Link>
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              className="bg-gray-700 text-teal-400 px-6 py-3 rounded-lg text-lg font-semibold shadow-lg"
-             
-            >
-              <Link to="/adminlogin">Admin Login</Link>
-            </motion.button>
+            <Link to="/signup">
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                className="bg-teal-400 text-gray-900 px-6 py-3 rounded-lg text-lg font-semibold shadow-lg"
+              >
+                Get started
+              </motion.button>
+            </Link>
+            <Link to="/login">
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                className="bg-gray-700 text-teal-400 px-6 py-3 rounded-lg text-lg font-semibold shadow-lg"
+              >
+                Login
+              </motion.button>
+            </Link>
           </div>
         </motion.div>
 
@@ -73,16 +68,16 @@ function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
-                title: "Thorough Reasearch",
-                desc: "Thorough research and Reliable Data",
+                title: "Thorough Research",
+                desc: "Thorough research and reliable data.",
               },
               {
-                title: "Sheets for last moment prep",
-                desc: "Compilation of multiple sheets from various genuine Authors",
+                title: "Sheets for Last Moment Prep",
+                desc: "Compilation of sheets from various genuine authors.",
               },
               {
-                title: "Progress tracking",
-                desc: "Track your progress and stay motivated",
+                title: "Progress Tracking",
+                desc: "Track your progress and stay motivated.",
               },
             ].map((feature, index) => (
               <motion.div
@@ -116,19 +111,21 @@ function HomePage() {
           <p className="text-lg font-medium text-gray-200">
             Be part of a growing community.
           </p>
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            className="bg-gray-900 text-teal-400 px-8 py-4 rounded-lg text-lg font-semibold shadow-lg"
-          >
-           <Link to={"/signup"}>Get started today!!</Link>
-          </motion.button>
+          <Link to="/signup">
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              className="bg-gray-900 text-teal-400 px-8 py-4 rounded-lg text-lg font-semibold shadow-lg"
+            >
+              Get started today!!
+            </motion.button>
+          </Link>
         </div>
       </section>
 
       {/* Footer */}
       <footer className="bg-gray-800 text-gray-400 py-6">
         <div className="max-w-6xl mx-auto text-center">
-          <p>&copy; 2024 YourWebsite. All Rights Reserved.</p>
+          <p>&copy; 2024 PrepDsa. All Rights Reserved.</p>
         </div>
       </footer>
     </div>

@@ -8,6 +8,7 @@ import Question from './pages/Question';
 import Adminlogin from './pages/Adminlogin';
 import Adminpanel from './pages/Adminpanel';
 import HomePage from './pages/Homepage';
+import NotFound from './pages/Notfound';
 import { useContext, useEffect ,useState} from 'react';
 import Addquestion from './pages/Addquestion';
 import Sendmail from './pages/Sendmail';
@@ -19,16 +20,8 @@ function App() {
     const [allquestions,setallquestions] = useState([]);
     const [allcompanies,setallcompanies] = useState([]);
     const [alltopics,setalltopics] = useState([]);
-    const navigate=useNavigate();
     const {loader}=useContext(AppContext)
 
-
-
-
-
-
-
-  
     async function getallquestions() {
       try{
         const response = await fetch("http://localhost:4000/getallquestions");
@@ -70,7 +63,6 @@ function App() {
     getallquestions();
     getallcompanies();
     getalltopics();
-  //  isLoggedIn();
   },[]);
 
   return (
@@ -84,9 +76,11 @@ function App() {
           <Route path="/adminlogin" element={<Adminlogin/>}/>
           <Route path="/adminpanel" element={<Adminpanel/>}/>
           <Route path="/addquestion" element={<Addquestion allcompanies={allcompanies} allquestions={allquestions} alltopics={alltopics}/>}/>
-          <Route path="/home" element={<HomePage/>}/>
+          <Route path="/" element={<HomePage/>}/>
           <Route path="/sendmail" element={<Sendmail/>}/>
           <Route path="/update-password/:token" element={<UpdatePassword/>}/>
+
+          <Route path="*" element={<NotFound />} />
         </Routes>
 
         {loader && <div className="fixed top-0 right-0 left-0  flex justify-center items-center h-full bg-black bg-opacity-50 z-50"><Loader/></div>}

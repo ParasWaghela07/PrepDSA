@@ -1,5 +1,5 @@
 import { toast } from "react-hot-toast";
-import React, { useState, useContext,useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { useNavigate, Link } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
@@ -27,15 +27,8 @@ function Signup() {
       try {
         const response = await fetch("http://localhost:4000/signup", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            username: username,
-            password: password,
-            name: name,
-            email: email,
-          }),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password, name, email }),
           credentials: "include",
         });
         const res = await response.json();
@@ -46,47 +39,42 @@ function Signup() {
           toast.error(res.message);
         }
       } catch (error) {
-        alert("An error occurred. Please try again.");
+        toast.error("An error occurred. Please try again.");
         console.error(error);
       }
       setloader(false);
     }
   };
 
-        async function isLoggedIn() {
-          setloader(true);
-          try {
-              const response = await fetch('http://localhost:4000/isloggedin', {
-                  method: 'GET',
-                  headers: {
-                      "Content-Type": "application/json"
-                  },
-                  credentials: "include"
-              });
-    
-              const res = await response.json();
-    
-              if (res.success) {
-                  navigate('/landing');
-              }
-          } catch (e) {
-              console.log(e);
-          }
-          setloader(false);
+  useEffect(() => {
+    const isLoggedIn = async () => {
+      setloader(true);
+      try {
+        const response = await fetch("http://localhost:4000/isloggedin", {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+        });
+        const res = await response.json();
+        if (res.success) {
+          navigate("/landing");
+        }
+      } catch (e) {
+        console.log(e);
       }
-  
-    useEffect(()=>{
-      isLoggedIn();
-    },[]);
+      setloader(false);
+    };
+    isLoggedIn();
+  }, [navigate, setloader]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 px-4">
-      <div className="w-full max-w-sm bg-gray-700 shadow-lg rounded-lg p-6">
-        <h1 className="text-2xl font-bold text-gray-200 text-center mb-4">Signup</h1>
-        <form onSubmit={handleSubmit}>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-gray-900 to-gray-800 text-gray-100 px-4">
+      <div className="w-full max-w-sm bg-gray-800 p-6 rounded-lg shadow-lg">
+        <h1 className="text-3xl font-bold text-teal-400 text-center mb-6">Signup</h1>
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Name Field */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-300 mb-1" htmlFor="name">
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-1">
               Name
             </label>
             <input
@@ -95,14 +83,14 @@ function Signup() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Full Name"
-              className="w-full px-4 py-2 border border-gray-600 bg-gray-800 text-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400"
               required
             />
           </div>
 
           {/* Username Field */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-300 mb-1" htmlFor="username">
+          <div>
+            <label htmlFor="username" className="block text-sm font-medium text-gray-300 mb-1">
               Username
             </label>
             <input
@@ -111,14 +99,14 @@ function Signup() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Your username"
-              className="w-full px-4 py-2 border border-gray-600 bg-gray-800 text-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400"
               required
             />
           </div>
 
           {/* Email Field */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-300 mb-1" htmlFor="email">
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1">
               Email
             </label>
             <input
@@ -127,14 +115,14 @@ function Signup() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="example@example.com"
-              className="w-full px-4 py-2 border border-gray-600 bg-gray-800 text-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400"
               required
             />
           </div>
 
           {/* Password Field */}
-          <div className="mb-4 relative">
-            <label className="block text-sm font-medium text-gray-300 mb-1" htmlFor="password">
+          <div className="relative">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-1">
               Password
             </label>
             <input
@@ -143,7 +131,7 @@ function Signup() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
-              className="w-full px-4 py-2 border border-gray-600 bg-gray-800 text-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400"
               required
             />
             {eye ? (
@@ -162,16 +150,16 @@ function Signup() {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
+            className="w-full py-3 bg-teal-400 text-gray-900 font-semibold rounded-lg shadow-lg hover:bg-teal-500 transition duration-300"
           >
             Sign Up
           </button>
         </form>
 
         {/* Login Redirect */}
-        <div className="mt-4 text-center">
-          <p className="text-sm text-gray-400">Already have an account?</p>
-          <Link to="/login" className="text-blue-400 font-medium hover:underline">
+        <div className="mt-4 text-center text-sm">
+          <p className="text-gray-300">Already have an account?</p>
+          <Link to="/login" className="text-teal-400 font-medium hover:underline">
             Login Page
           </Link>
         </div>

@@ -83,7 +83,7 @@ exports.popfrombookmark = async (req, res) => {
 
 
 exports.solved = async (req, res) => {
-    const { questionid } = req.body; 
+    const { questionid ,difficulty} = req.body; 
     const userId = req.payload.id;  
   
     try {
@@ -100,6 +100,16 @@ exports.solved = async (req, res) => {
         { $addToSet: { solved_question_ids: questionid } }, 
         { new: true } 
       );
+
+      if(difficulty==1){
+        await User.findByIdAndUpdate(userId,{$inc:{easy_question_count:1}});
+      }
+      else if(difficulty==2){
+        await User.findByIdAndUpdate(userId,{$inc:{medium_question_count:1}});
+      }
+      else{
+        await User.findByIdAndUpdate(userId,{$inc:{hard_question_count:1}});
+      }
   
       if (!updatedUser) {
         return res.status(404).json({
@@ -274,4 +284,20 @@ exports.getAllTopics=async(req,res)=>{
   }
 }
   
-  
+exports.getUserDetail=async(req,res)=>{
+  try{
+    const user=await User.findById(req.payload.id).populate('solved_question_ids').populate('bookmarkedquestions');
+    return res.status(200).json({
+      success:true,
+      message:"User details retrieved successfully.",
+      data:user
+    }); 
+  }
+  catch(e){
+    console.error("Error in finding user:",error);
+    return res.status(500).json({
+      success:false,
+      message:"An error occurred while retrieving user details. Please try again later."
+  });
+  }
+}

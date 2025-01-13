@@ -4,13 +4,14 @@ const {signup,login,isloggedin,logout,adminlogin,adminsignup,resetpassword,reset
 const {auth}=require('../middlewares/Auth');
 const {isAdmin}=require('../middlewares/AdminAuth');
 const { addquestion, addcompany ,addsheet,addtopic, isAdminloggedin} = require('../controllers/Admin');
-const { bookmark, solved, getAllQuestions,getAllCompanies,getAllTopics, checksolvestatus, checkbookmarkstatus, popfrombookmark} =require('../controllers/User_fn');
+const { bookmark, solved, getAllQuestions,getAllCompanies,getAllTopics, checksolvestatus, checkbookmarkstatus, popfrombookmark,getUserDetail} =require('../controllers/User_fn');
 
 
 //USER'S ROUTES
 router.post('/signup',signup);
 router.post('/login',login)
 router.get('/isloggedin',auth,isloggedin);
+router.get('/getuserdetail',auth,getUserDetail);
 
 router.get('/logout',logout);
 

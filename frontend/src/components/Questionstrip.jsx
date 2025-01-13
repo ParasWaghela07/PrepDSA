@@ -13,6 +13,7 @@ function Questionstrip({ questionid1, difficulty, title }) {
                 },
                 body: JSON.stringify({
                     questionid: questionid1,
+                    difficulty: difficulty,
                 }),
                 credentials: "include",
             });
@@ -158,14 +159,14 @@ function Questionstrip({ questionid1, difficulty, title }) {
             {/* Difficulty */}
             <p
                 className={`text-sm font-semibold ${
-                    difficulty === "Hard"
+                    difficulty == 3
                         ? "text-red-500"
-                        : difficulty === "Medium"
+                        : difficulty ==2
                         ? "text-yellow-500"
                         : "text-green-500"
                 }`}
             >
-                {difficulty}
+                {difficulty==3 ? "Hard" : difficulty==2 ? "Medium" : "Easy"}
             </p>
         </div>
     );

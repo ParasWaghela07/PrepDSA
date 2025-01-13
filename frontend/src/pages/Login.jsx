@@ -40,26 +40,7 @@ function Login() {
     setloader(false);
   };
 
-  useEffect(() => {
-    const isLoggedIn = async () => {
-      setloader(true);
-      try {
-        const response = await fetch("http://localhost:4000/isloggedin", {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-        });
-        const res = await response.json();
-        if (res.success) {
-          navigate("/landing");
-        }
-      } catch (e) {
-        console.log(e);
-      }
-      setloader(false);
-    };
-    isLoggedIn();
-  }, [navigate, setloader]);
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-gray-900 to-gray-800 text-gray-100 px-4">

@@ -1,6 +1,7 @@
 import { useState, useEffect,useContext } from "react";
 import Questionbox from "../components/Questionbox";
 import { AppContext } from "../context/AppContext";
+import { useNavigate } from "react-router-dom";
 
 function Landing({ allquestions, allcompanies, alltopics }) {
   const [difficulty, setDifficulty] = useState([]);
@@ -9,6 +10,8 @@ function Landing({ allquestions, allcompanies, alltopics }) {
   const [questions, setQuestions] = useState(allquestions);
   const [loading, setLoading] = useState(false);
   const { isLoggedIn } = useContext(AppContext);
+
+  const navigate=useNavigate();
 
   useEffect(() => {
     isLoggedIn();
@@ -91,10 +94,15 @@ function Landing({ allquestions, allcompanies, alltopics }) {
     <div className="min-h-screen w-full bg-gray-900 text-gray-100 overflow-x-hidden">
       {/* Hero Section */}
       <div className="w-full h-52 bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-600 flex gap-x-10 items-center justify-center shadow-lg">
-        <h1 className="text-3xl font-bold text-white">Explore Questions</h1>
-        <button onClick={logout} className="bg-red-500 text-white hover:bg-red-600 px-6 py-2 rounded-lg font-semibold">Logout</button>
+  <h1 className="text-3xl font-bold text-white">Explore Questions</h1>
+  <button onClick={logout} className="bg-red-500 text-white hover:bg-red-600 px-6 py-2 rounded-lg font-semibold">
+    Logout
+  </button>
+  <button onClick={() => navigate('/profile')} className="bg-green-500 text-white hover:bg-green-600 px-6 py-2 rounded-lg font-semibold">
+    Profile
+  </button>
+</div>
 
-      </div>
 
       {/* Filters Section */}
       <div className="bg-gray-800 py-6 shadow-md">

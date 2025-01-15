@@ -2,6 +2,9 @@ const Question = require("../models/question");
 const Company=require("../models/company");
 const Topic=require("../models/topic");
 const User = require("../models/user");
+const {uploadImageToCloudinary}=require('../util/imageUploader');
+
+require('dotenv').config();
 
 exports.bookmark = async (req, res) => {
   const { questionid } = req.body; 
@@ -301,3 +304,35 @@ exports.getUserDetail=async(req,res)=>{
   });
   }
 }
+
+exports.changeProfilePic = async (req, res) => {
+  try {
+    const userid = req.payload.id;
+    const imgfile = req.file; 
+
+    if (!imgfile) {
+      return res.status(400).json({
+        success: false,
+        message: 'No file uploaded',
+      });
+    }
+
+    // console.log(imgfile);
+
+  
+    const response = await uploadImageToCloudinary(imgfile.path, process.env.FOLDER_NAME, 200, 80);
+    await User.findByIdAndUpdate(userid, { userImg: response.secure_url });
+
+    return res.status(200).json({
+      success: true,
+      message: 'Profile picture changed successfully.',
+      data: response.secure_url,
+    });
+  } catch (error) {
+    console.error('Error in changing profile picture:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'An error occurred while changing profile picture. Please try again later.',
+    });
+  }
+};

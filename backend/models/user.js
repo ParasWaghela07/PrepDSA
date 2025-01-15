@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema(
       unique: true,
       match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
     },
+    userImg: { type: String, required: true },
     easy_question_count: { type: Number, default: 0 },
     medium_question_count: { type: Number, default: 0 },
     hard_question_count: { type: Number, default: 0 },

@@ -47,6 +47,7 @@ exports.signup = async (req, res) => {
       password: hashedPassword,
       name,
       email,
+      userImg: `https://api.dicebear.com/5.x/initials/svg?seed=${username} ${email}`
     });
 
     // Save user to the database

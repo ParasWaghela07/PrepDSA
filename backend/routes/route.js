@@ -1,10 +1,18 @@
 const express=require('express');
+const multer = require('multer');
 const router=express.Router();
 const {signup,login,isloggedin,logout,adminlogin,adminsignup,resetpassword,resetpasswordtoken}=require('../controllers/auth');
 const {auth}=require('../middlewares/Auth');
 const {isAdmin}=require('../middlewares/AdminAuth');
 const { addquestion, addcompany ,addsheet,addtopic, isAdminloggedin} = require('../controllers/Admin');
-const { bookmark, solved, getAllQuestions,getAllCompanies,getAllTopics, checksolvestatus, checkbookmarkstatus, popfrombookmark,getUserDetail} =require('../controllers/User_fn');
+const { bookmark, solved, getAllQuestions,getAllCompanies,getAllTopics, checksolvestatus, checkbookmarkstatus, popfrombookmark,getUserDetail,changeProfilePic} =require('../controllers/User_fn');
+
+const upload = multer({ 
+    dest: 'uploads/', 
+    fields: [{ name: 'file', maxCount: 1 }]  // Ensure 'file' is the correct field name
+  });
+  
+
 
 
 //USER'S ROUTES
@@ -26,6 +34,7 @@ router.get('/getalltopics',getAllTopics);
 router.post('/checksolvestatus',auth,checksolvestatus);
 router.post('/checkbookmarkstatus',auth,checkbookmarkstatus);
 router.post('/popfrombookmark',auth,popfrombookmark);
+router.post('/changeProfilePic', auth,upload.single('imgfile'), changeProfilePic);
 
 
 //ADMIN'S ROUTES

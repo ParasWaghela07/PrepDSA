@@ -308,7 +308,7 @@ exports.getUserDetail=async(req,res)=>{
 exports.changeProfilePic = async (req, res) => {
   try {
     const userid = req.payload.id;
-    const imgfile = req.file; 
+    const imgfile = req.files.imgfile; 
 
     if (!imgfile) {
       return res.status(400).json({
@@ -320,7 +320,7 @@ exports.changeProfilePic = async (req, res) => {
     // console.log(imgfile);
 
   
-    const response = await uploadImageToCloudinary(imgfile.path, process.env.FOLDER_NAME, 200, 80);
+    const response = await uploadImageToCloudinary(imgfile, process.env.FOLDER_NAME, 200, 80);
     await User.findByIdAndUpdate(userid, { userImg: response.secure_url });
 
     return res.status(200).json({

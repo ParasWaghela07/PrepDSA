@@ -15,6 +15,8 @@ import Sendmail from './pages/Sendmail';
 import UpdatePassword from './pages/Updatepassword';
 import Loader from './components/Loader';
 import { AppContext } from './context/AppContext';
+import Addsheet from './pages/Addsheet';
+import UpdateProfile from './pages/updateProfile';
 
 function App() {
     const [allquestions,setallquestions] = useState([]);
@@ -79,7 +81,8 @@ function App() {
           <Route path="/" element={<HomePage/>}/>
           <Route path="/sendmail" element={<Sendmail/>}/>
           <Route path="/update-password/:token" element={<UpdatePassword/>}/>
-
+          <Route path="/addsheet" element={<Addsheet allquestions={allquestions} allcompanies={allcompanies} alltopics={alltopics} />}/>
+          <Route path="/changeProfilepic" element={<UpdateProfile/>}/>
           <Route path="*" element={<NotFound />} />
         </Routes>
 

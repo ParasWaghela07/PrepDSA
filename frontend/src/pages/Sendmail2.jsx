@@ -3,8 +3,8 @@ import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import { AppContext } from "../context/AppContext";
 
-const Sendmail = () => {
-    const [email, setEmail] = useState("");
+const Sendmail2 = () => {
+
     const {setloader}=useContext(AppContext);
 
     const handleSubmit = async(e) => {
@@ -12,14 +12,11 @@ const Sendmail = () => {
         e.preventDefault();
         
         try{
-            const res=await fetch("http://localhost:4000/resetpasswordtoken",{
-                method:"POST",
+            const res=await fetch("http://localhost:4000/resetpasswordtoken2",{
+                method:"GET",
                 headers:{
                     "Content-Type":"application/json"
                 },
-                body:JSON.stringify({
-                    email
-                }),
                 credentials:"include"
             })
 
@@ -49,27 +46,10 @@ const Sendmail = () => {
                     Forgot Password
                 </h1>
                 <p className="text-gray-300 text-center mb-6">
-                    Enter your email address to receive a password reset link.
+                    We will send a password reset link to your email address.
                 </p>
+
                 <form onSubmit={handleSubmit} className="space-y-6">
-                    <div>
-                        <label
-                            htmlFor="email"
-                            className="block text-sm font-medium text-gray-300"
-                        >
-                            Email Address
-                        </label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            required
-                            placeholder="Enter your email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="w-full mt-2 p-3 rounded-lg bg-gray-700 text-gray-100 focus:ring-2 focus:ring-teal-400 focus:outline-none"
-                        />
-                    </div>
                     <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
@@ -85,4 +65,4 @@ const Sendmail = () => {
     );
 };
 
-export default Sendmail;
+export default Sendmail2;

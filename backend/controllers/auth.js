@@ -47,8 +47,9 @@ exports.signup = async (req, res) => {
       password: hashedPassword,
       name,
       email,
-      userImg: `https://api.dicebear.com/5.x/initials/svg?seed=${username} ${email}`
+      userImg: `https://api.dicebear.com/5.x/initials/svg?seed=${username.charAt(0)}`
     });
+    
 
     // Save user to the database
     await newUser.save();
@@ -298,6 +299,41 @@ exports.resetpasswordtoken=async(req,res)=>{
         message:"Email is not registered"
       });
     }
+
+    const token=crypto.randomUUID();
+    await User.findOneAndUpdate({email:email},{
+      resetToken:token,
+      resetTokenExpiration:Date.now()+5*60*1000
+    },{new:true});
+    
+    const url=`http://localhost:5173/update-password/${token}`;
+
+    await mailsender(email,"Password Reset Link",url);
+
+    return res.status(200).json({
+      success:true,
+      message:"Email sent successfully, please check email and change password"
+    });
+  }
+  catch(e){
+    return res.status(500).json({
+      success:false,
+      message:"Errors while sending reset password password link"
+    })
+  }
+}
+
+exports.resetpasswordtoken2=async(req,res)=>{
+  try{
+    const userId=req.payload.id;
+    const curruser=await User.findById(userId);
+    if(!curruser){
+      return res.status(404).json({
+        success:false,
+        message:"User not found"
+      });
+    }
+    const email=curruser.email;
 
     const token=crypto.randomUUID();
     await User.findOneAndUpdate({email:email},{

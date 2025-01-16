@@ -33,7 +33,7 @@ function Signup() {
         });
         const res = await response.json();
         if (res.success) {
-          navigate("/landing", { state: { id: email } });
+          navigate("/login", { state: { id: email } });
           toast.success(res.message);
         } else {
           toast.error(res.message);

@@ -3,6 +3,7 @@ const Company=require("../models/company");
 const Topic=require("../models/topic");
 const User = require("../models/user");
 const {uploadImageToCloudinary}=require('../util/imageUploader');
+const bcrypt = require("bcrypt");
 
 require('dotenv').config();
 
@@ -305,34 +306,88 @@ exports.getUserDetail=async(req,res)=>{
   }
 }
 
-exports.changeProfilePic = async (req, res) => {
+exports.changeProfile = async (req, res) => {
   try {
-    const userid = req.payload.id;
-    const imgfile = req.files.imgfile; 
+    const userId = req.payload.id;
+    const { name, username } = req.body;
+    
+    const updateData = {};
 
-    if (!imgfile) {
-      return res.status(400).json({
-        success: false,
-        message: 'No file uploaded',
-      });
+    if (req.files) {
+      const imgfile  = req.files.imgfile;
+      const response = await uploadImageToCloudinary(imgfile, process.env.FOLDER_NAME, 200, 80);
+      updateData.userImg = response.secure_url;
+    }
+    
+    if (name) {
+      updateData.name = name;
+    }
+    
+    if (username) {
+      updateData.username = username;
     }
 
-    // console.log(imgfile);
-
-  
-    const response = await uploadImageToCloudinary(imgfile, process.env.FOLDER_NAME, 200, 80);
-    await User.findByIdAndUpdate(userid, { userImg: response.secure_url });
+    if (Object.keys(updateData).length > 0) {
+      await User.updateOne({ _id: userId }, { $set: updateData });
+    }
 
     return res.status(200).json({
       success: true,
-      message: 'Profile picture changed successfully.',
-      data: response.secure_url,
+      message: 'Profile changed successfully.',
     });
   } catch (error) {
-    console.error('Error in changing profile picture:', error);
+    console.error('Error in changing profile:', error);
     return res.status(500).json({
       success: false,
-      message: 'An error occurred while changing profile picture. Please try again later.',
+      message: 'An error occurred while changing profile. Please try again later.',
     });
   }
 };
+
+exports.changepassword=async(req,res)=>{
+  try{
+    const {oldPassword,newPassword}=req.body;
+    const userId=req.payload.id;
+
+
+    const user=await User.findById(userId);
+    if(!user){
+      return res.status(404).json({
+        success:false,
+        message:"User not found."
+      });
+    }
+
+    const isMatch=await bcrypt.compare(oldPassword,user.password);
+    if(!isMatch){
+      return res.status(400).json({
+        success:false,
+        message:"Old password is incorrect."
+      });
+    }
+
+    let hashedPassword;
+    try {
+      hashedPassword = await bcrypt.hash(newPassword, 10);
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: "Error occurred while hashing the password.",
+      });
+    }
+
+    await User.findByIdAndUpdate(userId,{$set:{password:hashedPassword}});
+
+    return res.status(200).json({
+      success:true,
+      message:"Password changed successfully."
+    })
+  }
+  catch(error){
+    console.error("Error in changing password:",error);
+    return res.status(500).json({
+      success:false,
+      message:"An error occurred while changing password. Please try again later."
+    });
+  }
+}

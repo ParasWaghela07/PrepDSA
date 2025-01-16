@@ -3,13 +3,16 @@ import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import { AppContext } from "../context/AppContext";
 import { useNavigate, useParams } from "react-router-dom";
+import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 
 const UpdatePassword = () => {
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [showNewPassword, setShowNewPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const { setloader } = useContext(AppContext);
     const navigate = useNavigate();
-    const token=useParams();
+    const token = useParams();
 
     const handleSubmit = async (e) => {
         setloader(true);
@@ -22,8 +25,6 @@ const UpdatePassword = () => {
         }
 
         try {
-            console.log(token)
-            console.log(typeof token)
             const res = await fetch("http://localhost:4000/resetpassword", {
                 method: "POST",
                 headers: {
@@ -31,7 +32,7 @@ const UpdatePassword = () => {
                 },
                 body: JSON.stringify({
                     password: newPassword,
-                    token
+                    token,
                 }),
                 credentials: "include",
             });
@@ -39,7 +40,12 @@ const UpdatePassword = () => {
             const data = await res.json();
             if (data.success) {
                 toast.success(data.message);
-                navigate("/login");
+                if (localStorage.getItem('isLogin') === 'true') {
+                    localStorage.removeItem('isLogin');
+                    navigate("/profile");
+                } else {
+                    navigate("/login");
+                }
             } else {
                 toast.error(data.message);
             }
@@ -72,16 +78,29 @@ const UpdatePassword = () => {
                         >
                             New Password
                         </label>
-                        <input
-                            type="password"
-                            id="newPassword"
-                            name="newPassword"
-                            required
-                            placeholder="Enter your new password"
-                            value={newPassword}
-                            onChange={(e) => setNewPassword(e.target.value)}
-                            className="w-full mt-2 p-3 rounded-lg bg-gray-700 text-gray-100 focus:ring-2 focus:ring-teal-400 focus:outline-none"
-                        />
+                        <div className="relative">
+                            <input
+                                type={showNewPassword ? "text" : "password"}
+                                id="newPassword"
+                                name="newPassword"
+                                required
+                                placeholder="Enter your new password"
+                                value={newPassword}
+                                onChange={(e) => setNewPassword(e.target.value)}
+                                className="w-full mt-2 p-3 rounded-lg bg-gray-700 text-gray-100 focus:ring-2 focus:ring-teal-400 focus:outline-none"
+                            />
+                            {showNewPassword ? (
+                                <IoMdEyeOff
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer"
+                                    onClick={() => setShowNewPassword(false)}
+                                />
+                            ) : (
+                                <IoMdEye
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer"
+                                    onClick={() => setShowNewPassword(true)}
+                                />
+                            )}
+                        </div>
                     </div>
                     <div>
                         <label
@@ -90,16 +109,29 @@ const UpdatePassword = () => {
                         >
                             Confirm New Password
                         </label>
-                        <input
-                            type="password"
-                            id="confirmPassword"
-                            name="confirmPassword"
-                            required
-                            placeholder="Confirm your new password"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                            className="w-full mt-2 p-3 rounded-lg bg-gray-700 text-gray-100 focus:ring-2 focus:ring-teal-400 focus:outline-none"
-                        />
+                        <div className="relative">
+                            <input
+                                type={showConfirmPassword ? "text" : "password"}
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                required
+                                placeholder="Confirm your new password"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                className="w-full mt-2 p-3 rounded-lg bg-gray-700 text-gray-100 focus:ring-2 focus:ring-teal-400 focus:outline-none"
+                            />
+                            {showConfirmPassword ? (
+                                <IoMdEyeOff
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer"
+                                    onClick={() => setShowConfirmPassword(false)}
+                                />
+                            ) : (
+                                <IoMdEye
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer"
+                                    onClick={() => setShowConfirmPassword(true)}
+                                />
+                            )}
+                        </div>
                     </div>
                     <motion.button
                         whileHover={{ scale: 1.05 }}
@@ -110,17 +142,6 @@ const UpdatePassword = () => {
                         Update Password
                     </motion.button>
                 </form>
-                <div className="mt-6 text-center">
-                    <p className="text-gray-400 text-sm">
-                        Remembered your password?{" "}
-                        <a
-                            href="/login"
-                            className="text-teal-400 hover:underline"
-                        >
-                            Login here
-                        </a>
-                    </p>
-                </div>
             </motion.div>
         </div>
     );

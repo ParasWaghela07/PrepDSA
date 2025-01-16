@@ -1,10 +1,10 @@
 const express=require('express');
 const router=express.Router();
-const {signup,login,isloggedin,logout,adminlogin,adminsignup,resetpassword,resetpasswordtoken}=require('../controllers/auth');
+const {signup,login,isloggedin,logout,adminlogin,adminsignup,resetpassword,resetpasswordtoken,resetpasswordtoken2}=require('../controllers/auth');
 const {auth}=require('../middlewares/Auth');
 const {isAdmin}=require('../middlewares/AdminAuth');
 const { addquestion, addcompany ,addsheet,addtopic, isAdminloggedin} = require('../controllers/Admin');
-const { bookmark, solved, getAllQuestions,getAllCompanies,getAllTopics, checksolvestatus, checkbookmarkstatus, popfrombookmark,getUserDetail,changeProfilePic} =require('../controllers/User_fn');
+const { bookmark, solved, getAllQuestions,getAllCompanies,getAllTopics, checksolvestatus, checkbookmarkstatus, popfrombookmark,getUserDetail,changeProfile,changepassword} =require('../controllers/User_fn');
 
 
 
@@ -18,7 +18,9 @@ router.get('/getuserdetail',auth,getUserDetail);
 router.get('/logout',logout);
 
 router.post('/resetpasswordtoken',resetpasswordtoken);
+router.get('/resetpasswordtoken2',auth,resetpasswordtoken2);
 router.post('/resetpassword',resetpassword);
+
 
 router.post('/bookmark',auth,bookmark)
 router.post('/solved',auth,solved);
@@ -28,7 +30,8 @@ router.get('/getalltopics',getAllTopics);
 router.post('/checksolvestatus',auth,checksolvestatus);
 router.post('/checkbookmarkstatus',auth,checkbookmarkstatus);
 router.post('/popfrombookmark',auth,popfrombookmark);
-router.post('/changeProfilePic', auth, changeProfilePic);
+router.post('/changeProfile', auth, changeProfile);
+router.post('/changepassword', auth, changepassword);
 
 
 //ADMIN'S ROUTES

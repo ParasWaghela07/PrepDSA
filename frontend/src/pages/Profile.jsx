@@ -5,10 +5,12 @@ import UserInfo from "../components/UserInfo";
 import UserStats from "../components/UserStats";
 import SolvedQuestions from "../components/SolvedQuestions";
 import BookmarkedQuestions from "../components/BookmarkedQuestions";
+import { useNavigate } from "react-router-dom";
 
 function Profile() {
   const { isLoggedIn, setloader } = useContext(AppContext);
   const [userDetails, setUserDetails] = useState(null);
+  const navigate=useNavigate();
 
   async function getUserDetail() {
     setloader(true);
@@ -38,6 +40,8 @@ function Profile() {
     return <div>Loading...</div>;
   }
 
+  const { userImg } = userDetails;
+
   return (
     <div className="min-h-screen bg-gradient-to-r from-gray-900 to-gray-800 text-gray-100 p-8">
       <motion.div
@@ -46,8 +50,27 @@ function Profile() {
         transition={{ duration: 1 }}
         className="max-w-6xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg space-y-8"
       >
+        <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold text-teal-400">User Profile</h1>
-        <UserInfo userDetails={userDetails} />
+        <div className="flex flex-col items-end">
+          <h1 className="text-2xl font-bold text-teal-400 w-fit py-1 px-2 rounded-md cursor-pointer"
+          onClick={()=>{navigate('/changeProfile')}}>Edit profile</h1>
+          <h1 className="text-2xl font-bold text-teal-400 w-fit py-1 px-2 rounded-md cursor-pointer"
+          onClick={()=>{navigate('/changepassword')}}>Change password</h1>
+        </div>
+        </div>
+        <div className="flex items-center space-x-4">
+          {userImg && (
+            <img
+              src={userImg}
+              alt="User"
+              className="w-[150px] h-[150px] rounded-full border-2 border-teal-400 object-cover"
+            />
+          )}
+          <div>
+            <UserInfo userDetails={userDetails} />
+          </div>
+        </div>
         <UserStats userDetails={userDetails} />
         <SolvedQuestions questions={userDetails.solved_question_ids} />
         <BookmarkedQuestions questions={userDetails.bookmarkedquestions} />

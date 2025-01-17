@@ -76,12 +76,12 @@ const UpdateProfile = () => {
   },[]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-gray-900 to-gray-800 text-gray-100 p-8 flex justify-center items-center">
+    <div className="min-h-screen w-full bg-gradient-to-r from-gray-900 to-gray-800 text-gray-100 p-8 flex justify-center items-center">
       <motion.div
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
-        className="w-[50%] h-full max-w-4xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg space-y-8"
+        className="w-[30%] h-full max-w-4xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg space-y-8"
       >
         <h2 className="text-3xl font-bold text-teal-400 text-center">
           Update Profile

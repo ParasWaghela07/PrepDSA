@@ -4,7 +4,7 @@ const {signup,login,isloggedin,logout,adminlogin,adminsignup,resetpassword,reset
 const {auth}=require('../middlewares/Auth');
 const {isAdmin}=require('../middlewares/AdminAuth');
 const { addquestion, addcompany ,addsheet,addtopic, isAdminloggedin} = require('../controllers/Admin');
-const { bookmark, solved, getAllQuestions,getAllCompanies,getAllTopics, checksolvestatus, checkbookmarkstatus, popfrombookmark,getUserDetail,changeProfile,changepassword} =require('../controllers/User_fn');
+const { bookmark, solved, getAllQuestions,getAllCompanies,getAllTopics, checksolvestatus, checkbookmarkstatus, popfrombookmark,getUserDetail,changeProfile,changepassword,getquestiondetail} =require('../controllers/User_fn');
 
 
 
@@ -32,6 +32,7 @@ router.post('/checkbookmarkstatus',auth,checkbookmarkstatus);
 router.post('/popfrombookmark',auth,popfrombookmark);
 router.post('/changeProfile', auth, changeProfile);
 router.post('/changepassword', auth, changepassword);
+router.post('/getquestiondetail',getquestiondetail);
 
 
 //ADMIN'S ROUTES

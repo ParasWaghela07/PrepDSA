@@ -76,7 +76,7 @@ function App() {
           <Route path="/signup"  element={<Signup/>}/>
           <Route path="/landing" element= {<Landing allquestions={allquestions} allcompanies={allcompanies} alltopics={alltopics}/>}/>
           <Route path="/profile" element={<Profile/>}/>
-          <Route path="/Question" element={<Question/>}/>
+          <Route path="/Question/:qstid" element={<Question/>}/>
           <Route path="/adminlogin" element={<Adminlogin/>}/>
           <Route path="/adminpanel" element={<Adminpanel/>}/>
           <Route path="/addquestion" element={<Addquestion allcompanies={allcompanies} allquestions={allquestions} alltopics={alltopics}/>}/>

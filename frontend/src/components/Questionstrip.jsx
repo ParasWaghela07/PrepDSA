@@ -102,6 +102,10 @@ function Questionstrip({ questionid1, difficulty, title }) {
         }
     }
 
+    function addqstnametoparams() {
+        window.location.href = `/question/${questionid1}`;
+    }
+
     useEffect(() => {
         checkstatus();
         checkbookmarkstatus();
@@ -111,7 +115,7 @@ function Questionstrip({ questionid1, difficulty, title }) {
         <div
             className={`flex justify-between overflow-x-hidden items-center p-4 rounded-lg shadow-md transition-all ${
                 isChecked ? "bg-green-900/50 text-white" : "bg-gray-800 text-gray-300"
-            } hover:shadow-lg`}
+            } hover:shadow-lg cursor-pointer`} onClick={addqstnametoparams}
         >
             {/* Checkbox and Bookmark */}
             <div className="flex items-center gap-4">

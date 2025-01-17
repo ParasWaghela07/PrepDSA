@@ -53,9 +53,9 @@ function Profile() {
         <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold text-teal-400">User Profile</h1>
         <div className="flex flex-col items-end">
-          <h1 className="text-2xl font-bold text-teal-400 w-fit py-1 px-2 rounded-md cursor-pointer"
+          <h1 className="text-2xl font-bold text-teal-400 w-fit py-1 px-2 rounded-md cursor-pointer hover:text-teal-300"
           onClick={()=>{navigate('/changeProfile')}}>Edit profile</h1>
-          <h1 className="text-2xl font-bold text-teal-400 w-fit py-1 px-2 rounded-md cursor-pointer"
+          <h1 className="text-2xl font-bold text-teal-400 hover:text-teal-300 w-fit py-1 px-2 rounded-md cursor-pointer"
           onClick={()=>{navigate('/changepassword')}}>Change password</h1>
         </div>
         </div>

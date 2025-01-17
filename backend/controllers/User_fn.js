@@ -4,6 +4,7 @@ const Topic=require("../models/topic");
 const User = require("../models/user");
 const {uploadImageToCloudinary}=require('../util/imageUploader');
 const bcrypt = require("bcrypt");
+const mongoose=require('mongoose');
 
 require('dotenv').config();
 
@@ -391,3 +392,31 @@ exports.changepassword=async(req,res)=>{
     });
   }
 }
+
+exports.getquestiondetail = async (req, res) => {
+  try {
+    const { qstid } = req.body;
+   
+    const question = await Question.findById(qstid).populate('companies').populate('topics');
+    if (!question) {
+      return res.status(404).json({
+        success: false,
+        message: "Question not found.",
+      });
+    }
+
+    // Return the question details if found
+    return res.status(200).json({
+      success: true,
+      message: "Question retrieved successfully.",
+      data: question,
+    });
+
+  } catch (error) {
+    console.error("Error in fetching question:", error);
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while fetching the question. Please try again later.",
+    });
+  }
+};

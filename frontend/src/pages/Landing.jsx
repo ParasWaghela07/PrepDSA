@@ -11,6 +11,8 @@ function Landing({ allquestions, allcompanies, alltopics }) {
   const [loading, setLoading] = useState(false);
   const { isLoggedIn } = useContext(AppContext);
 
+  const [searchInput,setsearchInput]=useState("");
+
   const navigate=useNavigate();
 
   useEffect(() => {
@@ -43,6 +45,13 @@ function Landing({ allquestions, allcompanies, alltopics }) {
       }
     }
     return count === 0;
+  }
+
+  function searchQuestions() {
+    let filteredQuestions = allquestions.filter((question) =>
+      question.question_title.toLowerCase().includes(searchInput.toLowerCase())
+    );
+    setQuestions(filteredQuestions.length === 0 ? [] : filteredQuestions);
   }
 
   function filterQuestions(difficulty, topics, companies) {
@@ -89,6 +98,10 @@ function Landing({ allquestions, allcompanies, alltopics }) {
       console.log(e);
     }
   }
+
+  useEffect(()=>{
+    searchQuestions();
+  },[searchInput])
 
   return (
     <div className="min-h-screen w-full bg-gray-900 text-gray-100 overflow-x-hidden">
@@ -196,6 +209,16 @@ function Landing({ allquestions, allcompanies, alltopics }) {
             </p>
           </div>
         </div>
+      </div>
+
+      <div className="ml-10 mt-10">
+        <input
+          type="text"
+          value={searchInput}
+          onChange={(e) => setsearchInput(e.target.value)}
+          placeholder="Search question"
+          className="w-[30%] p-2 bg-gray-700 border border-gray-300 rounded-lg focus:outline-none"
+        />
       </div>
 
       {/* Questions Section */}

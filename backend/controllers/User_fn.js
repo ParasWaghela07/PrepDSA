@@ -397,7 +397,12 @@ exports.getquestiondetail = async (req, res) => {
   try {
     const { qstid } = req.body;
    
-    const question = await Question.findById(qstid).populate('companies').populate('topics');
+    const question = await Question.findById(qstid)
+    .populate('companies') 
+    .populate({
+        path: 'topics', 
+        populate: { path: 'question_list' } 
+    });
     if (!question) {
       return res.status(404).json({
         success: false,

@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 export const AppContext=createContext();
 
 export default function AppContextProvider({children}){
-
+    const  [current_topic_array,setcurrent_topic_array]=useState([]);
     const [loader,setloader]=useState(false);
     const [email, setEmail] = useState("");
     const navigate=useNavigate();
@@ -54,7 +54,7 @@ export default function AppContextProvider({children}){
 }
 
     const value={
-      email,setEmail,loader,setloader,isLoggedIn,isAdmin
+      email,setEmail,loader,setloader,isLoggedIn,isAdmin,current_topic_array,setcurrent_topic_array
     };
 
     return <AppContext.Provider value={value}>

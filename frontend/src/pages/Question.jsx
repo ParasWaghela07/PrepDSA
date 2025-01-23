@@ -115,6 +115,7 @@ async function checkstatus() {
       });
 
       const data = await response.json();
+      console.log(data);
       if (data.success) {
         setquestion(data.data);
       }

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { IoCheckmarkCircleOutline } from "react-icons/io5";
 
 function Questionstrip({ questionid1, difficulty, title }) {
     const [isBookmarked, setIsBookmarked] = useState(false);
@@ -114,12 +115,8 @@ function Questionstrip({ questionid1, difficulty, title }) {
     }, []);
 
     return (
-        <div
-            className={`flex justify-between overflow-x-hidden items-center p-4 rounded-lg shadow-md transition-all ${
-                isChecked ? "bg-green-900/50 text-white" : "bg-gray-800 text-gray-300"
-            } hover:shadow-lg cursor-pointer`} onClick={addqstnametoparams}
-        >
-            {/* Checkbox and Bookmark */}
+        <div className="flex items-center gap-x-2 w-full">
+                        {/* Checkbox and Bookmark */}
             <div className="flex items-center gap-4">
                 {/* <input
                     type="checkbox"
@@ -158,9 +155,17 @@ function Questionstrip({ questionid1, difficulty, title }) {
                     />
                 </svg>
             </div>
+        <div
+            className={`h-[8vh] w-full flex justify-between overflow-x-hidden items-center py-2 px-2 rounded-lg shadow-md bg-gray-800 text-gray-300 transition-all hover:shadow-lg cursor-pointer overflow-hidden`}
+        >
+            <IoCheckmarkCircleOutline className={`${!isChecked && "opacity-0"} text-2xl text-green-500 mr-2`}/>
 
             {/* Title */}
-            <h3 className="flex-grow font-medium">{title}</h3>
+            <h3 className="flex-grow font-medium"  onClick={addqstnametoparams}>{title}</h3>
+
+
+            
+
 
             {/* Difficulty */}
             <p
@@ -174,6 +179,7 @@ function Questionstrip({ questionid1, difficulty, title }) {
             >
                 {difficulty==3 ? "Hard" : difficulty==2 ? "Medium" : "Easy"}
             </p>
+        </div>
         </div>
     );
 }

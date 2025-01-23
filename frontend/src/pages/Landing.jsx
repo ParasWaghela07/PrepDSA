@@ -4,24 +4,27 @@ import Questionbox from "../components/Questionbox";
 import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
 
+
 function Landing({ allquestions, allcompanies, alltopics }) {
   const [difficulty, setDifficulty] = useState([]);
   const [companies, setCompanies] = useState([]);
   const [topics, setTopics] = useState([]);
   const [questions, setQuestions] = useState(allquestions);
   const [loading, setLoading] = useState(false);
-  const { isLoggedIn } = useContext(AppContext);
+  const { isLoggedIn,setloader,userDetails } = useContext(AppContext);
   const [searchInput, setsearchInput] = useState("");
   const [isDifficultyModalOpen, setIsDifficultyModalOpen] = useState(false);
   const [isTopicsModalOpen, setIsTopicsModalOpen] = useState(false);
   const [isCompaniesModalOpen, setIsCompaniesModalOpen] = useState(false);
 
   const navigate = useNavigate();
-
   useEffect(() => {
     isLoggedIn();
+  }, []);
+
+  useEffect(() => {
     setQuestions(allquestions);
-  }, [allquestions]);
+  },[allquestions]);
 
   const toggleSelection = (arr, setArray, value) => {
     setArray((prev) =>
@@ -92,38 +95,16 @@ function Landing({ allquestions, allcompanies, alltopics }) {
     setQuestions(filteredQuestions.length === 0 ? [] : filteredQuestions);
   };
 
-  const logout = async () => {
-    try {
-      const response = await fetch('http://localhost:4000/logout', {
-        method: 'GET',
-        headers: {
-          "Content-Type": "application/json"
-        },
-        credentials: "include"
-      });
-      const res = await response.json();
-      if (res.success) {
-        window.location.href = '/';
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
   useEffect(() => {
     searchQuestions();
   }, [searchInput]);
 
   return (
     <div className="min-h-screen w-full bg-gray-900 text-gray-100 overflow-x-hidden">
-      <div className="w-full h-52 bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-600 flex gap-x-10 items-center justify-center shadow-lg">
+      <div className="px-10 w-full h-20 bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-600 flex gap-x-10 items-center justify-between  shadow-lg">
         <h1 className="text-3xl font-bold text-white">Explore Questions</h1>
-        <button onClick={logout} className="bg-red-500 text-white hover:bg-red-600 px-6 py-2 rounded-lg font-semibold">
-          Logout
-        </button>
-        <button onClick={() => navigate('/profile')} className="bg-green-500 text-white hover:bg-green-600 px-6 py-2 rounded-lg font-semibold">
-          Profile
-        </button>
+        <img src={userDetails?.userImg} onClick={() => navigate('/profile',{state:{userDetails}})} className="w-10 rounded-full cursor-pointer">
+        </img>
       </div>
 
       <div className="bg-gray-800 py-6 shadow-md">

@@ -70,6 +70,7 @@ function Question() {
             }),
             credentials: "include",
         });
+        setIsChecked(true);
     } catch (error) {
         console.error("Error marking question as solved:", error);
     }
@@ -92,6 +93,7 @@ async function checkstatus() {
 
         if (responseData.data) {
             setIsChecked(true);
+            
         }
     } catch (error) {
         console.error("Error fetching solve status:", error);

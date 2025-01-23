@@ -1,26 +1,28 @@
 import { useEffect, useState } from "react";
 
 function Questionstrip({ questionid1, difficulty, title }) {
-    const [isChecked, setIsChecked] = useState(false);
     const [isBookmarked, setIsBookmarked] = useState(false);
+    /****DONOT REMOVE ANY PIECE OF CODE****/
 
-    async function pushtosolved() {
-        try {
-            await fetch("http://localhost:4000/solved", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    questionid: questionid1,
-                    difficulty: difficulty,
-                }),
-                credentials: "include",
-            });
-        } catch (error) {
-            console.error("Error marking question as solved:", error);
-        }
-    }
+    const [isChecked, setIsChecked] = useState(false);
+    
+    // async function pushtosolved() {
+    //     try {
+    //         await fetch("http://localhost:4000/solved", {
+    //             method: "POST",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //             },
+    //             body: JSON.stringify({
+    //                 questionid: questionid1,
+    //                 difficulty: difficulty,
+    //             }),
+    //             credentials: "include",
+    //         });
+    //     } catch (error) {
+    //         console.error("Error marking question as solved:", error);
+    //     }
+    // }
 
     async function checkstatus() {
         try {
@@ -119,7 +121,7 @@ function Questionstrip({ questionid1, difficulty, title }) {
         >
             {/* Checkbox and Bookmark */}
             <div className="flex items-center gap-4">
-                <input
+                {/* <input
                     type="checkbox"
                     checked={isChecked}
                     onChange={(e) => {
@@ -129,7 +131,7 @@ function Questionstrip({ questionid1, difficulty, title }) {
                         }
                     }}
                     className="w-6 h-6 cursor-pointer accent-green-500"
-                />
+                /> */}
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill={isBookmarked ? "currentColor" : "none"}

@@ -1,6 +1,6 @@
 import Questionstrip from "./Questionstrip";
 
-function Questionbox({ questions, difficulty, companies, topics }) {
+function Questionbox({ questions }) {
     console.log(questions);
     return (
         <div className="bg-gray-900 p-6 rounded-lg shadow-md text-gray-300 overflow-x-hidden">

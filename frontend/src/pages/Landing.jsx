@@ -11,15 +11,17 @@ function Landing({ allquestions, allcompanies, alltopics }) {
   const [topics, setTopics] = useState([]);
   const [questions, setQuestions] = useState(allquestions);
   const [loading, setLoading] = useState(false);
-  const { isLoggedIn,setloader,userDetails } = useContext(AppContext);
+  const { isLoggedIn,setloader,userDetails,getUserDetail } = useContext(AppContext);
   const [searchInput, setsearchInput] = useState("");
   const [isDifficultyModalOpen, setIsDifficultyModalOpen] = useState(false);
   const [isTopicsModalOpen, setIsTopicsModalOpen] = useState(false);
   const [isCompaniesModalOpen, setIsCompaniesModalOpen] = useState(false);
 
+
   const navigate = useNavigate();
   useEffect(() => {
     isLoggedIn();
+    getUserDetail();
   }, []);
 
   useEffect(() => {
@@ -103,8 +105,8 @@ function Landing({ allquestions, allcompanies, alltopics }) {
     <div className="min-h-screen w-full bg-gray-900 text-gray-100 overflow-x-hidden">
       <div className="px-10 w-full h-20 bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-600 flex gap-x-10 items-center justify-between  shadow-lg">
         <h1 className="text-3xl font-bold text-white">Explore Questions</h1>
-        <img src={userDetails?.userImg} onClick={() => navigate('/profile',{state:{userDetails}})} className="w-10 rounded-full cursor-pointer">
-        </img>
+        {userDetails && <img src={userDetails.userImg} onClick={() => navigate('/profile')} className="w-10 rounded-full cursor-pointer">
+        </img>}
       </div>
 
       <div className="bg-gray-800 py-6 shadow-md">

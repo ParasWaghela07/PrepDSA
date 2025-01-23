@@ -19,7 +19,7 @@ const Modal = ({ isOpen, onClose, title, options, selectedOptions, toggleOption 
       >
         <h2 className="text-2xl font-bold text-teal-400 mb-4">{title}</h2>
         <div className="flex flex-wrap gap-2">
-          {options.map((option) => (
+          {options?.map((option) => (
             <motion.div
               key={option}
               whileHover={{ scale: 1.02 }}

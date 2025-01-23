@@ -34,6 +34,7 @@ export default function AppContextProvider({children}){
   }
 
   async function isAdmin() {
+    setloader(true);
     try {
         const response = await fetch('http://localhost:4000/isadminloggedin', {
             method: 'GET',
@@ -52,6 +53,7 @@ export default function AppContextProvider({children}){
     } catch (e) {
         console.log(e);
     }
+    setloader(false);
 }
 
     async function getUserDetail() {
@@ -74,16 +76,8 @@ export default function AppContextProvider({children}){
       setloader(false);
     }
 
-    useEffect(() => {
-      getUserDetail();
-    }, []);
-
     const value={
-<<<<<<< HEAD
-      email,setEmail,loader,setloader,isLoggedIn,isAdmin,userDetails
-=======
-      email,setEmail,loader,setloader,isLoggedIn,isAdmin,current_topic_array,setcurrent_topic_array
->>>>>>> 0b2eeb11028c28a74b7bb54b49da646f73d3b9e1
+      email,setEmail,loader,setloader,isLoggedIn,isAdmin,userDetails,current_topic_array,setcurrent_topic_array,getUserDetail
     };
 
     return <AppContext.Provider value={value}>

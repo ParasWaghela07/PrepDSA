@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { IoCheckmarkCircleOutline } from "react-icons/io5";
+import { AppContext } from "../context/AppContext";
 
 function Questionstrip({ questionid1, difficulty, title }) {
     const [isBookmarked, setIsBookmarked] = useState(false);
+    const {setloader}=useContext(AppContext);
     /****DONOT REMOVE ANY PIECE OF CODE****/
 
     const [isChecked, setIsChecked] = useState(false);
@@ -26,6 +28,7 @@ function Questionstrip({ questionid1, difficulty, title }) {
     // }
 
     async function checkstatus() {
+        setloader(true);
         try {
             const response = await fetch("http://localhost:4000/checksolvestatus", {
                 method: "POST",
@@ -46,9 +49,11 @@ function Questionstrip({ questionid1, difficulty, title }) {
         } catch (error) {
             console.error("Error fetching solve status:", error);
         }
+        setloader(false);
     }
 
     async function checkbookmarkstatus() {
+        setloader(true);
         try {
             const response = await fetch("http://localhost:4000/checkbookmarkstatus", {
                 method: "POST",
@@ -69,6 +74,7 @@ function Questionstrip({ questionid1, difficulty, title }) {
         } catch (error) {
             console.error("Error fetching bookmark status:", error);
         }
+        setloader(false);
     }
 
     async function pushtobookmark() {
@@ -108,7 +114,7 @@ function Questionstrip({ questionid1, difficulty, title }) {
     function addqstnametoparams() {
         window.location.href = `/question/${questionid1}`;
     }
-    //.log(questionid1);
+    
     useEffect(() => {
         checkstatus();
         checkbookmarkstatus();

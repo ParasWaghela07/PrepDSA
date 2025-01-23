@@ -19,6 +19,7 @@ import Addsheet from './pages/Addsheet';
 import UpdateProfile from './pages/UpdateProfile';
 import ChangePassword from './pages/Changepassword';
 import Sendmail2 from './pages/Sendmail2';
+import Spectopic from './pages/Spectopic';
 
 function App() {
     const [allquestions,setallquestions] = useState([]);
@@ -88,6 +89,7 @@ function App() {
           <Route path="/changeProfile" element={<UpdateProfile/>}/>
           <Route path="/changepassword" element={<ChangePassword/>}/>
           <Route path="*" element={<NotFound />} />
+          <Route path="/topic" element={<Spectopic/>}></Route>
         </Routes>
 
         {loader && <div className="fixed top-0 right-0 left-0  flex justify-center items-center h-full bg-black bg-opacity-50 z-50"><Loader/></div>}

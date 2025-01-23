@@ -108,7 +108,7 @@ function Questionstrip({ questionid1, difficulty, title }) {
     function addqstnametoparams() {
         window.location.href = `/question/${questionid1}`;
     }
-
+    //.log(questionid1);
     useEffect(() => {
         checkstatus();
         checkbookmarkstatus();

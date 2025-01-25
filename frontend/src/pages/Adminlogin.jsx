@@ -13,6 +13,16 @@ function AdminLogin() {
   const [eye1, setEye1] = useState(true);
   const [eye2, setEye2] = useState(true);
 
+  function setTokenWithExpiry(token, ttl,role) {
+    const now = new Date();
+    const item = {
+      token: token,
+      expiry: now.getTime() + ttl,
+      role:role
+    };
+    localStorage.setItem("token", JSON.stringify(item));
+  }
+
   const submit = async (e) => {
     e.preventDefault();
     setloader(true);
@@ -33,6 +43,7 @@ function AdminLogin() {
       if (res.success) {
         toast.success(res.message);
         navigate("/adminpanel", { state: { id: email } });
+        setTokenWithExpiry(res.token, 3 * 24 * 60 * 60 * 1000,"admin");
       } else {
         toast.error(res.message);
       }

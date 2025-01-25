@@ -9,7 +9,7 @@ const UpdateProfile = () => {
   const [message, setMessage] = useState("");
   const [preview, setPreview] = useState("");
   const fileInputRef = useRef(null);
-  const { loader, setloader ,isLoggedIn} = useContext(AppContext);
+  const { loader, setloader} = useContext(AppContext);
 
   const handleImageChange = (file) => {
     if (file) {
@@ -61,6 +61,7 @@ const UpdateProfile = () => {
       console.log(data);
       if (data.success) {
         setMessage("Profile updated successfully!");
+        localStorage.setItem("user", JSON.stringify(data.user));
       } else {
         setMessage(data.message || "Failed to update profile.");
       }
@@ -71,9 +72,6 @@ const UpdateProfile = () => {
     }
   };
 
-  useEffect(() => {
-    isLoggedIn();
-  },[]);
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-r from-gray-900 to-gray-800 text-gray-100 p-8 flex justify-center items-center">

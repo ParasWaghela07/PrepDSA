@@ -12,6 +12,16 @@ function Login() {
   const [password, setPassword] = useState("");
   const [eye, setEye] = useState(true);
 
+  function setTokenWithExpiry(token, ttl,role) {
+    const now = new Date();
+    const item = {
+      token: token,
+      expiry: now.getTime() + ttl,
+      role:role
+    };
+    localStorage.setItem("token", JSON.stringify(item));
+  }
+
   const submit = async (e) => {
     e.preventDefault();
     setloader(true);
@@ -30,7 +40,9 @@ function Login() {
       const res = await response.json();
       if (res.success) {
         toast.success(res.message);
-        navigate("/landing", { state: { id: email } });
+        navigate("/landing");
+        setTokenWithExpiry(res.token, 3 * 24 * 60 * 60 * 1000,"user");
+        localStorage.setItem("user", JSON.stringify(res.user));
       } else {
         toast.error(res.message);
       }

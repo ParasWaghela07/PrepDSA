@@ -5,7 +5,7 @@ function SolvedQuestions({ questions }) {
       <div className="space-y-6" >
         <h2 className="text-2xl font-bold text-teal-400">Solved Questions</h2>
         <div className="grid gap-6">
-          {questions.map((question, index) => (
+          {questions?.map((question, index) => (
             <div key={index} className="bg-gray-700 flex justify-between items-center p-6 rounded-lg shadow-lg cursor-pointer"
             onClick={()=>{ window.location.href = `/question/${question._id}`;}}>
               <h3 className="text-xl font-semibold text-white">{question.question_title}</h3>

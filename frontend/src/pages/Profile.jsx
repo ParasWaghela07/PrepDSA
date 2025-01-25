@@ -10,7 +10,7 @@ import { FaEdit } from "react-icons/fa";
 
 function Profile() {
 
-  const { isLoggedIn,userDetails } = useContext(AppContext);
+  const userDetails=JSON.parse(localStorage.getItem('user'));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tab,settab]=useState(true);
   const navigate = useNavigate();
@@ -26,6 +26,7 @@ function Profile() {
       });
       const res = await response.json();
       if (res.success) {
+        localStorage.clear();
         window.location.href = '/';
       }
     } catch (e) {
@@ -33,11 +34,6 @@ function Profile() {
     }
   };
 
-
-
-  useEffect(() => {
-    isLoggedIn();
-  }, []);
 
   if (!userDetails) {
     return <div>Loading...</div>;

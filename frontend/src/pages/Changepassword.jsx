@@ -42,6 +42,7 @@ export const ChangePassword = () => {
       const data = await response.json();
       if (data.success) {
         setMessage("Password changed successfully!");
+        localStorage.setItem("user", JSON.stringify(data.user));
         toast.success(data.message);
         navigate('/profile');
       } else {

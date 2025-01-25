@@ -9,10 +9,8 @@ function Addsheet({ allquestions, allcompanies, alltopics}){
   const [topics, setTopics] = useState([]);
   const [questions, setQuestions] = useState(allquestions);
   const [loading, setLoading] = useState(false);
-  const { isLoggedIn } = useContext(AppContext);
 
   useEffect(() => {
-    isLoggedIn();
     setQuestions(allquestions);
   }, [allquestions]);
 

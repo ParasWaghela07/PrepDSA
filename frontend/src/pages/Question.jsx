@@ -50,7 +50,7 @@ const RedirectLinks = ({ links }) => {
 };
 
 function Question() {
-  const { isLoggedIn } = useContext(AppContext);
+
   const { loader, setloader } = useContext(AppContext);
   const qstid = useParams();
   const [question, setquestion] = useState({});
@@ -59,7 +59,7 @@ function Question() {
 
   async function pushtosolved() {
     try {
-        await fetch("http://localhost:4000/solved", {
+        const response=await fetch("http://localhost:4000/solved", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -70,6 +70,8 @@ function Question() {
             }),
             credentials: "include",
         });
+        const res=await response.json();
+        if(res.success) localStorage.setItem("user", JSON.stringify(res.user));
         setIsChecked(true);
     } catch (error) {
         console.error("Error marking question as solved:", error);
@@ -126,7 +128,6 @@ async function checkstatus() {
   }
 
   useEffect(() => {
-    isLoggedIn();
     getqstdetail();
     checkstatus();
   }, []);

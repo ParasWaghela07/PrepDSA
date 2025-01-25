@@ -20,6 +20,10 @@ import UpdateProfile from './pages/UpdateProfile';
 import ChangePassword from './pages/Changepassword';
 import Sendmail2 from './pages/Sendmail2';
 import Spectopic from './pages/Spectopic';
+import PrivateRoute from './components/PrivateRoute';
+import OpenRoute from './components/OpenRoute';
+import ProtectedRoute from './components/ProtectedRoute';
+
 
 function App() {
     const [allquestions,setallquestions] = useState([]);
@@ -75,21 +79,21 @@ function App() {
         <Routes>
           <Route path="/login"   element={<Login/>}/>
           <Route path="/signup"  element={<Signup/>}/>
-          <Route path="/landing" element= {<Landing allquestions={allquestions} allcompanies={allcompanies} alltopics={alltopics}/>}/>
-          <Route path="/profile" element={<Profile/>}/>
-          <Route path="/Question/:qstid" element={<Question/>}/>
+          <Route path="/landing" element={<PrivateRoute><Landing allquestions={allquestions} allcompanies={allcompanies} alltopics={alltopics}/></PrivateRoute>}/>
+          <Route path="/profile" element={<PrivateRoute><Profile/></PrivateRoute>}/>
+          <Route path="/Question/:qstid" element={<PrivateRoute><Question/></PrivateRoute>}/>
           <Route path="/adminlogin" element={<Adminlogin/>}/>
-          <Route path="/adminpanel" element={<Adminpanel/>}/>
-          <Route path="/addquestion" element={<Addquestion allcompanies={allcompanies} allquestions={allquestions} alltopics={alltopics}/>}/>
-          <Route path="/" element={<HomePage/>}/>
+          <Route path="/adminpanel" element={<ProtectedRoute><Adminpanel/></ProtectedRoute>}/>
+          <Route path="/addquestion" element={<ProtectedRoute><Addquestion allcompanies={allcompanies} allquestions={allquestions} alltopics={alltopics}/></ProtectedRoute>}/>
+          <Route path="/" element={<OpenRoute><HomePage/></OpenRoute>}/>
           <Route path="/sendmail" element={<Sendmail/>}/>
-          <Route path="/sendmail2" element={<Sendmail2/>}/>
+          <Route path="/sendmail2" element={<PrivateRoute><Sendmail2/></PrivateRoute>}/>
           <Route path="/update-password/:token" element={<UpdatePassword/>}/>
-          <Route path="/addsheet" element={<Addsheet allquestions={allquestions} allcompanies={allcompanies} alltopics={alltopics} />}/>
-          <Route path="/changeProfile" element={<UpdateProfile/>}/>
-          <Route path="/changepassword" element={<ChangePassword/>}/>
+          <Route path="/addsheet" element={<ProtectedRoute><Addsheet allquestions={allquestions} allcompanies={allcompanies} alltopics={alltopics} /></ProtectedRoute>}/>
+          <Route path="/changeProfile" element={<PrivateRoute><UpdateProfile/></PrivateRoute>}/>
+          <Route path="/changepassword" element={<PrivateRoute><ChangePassword/></PrivateRoute>}/>
           <Route path="*" element={<NotFound />} />
-          <Route path="/topic" element={<Spectopic/>}></Route>
+          <Route path="/topic" element={<PrivateRoute><Spectopic/></PrivateRoute>}></Route>
         </Routes>
 
         {loader && <div className="fixed top-0 right-0 left-0  flex justify-center items-center h-full bg-black bg-opacity-50 z-50"><Loader/></div>}

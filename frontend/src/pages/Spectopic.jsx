@@ -5,20 +5,16 @@ import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
 
 function Spectopic() {
+  const current_topic_array = JSON.parse(localStorage.getItem("currqsts"));
   const [difficulty, setDifficulty] = useState([]);
-  const {current_topic_array,setcurrent_topic_array}=useContext(AppContext);
   const [loading, setLoading] = useState(false);
-  const { isLoggedIn } = useContext(AppContext);
   const [searchInput, setsearchInput] = useState("");
   const [isDifficultyModalOpen, setIsDifficultyModalOpen] = useState(false);
   const [questions, setQuestions] = useState(current_topic_array);
 
-  const navigate = useNavigate();
+  
 
-  useEffect(() => {
-    isLoggedIn();
-    setQuestions(current_topic_array);
-  }, []);
+  const navigate = useNavigate();
 
   const toggleSelection = (arr, setArray, value) => {
     setArray((prev) =>

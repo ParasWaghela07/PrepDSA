@@ -28,7 +28,7 @@ function Questionstrip({ questionid1, difficulty, title }) {
     // }
 
     async function checkstatus() {
-        setloader(true);
+        // setloader(true);
         try {
             const response = await fetch("http://localhost:4000/checksolvestatus", {
                 method: "POST",
@@ -49,11 +49,11 @@ function Questionstrip({ questionid1, difficulty, title }) {
         } catch (error) {
             console.error("Error fetching solve status:", error);
         }
-        setloader(false);
+        // setloader(false);
     }
 
     async function checkbookmarkstatus() {
-        setloader(true);
+        // setloader(true);
         try {
             const response = await fetch("http://localhost:4000/checkbookmarkstatus", {
                 method: "POST",
@@ -74,12 +74,12 @@ function Questionstrip({ questionid1, difficulty, title }) {
         } catch (error) {
             console.error("Error fetching bookmark status:", error);
         }
-        setloader(false);
+        // setloader(false);
     }
 
     async function pushtobookmark() {
         try {
-            await fetch("http://localhost:4000/bookmark", {
+            const response=await fetch("http://localhost:4000/bookmark", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -89,6 +89,9 @@ function Questionstrip({ questionid1, difficulty, title }) {
                 }),
                 credentials: "include",
             });
+            const res=await response.json();
+            console.log(res);
+            if(res.success) localStorage.setItem("user", JSON.stringify(res.user)),console.log("krdia");
         } catch (error) {
             console.error("Error bookmarking question:", error);
         }
@@ -96,7 +99,7 @@ function Questionstrip({ questionid1, difficulty, title }) {
 
     async function popfrombookmark() {
         try {
-            await fetch("http://localhost:4000/popfrombookmark", {
+            const response=await fetch("http://localhost:4000/popfrombookmark", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -106,6 +109,9 @@ function Questionstrip({ questionid1, difficulty, title }) {
                 }),
                 credentials: "include",
             });
+            const res=await response.json();
+            console.log(res);
+            if(res.success) localStorage.setItem("user", JSON.stringify(res.user)),console.log("krdia");
         } catch (error) {
             console.error("Error removing bookmark:", error);
         }

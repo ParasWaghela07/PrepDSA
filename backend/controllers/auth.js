@@ -152,7 +152,7 @@ exports.login = async (req, res) => {
     }
   
   
-      const user = await User.findOne({ email });
+      const user = await User.findOne({ email }).populate('solved_question_ids').populate('bookmarkedquestions');
       if(!user){
           return res.status(404).json({
               success:false,
@@ -174,9 +174,17 @@ exports.login = async (req, res) => {
             expires:new Date(Date.now()+3*24*60*60*1000),
             httpOnly:true,
         }
+
+        const safeuser = await User.findOne({ email })
+        .select('-password -resetToken -resetTokenExpiration') // Exclude these fields
+        .populate('solved_question_ids')
+        .populate('bookmarkedquestions');
+
         return res.cookie('token',token,options).status(200).json({
             success:true,
-            message:"Login Successful"
+            message:"Login Successful",
+            token:token,
+            user:safeuser
         })
     }
     else{
@@ -241,6 +249,7 @@ exports.adminlogin = async (req, res) => {
         .json({
           success: true,
           message: "Login successful",
+          token: token,
         });
     } else {
       return res.status(400).json({

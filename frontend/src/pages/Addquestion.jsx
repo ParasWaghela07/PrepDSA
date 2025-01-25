@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
-import { useContext } from "react";
-import { AppContext } from "../context/AppContext";
+
 
 function Addquestion({ allcompanies, alltopics }) {
-    const {isAdmin}=useContext(AppContext); 
 
     const pushtodatabse = async () => {
         console.log("Redirect Links:", redirectLinks);
@@ -54,10 +52,6 @@ function Addquestion({ allcompanies, alltopics }) {
             prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value]
         );
     };
-
-    useEffect(() => {
-        isAdmin();
-    }, []);
 
     // State variables
     const [question_title, setquestion_title] = useState("");

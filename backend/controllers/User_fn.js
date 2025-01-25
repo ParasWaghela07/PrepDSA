@@ -25,7 +25,8 @@ exports.bookmark = async (req, res) => {
       userId,
       { $addToSet: { bookmarkedquestions: questionid } }, 
       { new: true } 
-    );
+    ).populate('solved_question_ids')
+    .populate('bookmarkedquestions');;
 
     if (!updatedUser) {
       return res.status(404).json({
@@ -38,6 +39,7 @@ exports.bookmark = async (req, res) => {
       success: true,
       message: "Question bookmarked successfully.",
       data: updatedUser.bookmarkedquestions, 
+      user:updatedUser
     });
   } catch (error) {
     console.error("Error in bookmarking question:", error);
@@ -63,7 +65,8 @@ exports.popfrombookmark = async (req, res) => {
       userId,
       { $pull: { bookmarkedquestions: questionid } }, 
       { new: true } 
-    );
+    ).populate('solved_question_ids')
+    .populate('bookmarkedquestions');;
 
     if (!updatedUser) {
       return res.status(404).json({
@@ -76,6 +79,7 @@ exports.popfrombookmark = async (req, res) => {
       success: true,
       message: "Question removed from bookmarks successfully.",
       data: updatedUser.bookmarkedquestions, 
+      user:updatedUser
     });
   } catch (error) {
     console.error("Error in removing bookmark:", error);
@@ -104,7 +108,8 @@ exports.solved = async (req, res) => {
         userId,
         { $addToSet: { solved_question_ids: questionid } }, 
         { new: true } 
-      );
+      ).populate('solved_question_ids')
+      .populate('bookmarkedquestions');;
 
       if(difficulty==1){
         await User.findByIdAndUpdate(userId,{$inc:{easy_question_count:1}});
@@ -127,6 +132,7 @@ exports.solved = async (req, res) => {
         success: true,
         message: "Question solved successfully.",
         data: updatedUser.solved_question_ids, 
+        user:updatedUser
       });
     } catch (error) {
       console.error("Error in solving question:", error);
@@ -328,13 +334,16 @@ exports.changeProfile = async (req, res) => {
       updateData.username = username;
     }
 
+  
     if (Object.keys(updateData).length > 0) {
       await User.updateOne({ _id: userId }, { $set: updateData });
     }
 
+    const updatedUser=await User.findById(userId).populate('solved_question_ids').populate('bookmarkedquestions');
     return res.status(200).json({
       success: true,
       message: 'Profile changed successfully.',
+      user: updatedUser
     });
   } catch (error) {
     console.error('Error in changing profile:', error);
@@ -377,11 +386,13 @@ exports.changepassword=async(req,res)=>{
       });
     }
 
-    await User.findByIdAndUpdate(userId,{$set:{password:hashedPassword}});
+    const updatedUser=await User.findByIdAndUpdate(userId,{$set:{password:hashedPassword}},{new:true}).populate('solved_question_ids')
+    .populate('bookmarkedquestions');;
 
     return res.status(200).json({
       success:true,
-      message:"Password changed successfully."
+      message:"Password changed successfully.",
+      user:updatedUser
     })
   }
   catch(error){

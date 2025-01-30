@@ -5,6 +5,7 @@ import { Companies } from "../components/Companies";
 import { Solutions } from "../components/Solutions";
 import { Complexities } from "../components/Complexities";
 import { Topics } from "../components/Topics";
+import { ConfirmationModal } from "../components/ConfirmationModal";
 
 const platformLogos = {
   leetcode: "https://upload.wikimedia.org/wikipedia/commons/1/19/LeetCode_logo_black.png",
@@ -20,6 +21,7 @@ const getPlatformDetails = (url) => {
   if (url.includes("codechef.com")) return { name: "CodeChef", logo: platformLogos.codechef };
   return { name: "Unknown", logo: null };
 };
+
 
 const RedirectLinks = ({ links }) => {
   return (
@@ -55,7 +57,7 @@ function Question() {
   const qstid = useParams();
   const [question, setquestion] = useState({});
   const [isChecked, setIsChecked] = useState(false);
-  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [modal, setModal] = useState(false);
 
   async function pushtosolved() {
     try {
@@ -76,6 +78,11 @@ function Question() {
     } catch (error) {
         console.error("Error marking question as solved:", error);
     }
+    setModal(false);
+}
+
+function cancel(){
+  setModal(false);
 }
 
 async function checkstatus() {
@@ -143,7 +150,7 @@ async function checkstatus() {
             <div className="flex">
             <h1 className="text-3xl font-bold mb-4">{question.question_title}</h1>
             <div>
-              <button onClick={pushtosolved} className=" flex p-2 m-2 items-center bg-blue-600">
+              <button onClick={()=>{if(!isChecked) setModal(true)}} className=" flex p-2 m-2 items-center bg-blue-600">
                 {isChecked?"solved":"solve"}
               </button>
             </div>
@@ -173,6 +180,13 @@ async function checkstatus() {
         <h2 className="text-2xl font-bold mb-4">Redirect Links</h2>
         <RedirectLinks links={question.redirectLinks || []} />
       </div>
+            {modal && <ConfirmationModal
+            title="Are you sure?"
+            desc="Once marked, you won't be able to undo this action. Make sure you're certain!"
+            btn2="Cancel"
+            btn1="Confirm Solve"
+            btn2fn={cancel}
+            btn1fn={pushtosolved}/>}
     </div>
   );
 }

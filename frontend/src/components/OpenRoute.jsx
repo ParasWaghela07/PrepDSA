@@ -10,7 +10,7 @@ const OpenRoute = ({children}) => {
     if(!token)
         return children
     else if(token.role === "user")
-        return <Navigate to="/landing" />
+        return <Navigate to="/profile" />
     else 
         return <Navigate to="/adminpanel" />
 

@@ -8,6 +8,7 @@ import BookmarkedQuestions from "../components/BookmarkedQuestions";
 import { useNavigate,useLocation } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 
+
 function Profile() {
 
   const userDetails=JSON.parse(localStorage.getItem('user'));
@@ -15,24 +16,6 @@ function Profile() {
   const [tab,settab]=useState(true);
   const navigate = useNavigate();
 
-  const logout = async () => {
-    try {
-      const response = await fetch('http://localhost:4000/logout', {
-        method: 'GET',
-        headers: {
-          "Content-Type": "application/json"
-        },
-        credentials: "include"
-      });
-      const res = await response.json();
-      if (res.success) {
-        localStorage.clear();
-        window.location.href = '/';
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
 
 
   if (!userDetails) {
@@ -40,6 +23,7 @@ function Profile() {
   }
 
   const { userImg } = userDetails;
+
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-gray-900 to-gray-800 text-gray-100 p-8">
@@ -62,24 +46,6 @@ function Profile() {
         transition={{ duration: 1 }}
         className="max-w-6xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg space-y-8"
       >
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-teal-400">User Profile</h1>
-          <div className="flex gap-x-8">
-            <h1 
-              className="text-2xl font-bold text-teal-400 hover:text-teal-300 w-fit py-1 px-2 rounded-md cursor-pointer"
-              onClick={() => navigate('/changepassword')}
-            >
-              Change password
-            </h1>
-
-            <h1 
-              className="text-2xl font-bold text-teal-400 hover:text-teal-300 w-fit py-1 px-2 rounded-md cursor-pointer"
-              onClick={logout}
-            >
-              Log out
-            </h1>
-          </div>
-        </div>
         <div className="flex items-center justify-between space-x-4">
 
           <div>

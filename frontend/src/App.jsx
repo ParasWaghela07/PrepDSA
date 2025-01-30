@@ -23,6 +23,7 @@ import Spectopic from './pages/Spectopic';
 import PrivateRoute from './components/PrivateRoute';
 import OpenRoute from './components/OpenRoute';
 import ProtectedRoute from './components/ProtectedRoute';
+import { Sidebar } from './components/Sidebar';
 
 
 function App() {
@@ -66,6 +67,8 @@ function App() {
         console.error("Error fetching topics:", error);
       }
     }
+
+    const token=JSON.parse(localStorage.getItem('token'));
   
 
   useEffect(() => {
@@ -75,7 +78,9 @@ function App() {
   },[]);
 
   return (
-    <div className="w-screen h-screen">
+    <div className="w-screen h-screen flex">
+        {token && <Sidebar/>}
+        <div className='w-full h-full overflow-y-auto'>
         <Routes>
           <Route path="/login"   element={<Login/>}/>
           <Route path="/signup"  element={<Signup/>}/>
@@ -95,6 +100,7 @@ function App() {
           <Route path="*" element={<NotFound />} />
           <Route path="/topic" element={<PrivateRoute><Spectopic/></PrivateRoute>}></Route>
         </Routes>
+        </div>
 
         {loader && <div className="fixed top-0 right-0 left-0  flex justify-center items-center h-full bg-black bg-opacity-50 z-50"><Loader/></div>}
     </div>

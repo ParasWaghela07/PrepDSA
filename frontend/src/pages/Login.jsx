@@ -40,7 +40,7 @@ function Login() {
       const res = await response.json();
       if (res.success) {
         toast.success(res.message);
-        navigate("/landing");
+        navigate("/profile");
         setTokenWithExpiry(res.token, 3 * 24 * 60 * 60 * 1000,"user");
         localStorage.setItem("user", JSON.stringify(res.user));
       } else {

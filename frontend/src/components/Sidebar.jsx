@@ -3,19 +3,22 @@ import { useNavigate } from 'react-router-dom'
 import { useState } from 'react';
 import { ConfirmationModal } from "../components/ConfirmationModal";
 import { useLocation } from 'react-router-dom';
+import { MdLogout } from "react-icons/md";
+import { FaUser, FaCode, FaCalculator, FaMicrochip, FaComments } from "react-icons/fa";
 
 export const Sidebar = () => {
-    const tabs=[
-        {"name":"Profile","path":"/profile"},
-        {"name":"DSA","path":"/landing"},
-        {"name":"Aptitude","path":"/aptitude"},
-        {"name":"Technical Questions","path":"/technical"},
-        {"name":"Mock Interview","path":"/mockinterview"}
-    ]
+  const tabs = [
+    { name: "Profile", path: "/profile", icon: <FaUser /> },
+    { name: "DSA", path: "/landing", icon: <FaCode /> },
+    { name: "Aptitude", path: "/aptitude", icon: <FaCalculator /> },
+    { name: "Technical Questions", path: "/technical", icon: <FaMicrochip /> },
+    { name: "Mock Interview", path: "/mockinterview", icon: <FaComments /> }
+  ];
     const navigate=useNavigate();
     const [modal, setModal] = useState(false);
     const location=useLocation();
     const path=location.pathname;
+    const userimg=JSON.parse(localStorage.getItem('user')).userImg;
 
     const logout = async () => {
         try {
@@ -39,42 +42,48 @@ export const Sidebar = () => {
         setModal(false);
       }
   return (
-    <div className='hidden sm:flex z-10 w-[13%] flex-col justify-between items-center h-full bg-gray-700 py-5 px-2 border-r-2 border-gray-500
+    <div className='hidden sm:flex z-10 w-[13%] flex-col justify-between items-center h-full bg-gray-700 py-5 border-r-2 border-gray-500
 '>
         <div className='font-bold text-2xl text-teal-500'>
             Dashboard
         </div>
-        <div className='flex flex-col justify-between items-center h-full bg-gray-700 py-5'>
+        <div className='w-full flex flex-col justify-between items-center h-full bg-gray-700 py-5'>
         <div className='w-full flex flex-col gap-y-3 text-md font-semibold text-teal-200'>
             
             {tabs.map((tab,index)=>{
                 return(
                     <div 
                         key={index}
-                        className={`className='w-full cursor-pointer p-2 transition duration-200 rounded-md ${path===tab.path?'border-l-2 rounded-none text-gray-50':''} ${path!==tab.path?'hover:bg-gray-600':''}`}
+                        className={`className='w-full cursor-pointer p-2 transition duration-200 ${path===tab.path?'border-l-2  text-gray-50 bg-gray-50/[0.1]':''} ${path!==tab.path?'hover:bg-gray-600':''}`}
                         onClick={()=>navigate(tab.path)}
                     >
+                        <div className='flex gap-x-2 items-center'>
+                          {tab.name=="Profile" ? (<img src={userimg} alt="" className='w-5 rounded-full' />)
+                          :(tab.icon)}
                         {tab.name}
+                        </div>
                     </div>
                 )
             })}
         </div>
 
         
-        <div className="flex flex-col text-teal-300 font-semibold">
-            <h1 
+        <div className="flex flex-col text-teal-300 font-semibold justify-center items-start">
+            <p 
               className="hover:text-teal-100 cursor-pointer text-md"
               onClick={() => navigate('/changepassword')}
             >
               Change password
-            </h1>
+            </p>
 
-            <h1 
-              className="hover:text-teal-100 cursor-pointer text-md"
-              onClick={()=>{setModal(true)}}
+            <div className='hover:text-white cursor-pointer  flex px-1 py-2 items-center gap-x-2  text-center' onClick={()=>{setModal(true)}}>
+            <MdLogout className=''/>
+            <p
+              className="text-center text-md"
             >
               Log out
-            </h1>
+            </p>
+            </div>
         </div>
 
         {modal && <ConfirmationModal

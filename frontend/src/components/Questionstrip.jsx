@@ -8,7 +8,7 @@ function Questionstrip({ questionid1, difficulty, title }) {
     const navigate=useNavigate();
     const {user,setuser,setloader}=useContext(AppContext);
     const [isChecked, setIsChecked] = useState(false);
-
+    const [fresh,setfresh]=useState(false);
     function checkstatus(){
         const user_solved_qsts=user.solved_question_ids;
         for(let i=0;i<user_solved_qsts?.length;i++){
@@ -16,6 +16,7 @@ function Questionstrip({ questionid1, difficulty, title }) {
                 setIsChecked(true);
                 break;
             }
+            setIsBookmarked(false);
         }
     }
 
@@ -76,7 +77,7 @@ function Questionstrip({ questionid1, difficulty, title }) {
     useEffect(() => {
         checkstatus();
         checkbookmarkstatus();
-    }, [user]);
+    }, [user,questionid1]);
 
     return (
         <div className="flex items-center gap-x-2 w-full">

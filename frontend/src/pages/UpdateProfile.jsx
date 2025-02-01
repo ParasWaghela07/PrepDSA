@@ -1,7 +1,7 @@
 import React, { useState, useRef, useContext, useEffect } from "react";
 import { motion } from "framer-motion";
 import { AppContext } from "../context/AppContext";
-
+import { useNavigate } from 'react-router-dom';
 const UpdateProfile = () => {
   const [image, setImage] = useState(null);
   const [name, setName] = useState("");
@@ -10,7 +10,7 @@ const UpdateProfile = () => {
   const [preview, setPreview] = useState("");
   const fileInputRef = useRef(null);
   const { loader, setloader} = useContext(AppContext);
-
+   const navigate = useNavigate();
   const handleImageChange = (file) => {
     if (file) {
       setImage(file);
@@ -62,6 +62,7 @@ const UpdateProfile = () => {
       if (data.success) {
         setMessage("Profile updated successfully!");
         localStorage.setItem("user", JSON.stringify(data.user));
+        navigate('/profile')
       } else {
         setMessage(data.message || "Failed to update profile.");
       }
@@ -135,6 +136,7 @@ const UpdateProfile = () => {
               type="submit"
               disabled={loader}
               className="bg-teal-400 text-gray-900 px-6 py-3 rounded-lg text-lg font-semibold shadow-lg"
+              
             >
               {loader ? "Uploading..." : "Update"}
             </motion.button>

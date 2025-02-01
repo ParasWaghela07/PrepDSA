@@ -85,15 +85,14 @@ function cancel(){
   setModal(false);
 }
 
-function checkstatus(qst){
+function checkstatus(){
   const user_solved_qsts=user.solved_question_ids;
   for(let i=0;i<user_solved_qsts?.length;i++){
-      if(user_solved_qsts[i]._id==qst._id){
+      if(user_solved_qsts[i]._id==question._id){
           setIsChecked(true);
           break;
       }
   }
-  setloader(false);
 }
 
   async function getqstdetail() {
@@ -113,16 +112,20 @@ function checkstatus(qst){
       const data = await response.json();
       if (data.success) {
         setquestion(data.data);
-        checkstatus(data.data);
       }
     } catch (error) {
       console.error("Error fetching question:", error);
     }
+    setloader(false);
   }
 
   useEffect(() => {
     getqstdetail();
-  },[user]);
+  },[]);
+
+  useEffect(()=>{
+    checkstatus();
+  },[user,question])
 
   return (
     <div className="flex flex-col lg:flex-row h-screen bg-gray-900 text-white">

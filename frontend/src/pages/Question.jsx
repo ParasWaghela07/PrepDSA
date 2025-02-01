@@ -53,7 +53,7 @@ const RedirectLinks = ({ links }) => {
 
 function Question() {
 
-  const { loader, setloader } = useContext(AppContext);
+  const { loader, setloader,user,setuser } = useContext(AppContext);
   const qstid = useParams();
   const [question, setquestion] = useState({});
   const [isChecked, setIsChecked] = useState(false);
@@ -73,8 +73,8 @@ function Question() {
             credentials: "include",
         });
         const res=await response.json();
-        if(res.success) localStorage.setItem("user", JSON.stringify(res.user));
-        setIsChecked(true);
+        if(res.success) setuser(res.user),setIsChecked(true);
+
     } catch (error) {
         console.error("Error marking question as solved:", error);
     }
@@ -85,28 +85,14 @@ function cancel(){
   setModal(false);
 }
 
-async function checkstatus() {
-    try {
-        const response = await fetch("http://localhost:4000/checksolvestatus", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                questionid: qstid.qstid,
-            }),
-            credentials: "include",
-        });
-
-        const responseData = await response.json();
-
-        if (responseData.data) {
-            setIsChecked(true);
-            
-        }
-    } catch (error) {
-        console.error("Error fetching solve status:", error);
-    }
+function checkstatus(){
+  const user_solved_qsts=user.solved_question_ids;
+  for(let i=0;i<user_solved_qsts?.length;i++){
+      if(user_solved_qsts[i]._id===questionid1){
+          setIsChecked(true);
+          break;
+      }
+  }
 }
 
   async function getqstdetail() {

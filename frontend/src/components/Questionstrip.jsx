@@ -1,80 +1,32 @@
 import { useContext, useEffect, useState } from "react";
 import { IoCheckmarkCircleOutline } from "react-icons/io5";
 import { AppContext } from "../context/AppContext";
+import { useNavigate } from "react-router-dom";
 
 function Questionstrip({ questionid1, difficulty, title }) {
     const [isBookmarked, setIsBookmarked] = useState(false);
-    const {setloader}=useContext(AppContext);
-    /****DONOT REMOVE ANY PIECE OF CODE****/
-
+    const navigate=useNavigate();
+    const {user,setuser,setloader}=useContext(AppContext);
     const [isChecked, setIsChecked] = useState(false);
-    
-    // async function pushtosolved() {
-    //     try {
-    //         await fetch("http://localhost:4000/solved", {
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //             },
-    //             body: JSON.stringify({
-    //                 questionid: questionid1,
-    //                 difficulty: difficulty,
-    //             }),
-    //             credentials: "include",
-    //         });
-    //     } catch (error) {
-    //         console.error("Error marking question as solved:", error);
-    //     }
-    // }
 
-    async function checkstatus() {
-        // setloader(true);
-        try {
-            const response = await fetch("http://localhost:4000/checksolvestatus", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    questionid: questionid1,
-                }),
-                credentials: "include",
-            });
-
-            const responseData = await response.json();
-
-            if (responseData.data) {
+    function checkstatus(){
+        const user_solved_qsts=user.solved_question_ids;
+        for(let i=0;i<user_solved_qsts?.length;i++){
+            if(user_solved_qsts[i]._id===questionid1){
                 setIsChecked(true);
+                break;
             }
-        } catch (error) {
-            console.error("Error fetching solve status:", error);
         }
-        // setloader(false);
     }
 
-    async function checkbookmarkstatus() {
-        // setloader(true);
-        try {
-            const response = await fetch("http://localhost:4000/checkbookmarkstatus", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    questionid: questionid1,
-                }),
-                credentials: "include",
-            });
-
-            const responseData = await response.json();
-
-            if (responseData.data) {
+    function checkbookmarkstatus() {
+        const user_bookmarked_qsts=user.bookmarkedquestions;
+        for(let i=0;i<user_bookmarked_qsts?.length;i++){
+            if(user_bookmarked_qsts[i]._id===questionid1){
                 setIsBookmarked(true);
+                break;
             }
-        } catch (error) {
-            console.error("Error fetching bookmark status:", error);
         }
-        // setloader(false);
     }
 
     async function pushtobookmark() {
@@ -91,7 +43,7 @@ function Questionstrip({ questionid1, difficulty, title }) {
             });
             const res=await response.json();
             console.log(res);
-            if(res.success) localStorage.setItem("user", JSON.stringify(res.user)),console.log("krdia");
+            if(res.success) setuser(res.user);
         } catch (error) {
             console.error("Error bookmarking question:", error);
         }
@@ -111,20 +63,20 @@ function Questionstrip({ questionid1, difficulty, title }) {
             });
             const res=await response.json();
             console.log(res);
-            if(res.success) localStorage.setItem("user", JSON.stringify(res.user)),console.log("krdia");
+            if(res.success) setuser(res.user);
         } catch (error) {
             console.error("Error removing bookmark:", error);
         }
     }
 
     function addqstnametoparams() {
-        window.location.href = `/question/${questionid1}`;
+        navigate(`/question/${questionid1}`);
     }
     
     useEffect(() => {
         checkstatus();
         checkbookmarkstatus();
-    }, []);
+    }, [user]);
 
     return (
         <div className="flex items-center gap-x-2 w-full">

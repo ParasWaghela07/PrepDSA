@@ -10,8 +10,8 @@ import { FaEdit } from "react-icons/fa";
 
 
 function Profile() {
-
-  const userDetails=JSON.parse(localStorage.getItem('user'));
+  const {user}=useContext(AppContext);
+  const userDetails=user;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tab,settab]=useState(true);
   const navigate = useNavigate();

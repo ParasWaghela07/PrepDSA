@@ -4,14 +4,12 @@ import { AppContext } from '../context/AppContext';
 
 export const Topics = ({topics}) => {
   const navigate=useNavigate();
-  const {current_topic_array,setcurrent_topic_array}=useContext(AppContext);
   
   return (
     <div >
       {topics?.length>0 ?
       topics.map((topic,index)=><span className=' cursor-pointer bg-blue-500 p-2 mr-2 rounded-md w-fit ' onClick={()=>{
-        localStorage.setItem("currqsts", JSON.stringify(topic.question_list));
-        navigate(`/topic`);
+        navigate(`/topic/${topic._id}`);
       }} key={index}>{topic.topic_name} </span>)
     :<p>No topics</p>}
     </div>

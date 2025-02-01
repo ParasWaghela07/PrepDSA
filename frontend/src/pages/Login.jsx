@@ -42,7 +42,7 @@ function Login() {
         toast.success(res.message);
         navigate("/profile");
         setTokenWithExpiry(res.token, 3 * 24 * 60 * 60 * 1000,"user");
-        localStorage.setItem("user", JSON.stringify(res.user));
+        // localStorage.setItem("user", JSON.stringify(res.user));
       } else {
         toast.error(res.message);
       }

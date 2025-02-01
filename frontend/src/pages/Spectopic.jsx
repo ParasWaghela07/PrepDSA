@@ -2,15 +2,49 @@ import { useState, useEffect, useContext } from "react";
 import Modal from "../components/Modal";
 import Questionbox from "../components/Questionbox";
 import { AppContext } from "../context/AppContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 function Spectopic() {
-  const current_topic_array = JSON.parse(localStorage.getItem("currqsts"));
+
+  const topicid=useParams();
+
   const [difficulty, setDifficulty] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchInput, setsearchInput] = useState("");
   const [isDifficultyModalOpen, setIsDifficultyModalOpen] = useState(false);
-  const [questions, setQuestions] = useState(current_topic_array);
+  const [questions, setQuestions] = useState([]);
+  const { setloader } = useContext(AppContext);
+  const [fetchedQuestions, setFetchedQuestions] = useState([]);
+
+  async function gettopicdetail() {
+    setloader(true);
+    try {
+      const response = await fetch("http://localhost:4000/gettopicdetail", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          topicid: topicid.topicid,
+        }),
+        credentials: "include",
+      });
+
+      const data = await response.json();
+      console.log(data)
+      if (data.success) {
+       setFetchedQuestions(data.data.question_list);
+       setQuestions(data.data.question_list);
+      }
+    } catch (error) {
+      console.error("Error fetching question:", error);
+    }
+    setloader(false);
+  }
+
+  useEffect(() => {
+    gettopicdetail();
+  },[])
 
   
 
@@ -26,7 +60,7 @@ function Spectopic() {
 
   function filterQuestions(difficulty, companies) {
     
-    let filteredQuestions = current_topic_array;
+    let filteredQuestions = fetchedQuestions;
 
     for(let i=0;i<difficulty.length;i++){
       difficulty[i]=difficulty[i]==="Easy"?1:difficulty[i]==="Medium"?2:3;
@@ -51,7 +85,7 @@ function Spectopic() {
   }
 
   const searchQuestions = () => {
-    const filteredQuestions = current_topic_array.filter((question) =>
+    const filteredQuestions = fetchedQuestions.filter((question) =>
       question.question_title.toLowerCase().includes(searchInput.toLowerCase())
     );
     setQuestions(filteredQuestions.length === 0 ? [] : filteredQuestions);
@@ -118,6 +152,7 @@ function Spectopic() {
         ) : (
           <Questionbox
             questions={questions}
+            searchInput={searchInput}
           />
         )}
       </div>

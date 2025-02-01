@@ -30,7 +30,7 @@ function App() {
     const [allquestions,setallquestions] = useState([]);
     const [allcompanies,setallcompanies] = useState([]);
     const [alltopics,setalltopics] = useState([]);
-    const {loader}=useContext(AppContext)
+    const {loader,user,setuser}=useContext(AppContext)
 
     async function getallquestions() {
       try{
@@ -68,13 +68,31 @@ function App() {
       }
     }
 
+    async function getUserDetail() {
+      try{
+        const response = await fetch("http://localhost:4000/getuserdetail",{
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+        });
+        const data = await response.json();
+        console.log(data);
+        if(data.data){
+          setuser(data.data);
+        }
+      }
+      catch(error){
+        console.error("Error fetching user:", error);
+      }
+    }
+
     const token=JSON.parse(localStorage.getItem('token'));
   
-
   useEffect(() => {
     getallquestions();
     getallcompanies();
     getalltopics();
+    getUserDetail();
   },[]);
 
   return (
@@ -98,7 +116,7 @@ function App() {
           <Route path="/changeProfile" element={<PrivateRoute><UpdateProfile/></PrivateRoute>}/>
           <Route path="/changepassword" element={<PrivateRoute><ChangePassword/></PrivateRoute>}/>
           <Route path="*" element={<NotFound />} />
-          <Route path="/topic" element={<PrivateRoute><Spectopic/></PrivateRoute>}></Route>
+          <Route path="/topic/:topicid" element={<PrivateRoute><Spectopic/></PrivateRoute>}></Route>
         </Routes>
         </div>
 

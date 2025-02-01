@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react';
 import { ConfirmationModal } from "../components/ConfirmationModal";
 import { useLocation } from 'react-router-dom';
 import { MdLogout } from "react-icons/md";
 import { FaUser, FaCode, FaCalculator, FaMicrochip, FaComments } from "react-icons/fa";
+import { AppContext } from '../context/AppContext';
 
 export const Sidebar = () => {
   const tabs = [
@@ -18,7 +19,8 @@ export const Sidebar = () => {
     const [modal, setModal] = useState(false);
     const location=useLocation();
     const path=location.pathname;
-    const userimg=JSON.parse(localStorage.getItem('user')).userImg;
+    const {user}=useContext(AppContext);
+    const userimg=user.userImg;
 
     const logout = async () => {
         try {

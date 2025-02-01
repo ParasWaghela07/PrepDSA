@@ -436,3 +436,34 @@ exports.getquestiondetail = async (req, res) => {
     });
   }
 };
+
+exports.gettopicdetail = async (req, res) => {
+  try {
+    const { topicid } = req.body;
+   
+    const topic = await Topic.findById(topicid)
+    .populate('question_list');
+    
+    if (!topic) {
+      return res.status(404).json({
+        success: false,
+        message: "Question not found.",
+      });
+    }
+
+    // Return the question details if found
+    return res.status(200).json({
+      success: true,
+      message: "Topic retrieved successfully.",
+      data: topic,
+    });
+
+  } catch (error) {
+    console.error("Error in fetching topic:", error);
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while fetching the topic details. Please try again later.",
+    });
+  }
+};
+

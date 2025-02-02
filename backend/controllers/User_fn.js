@@ -91,57 +91,111 @@ exports.popfrombookmark = async (req, res) => {
 };
 
 
-exports.solved = async (req, res) => {
-    const { questionid ,difficulty} = req.body; 
-    const userId = req.payload.id;  
+// exports.solved = async (req, res) => {
+//     const { questionid ,difficulty} = req.body; 
+//     const userId = req.payload.id;  
   
-    try {
+//     try {
      
-      if (!questionid) {
-        return res.status(400).json({
-          success: false,
-          message: "Question ID is required.",
-        });
-      }
+//       if (!questionid) {
+//         return res.status(400).json({
+//           success: false,
+//           message: "Question ID is required.",
+//         });
+//       }
   
-      const updatedUser = await User.findByIdAndUpdate(
-        userId,
-        { $addToSet: { solved_question_ids: questionid } }, 
-        { new: true } 
-      ).populate('solved_question_ids')
-      .populate('bookmarkedquestions');;
+//       let updatedUser = await User.findByIdAndUpdate(
+//         userId,
+//         { $addToSet: { solved_question_ids: questionid } }, 
+//         { new: true } 
+//       ).populate('solved_question_ids')
+//       .populate('bookmarkedquestions');;
 
-      if(difficulty==1){
-        await User.findByIdAndUpdate(userId,{$inc:{easy_question_count:1}});
-      }
-      else if(difficulty==2){
-        await User.findByIdAndUpdate(userId,{$inc:{medium_question_count:1}});
-      }
-      else{
-        await User.findByIdAndUpdate(userId,{$inc:{hard_question_count:1}});
-      }
+//       if(difficulty==1){
+//         updatedUser=await User.findByIdAndUpdate(userId,{$inc:{easy_question_count:1}},{new:true});
+//       }
+//       else if(difficulty==2){
+//         updatedUser=await User.findByIdAndUpdate(userId,{$inc:{medium_question_count:1}},{new:true});
+//       }
+//       else{
+//         updatedUser=await User.findByIdAndUpdate(userId,{$inc:{hard_question_count:1}},{new:true});
+//       }
   
+//       if (!updatedUser) {
+//         return res.status(404).json({
+//           success: false,
+//           message: "User not found.",
+//         });
+//       }
+//       // console.log(updatedUser);
+//       return res.status(201).json({
+//         success: true,
+//         message: "Question solved successfully.",
+//         data: updatedUser.solved_question_ids, 
+//         user:updatedUser
+//       });
+//     } catch (error) {
+//       console.error("Error in solving question:", error);
+//       return res.status(500).json({
+//         success: false,
+//         message: "An error occurred during solving. Please try again later.",
+//       });
+//     }
+// };
+
+exports.solved = async (req, res) => {
+  const { questionid, difficulty } = req.body;
+  const userId = req.payload.id;
+
+  try {
+      if (!questionid) {
+          return res.status(400).json({
+              success: false,
+              message: "Question ID is required.",
+          });
+      }
+
+      // Define the increment field based on difficulty
+      const incrementField = 
+          difficulty == 1 ? { easy_question_count: 1 } :
+          difficulty == 2 ? { medium_question_count: 1 } :
+          { hard_question_count: 1 };
+
+      // Update solved questions and increment count in one query
+      const updatedUser = await User.findByIdAndUpdate(
+          userId,
+          {
+              $addToSet: { solved_question_ids: questionid },
+              $inc: incrementField
+          },
+          { new: true }
+      )
+      .populate('solved_question_ids')
+      .populate('bookmarkedquestions');
+
       if (!updatedUser) {
-        return res.status(404).json({
-          success: false,
-          message: "User not found.",
-        });
+          return res.status(404).json({
+              success: false,
+              message: "User not found.",
+          });
       }
-  
+
+      // console.log(updatedUser);
       return res.status(201).json({
-        success: true,
-        message: "Question solved successfully.",
-        data: updatedUser.solved_question_ids, 
-        user:updatedUser
+          success: true,
+          message: "Question solved successfully.",
+          data: updatedUser.solved_question_ids,
+          user: updatedUser
       });
-    } catch (error) {
+  } catch (error) {
       console.error("Error in solving question:", error);
       return res.status(500).json({
-        success: false,
-        message: "An error occurred during solving. Please try again later.",
+          success: false,
+          message: "An error occurred during solving. Please try again later.",
       });
-    }
+  }
 };
+
 exports.checksolvestatus=async(req,res)=>{
   const { questionid } = req.body;
 

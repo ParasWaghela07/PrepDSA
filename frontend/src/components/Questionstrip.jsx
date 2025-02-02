@@ -24,6 +24,7 @@ function Questionstrip({ questionid1, difficulty, title }) {
 
     function checkbookmarkstatus() {
         const user_bookmarked_qsts=user.bookmarkedquestions;
+        setIsBookmarked(false);
         for(let i=0;i<user_bookmarked_qsts?.length;i++){
             if(user_bookmarked_qsts[i]._id===questionid1){
                 setIsBookmarked(true);

@@ -92,8 +92,11 @@ function App() {
     getallquestions();
     getallcompanies();
     getalltopics();
-    getUserDetail();
   },[]);
+
+  useEffect(()=>{
+    getUserDetail();
+  })
 
   return (
     <div className="w-screen h-screen flex">

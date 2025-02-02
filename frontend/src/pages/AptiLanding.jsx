@@ -1,28 +1,56 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Modal from "../components/Modal";
-import { useNavigate } from 'react-router-dom';
 
 const AptiLanding = () => {
     const [questions, setQuestions] = useState([]);
+    const [allQuestions, setAllQuestions] = useState([]);
     const [difficulty, setDifficulty] = useState([]);
     const [topics, setTopics] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [searchQuery, setSearchQuery] = useState('');
 
     const [isDifficultyModalOpen, setIsDifficultyModalOpen] = useState(false);
     const [isTopicsModalOpen, setIsTopicsModalOpen] = useState(false);
 
+    const predefinedTopics = [
+        "Arithmetic", "Algebra", "Geometry", "Mathematics"
+    ];
+
     useEffect(() => {
-        fetch('http://localhost:4000/api/aptitude/questions')
-            .then((response) => response.json())
-            .then((data) => {
-                setQuestions(data.questions);
-                setLoading(false);
-            })
-            .catch((error) => {
-                console.error('Error fetching questions:', error);
-                setLoading(false);
-            });
+        fetchAllQuestions();
     }, []);
+
+    const fetchAllQuestions = async () => {
+        setLoading(true);
+        try {
+            const response = await fetch(`http://localhost:4000/api/aptitude/questions`);
+            const data = await response.json();
+            setAllQuestions(data.questions);
+            setQuestions(data.questions);
+        } catch (error) {
+            console.error("Error fetching questions:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const filterQuestions = () => {
+        setLoading(true);
+        try {
+            const filteredQuestions = allQuestions.filter((question) => {
+                const matchesDifficulty = difficulty.length ? difficulty.includes(question.difficulty) : true;
+                const matchesTopic = topics.length ? topics.includes(question.topic) : true;
+                const matchesSearch = searchQuery ? question.question.toLowerCase().includes(searchQuery.toLowerCase()) : true;
+                return matchesDifficulty && matchesTopic && matchesSearch;
+            });
+            setQuestions(filteredQuestions);
+        } catch (error) {
+            console.error("Error filtering questions:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const toggleSelection = (arr, setArray, value) => {
         setArray((prev) =>
@@ -30,40 +58,21 @@ const AptiLanding = () => {
         );
     };
 
-    const filterQuestions = () => {
-        let filteredQuestions = questions;
-
-        if (difficulty.length > 0) {
-            filteredQuestions = filteredQuestions.filter((question) =>
-                difficulty.includes(question.difficulty)
-            );
-        }
-
-        if (topics.length > 0) {
-            filteredQuestions = filteredQuestions.filter((question) =>
-                question.topics.some((topic) => topics.includes(topic.topic_name))
-            );
-        }
-
-        setQuestions(filteredQuestions);
-    };
-
     const getDifficultyColor = (difficulty) => {
         switch (difficulty) {
-            case 'Easy':
-                return 'text-green-500';
-            case 'Medium':
-                return 'text-yellow-500';
-            case 'Hard':
-                return 'text-red-500';
+            case "Easy":
+                return "text-green-500";
+            case "Medium":
+                return "text-yellow-500";
+            case "Hard":
+                return "text-red-500";
             default:
-                return 'text-gray-500'; //JUST IN CASE if error hua
+                return "text-gray-500";
         }
     };
 
     return (
         <div className="min-h-screen bg-gray-900 text-gray-100">
-
             <div className="bg-gray-800 py-6 shadow-md">
                 <div className="container mx-auto flex gap-6 justify-center lg:justify-between px-4">
                     <div
@@ -100,6 +109,8 @@ const AptiLanding = () => {
                     type="text"
                     placeholder="Search question"
                     className="w-[30%] p-2 bg-gray-700 border border-gray-300 rounded-lg focus:outline-none text-gray-100"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
                 />
             </div>
 
@@ -109,20 +120,24 @@ const AptiLanding = () => {
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         {questions.map((question) => (
-                            <div
+                            <Link
+                                to={`/aptitude/question/${question._id}`}
                                 key={question._id}
                                 className="bg-gray-700 text-gray-100 p-4 rounded-lg shadow-lg"
                             >
                                 <div className="flex justify-between items-center">
-                                    <h3 className="font-semibold text-lg">{question.question_title}</h3>
+                                    <h3 className="font-semibold text-lg">{question.question}</h3>
                                     <span
                                         className={`${getDifficultyColor(question.difficulty)} text-sm font-medium`}
                                     >
                                         {question.difficulty}
                                     </span>
                                 </div>
-                                <p className="mt-2 text-sm">{question.description}</p>
-                            </div>
+
+                                <div className="mt-2">
+                                    <p className="text-sm text-gray-400">{question.topic}</p>
+                                </div>
+                            </Link>
                         ))}
                     </div>
                 )}
@@ -136,11 +151,12 @@ const AptiLanding = () => {
                 selectedOptions={difficulty}
                 toggleOption={(value) => toggleSelection(difficulty, setDifficulty, value)}
             />
+
             <Modal
                 isOpen={isTopicsModalOpen}
                 onClose={() => setIsTopicsModalOpen(false)}
                 title="Select Topics"
-                options={["Math", "Science", "English"]}
+                options={predefinedTopics}
                 selectedOptions={topics}
                 toggleOption={(value) => toggleSelection(topics, setTopics, value)}
             />

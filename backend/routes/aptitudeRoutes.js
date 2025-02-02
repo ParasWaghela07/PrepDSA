@@ -5,7 +5,7 @@ const router = express.Router();
 const aptitudeController = require('../controllers/aptitudeController');
 
 // Create new aptitude question
-router.post('/create', aptitudeController.createQuestion);
+router.post('/create', aptitudeController.createQuestions);
 
 // Get list of aptitude questions (with filters)
 router.get('/questions', aptitudeController.getQuestions);

@@ -1,45 +1,51 @@
+const mongoose = require('mongoose');
 
-const AptitudeQuestion = require('../models/aptitudeQuestion.js');
+const AptitudeQuestion = require('../models/AptitudeQuestion');
 
-exports.createQuestion = async (req, res) => {
-    const { question, options, correctAnswer, difficulty, topic } = req.body;
+exports.createQuestions = async (req, res) => {
+    const questions = req.body;
+
     try {
-        const newQuestion = new AptitudeQuestion({
-            question,
-            options,
-            correctAnswer,
-            difficulty,
-            topic,
+        const result = await AptitudeQuestion.insertMany(questions);
+
+        res.status(201).json({
+            message: `${result.length} questions added successfully`,
+            questions: result
         });
-        await newQuestion.save();
-        res.status(201).json({ message: 'Question added successfully', question: newQuestion });
     } catch (err) {
-        res.status(500).json({ message: 'Error adding question', error: err.message });
+        console.error('Error adding questions:', err.message);
+        res.status(500).json({
+            message: 'Error adding questions',
+            error: err.message
+        });
     }
 };
-
 exports.getQuestions = async (req, res) => {
     const { difficulty, topic } = req.query;
     let filter = {};
 
-    console.log('Received query:', req.query); // Log the query parameters
+    console.log('Received query:', req.query);
 
     if (difficulty) filter.difficulty = difficulty;
     if (topic) filter.topic = topic;
 
     try {
         const questions = await AptitudeQuestion.find(filter);
-        console.log('Fetched questions:', questions); // Log fetched questions
+        console.log('Fetched questions:', questions);
         res.status(200).json({ questions });
     } catch (err) {
-        console.error('Error fetching questions:', err); // Log any errors
+        console.error('Error fetching questions:', err);
         res.status(500).json({ message: 'Error fetching questions', error: err.message });
     }
 };
 
-// Get a single aptitude question by ID
 exports.getQuestionById = async (req, res) => {
     const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ message: 'Invalid question ID format' });
+    }
+
     try {
         const question = await AptitudeQuestion.findById(id);
         if (!question) {
@@ -51,7 +57,6 @@ exports.getQuestionById = async (req, res) => {
     }
 };
 
-// Update an aptitude question
 exports.updateQuestion = async (req, res) => {
     const { id } = req.params;
     const { question, options, correctAnswer, difficulty, topic } = req.body;
@@ -70,7 +75,6 @@ exports.updateQuestion = async (req, res) => {
     }
 };
 
-// Delete an aptitude question
 exports.deleteQuestion = async (req, res) => {
     const { id } = req.params;
     try {

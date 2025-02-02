@@ -3,21 +3,23 @@ import { IoCheckmarkCircleOutline } from "react-icons/io5";
 import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
 
+
 function Questionstrip({ questionid1, difficulty, title }) {
     const [isBookmarked, setIsBookmarked] = useState(false);
     const navigate=useNavigate();
     const {user,setuser,setloader}=useContext(AppContext);
     const [isChecked, setIsChecked] = useState(false);
-    const [fresh,setfresh]=useState(false);
+    
     function checkstatus(){
         const user_solved_qsts=user.solved_question_ids;
+        setIsChecked(false);
         for(let i=0;i<user_solved_qsts?.length;i++){
             if(user_solved_qsts[i]._id===questionid1){
                 setIsChecked(true);
                 break;
             }
-            setIsBookmarked(false);
         }
+        
     }
 
     function checkbookmarkstatus() {

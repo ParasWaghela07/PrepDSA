@@ -4,12 +4,12 @@ import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
 
 
-function Questionstrip({ questionid1, difficulty, title }) {
+function Questionstrip({ questionid1, difficulty, title ,role,sheetarray,setsheetarray}) {
     const [isBookmarked, setIsBookmarked] = useState(false);
     const navigate=useNavigate();
     const {user,setuser,setloader}=useContext(AppContext);
     const [isChecked, setIsChecked] = useState(false);
-    
+   
     function checkstatus(){
         const user_solved_qsts=user.solved_question_ids;
         setIsChecked(false);
@@ -76,11 +76,22 @@ function Questionstrip({ questionid1, difficulty, title }) {
     function addqstnametoparams() {
         navigate(`/question/${questionid1}`);
     }
-    
+    function addtosheetarray(){
+        setsheetarray([...sheetarray,questionid1]);
+        //console.log(sheetarray);
+    }
+    function popfromsheetarray(){
+        setsheetarray(sheetarray.filter(num => num !== questionid1));
+        //console.log(sheetarray);
+    }
     useEffect(() => {
         checkstatus();
         checkbookmarkstatus();
     }, [user,questionid1]);
+
+    useEffect(()=>{
+        console.log(sheetarray)
+    },[sheetarray])
 
     return (
         <div className="flex items-center gap-x-2 w-full">
@@ -109,10 +120,10 @@ function Questionstrip({ questionid1, difficulty, title }) {
                     onClick={() => {
                         if (!isBookmarked) {
                             setIsBookmarked(true);
-                            pushtobookmark();
+                            {role=="user"?pushtobookmark():addtosheetarray()}
                         } else {
                             setIsBookmarked(false);
-                            popfrombookmark();
+                            {role=="user"?popfrombookmark():popfromsheetarray()}
                         }
                     }}
                 >

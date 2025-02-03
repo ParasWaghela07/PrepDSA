@@ -138,6 +138,7 @@ exports.addcompany = async (req, res) => {
   exports.addsheet=async(req,res)=>{
     try{
       const {sheetname,questions}=req.body;
+      console.log(questions);
       if(!sheetname || !questions){
         return res.status(400).json({
           success:false,

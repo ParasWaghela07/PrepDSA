@@ -370,7 +370,15 @@ exports.getAllTopics=async(req,res)=>{
   
 exports.getUserDetail=async(req,res)=>{
   try{
-    const user=await User.findById(req.payload.id).populate('solved_question_ids').populate('bookmarkedquestions');
+    const user=await User.findById(req.payload.id).populate({
+      path:'solved_question_ids',
+      populate:{path:'companies topics'}
+    }
+    ).populate({
+      path:'bookmarkedquestions',
+      populate:{path:'companies topics'}
+    }
+    );
     return res.status(200).json({
       success:true,
       message:"User details retrieved successfully.",

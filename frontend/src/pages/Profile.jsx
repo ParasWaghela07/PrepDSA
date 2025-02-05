@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import Sheetbox from "../components/Sheetbox";
 
+
 function Profile() {
   const { user } = useContext(AppContext);
   const userDetails = user;

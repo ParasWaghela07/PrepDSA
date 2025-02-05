@@ -1,23 +1,32 @@
+import { DoughnutChart } from "./DoughnutChart";
+
 function UserStats({ userDetails }) {
+  let count=userDetails?.solved_question_ids?.length;
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div className="bg-gray-700 p-4 rounded-lg">
-        <h3 className="text-lg font-semibold text-teal-400">Easy Questions</h3>
-        <p>{userDetails.easy_question_count}</p>
-      </div>
-      <div className="bg-gray-700 p-4 rounded-lg">
-        <h3 className="text-lg font-semibold text-teal-400">Medium Questions</h3>
-        <p>{userDetails.medium_question_count}</p>
-      </div>
-      <div className="bg-gray-700 p-4 rounded-lg">
-        <h3 className="text-lg font-semibold text-teal-400">Hard Questions</h3>
-        <p>{userDetails.hard_question_count}</p>
-      </div>
-      <div className="bg-gray-700 p-4 rounded-lg col-span-1 md:col-span-3">
-        <h3 className="text-lg font-semibold text-teal-400">Daily Streak</h3>
-        <p>{userDetails.daily_streak}</p>
+    <>
+    {count>0 ?(
+      <div className="w-full h-[200px] flex justify-evenly items-center">
+      <DoughnutChart easy={userDetails.easy_question_count} medium={userDetails.medium_question_count} hard={userDetails.hard_question_count}/>
+      <div className="flex justify-center items-center gap-x-4">
+        <div className="font-semibold flex flex-col justify-center items-center text-green-400 bg-gray-50/[0.2] px-4 py-2 rounded-md text-3xl">
+          <p>Easy</p>
+          <p>{userDetails.easy_question_count}</p>
+        </div>
+        <div className="font-semibold flex flex-col justify-center items-center text-yellow-400 bg-gray-50/[0.2] px-4 py-2 rounded-md text-3xl">
+          <p>Medium</p>
+          <p>{userDetails.medium_question_count}</p>
+        </div>
+        <div className="font-semibold flex flex-col justify-center items-center text-red-400 bg-gray-50/[0.2] px-4 py-2 rounded-md text-3xl">
+          <p>Hard</p>
+          <p>{userDetails.hard_question_count}</p>
+        </div>
       </div>
     </div>
+    ):(
+      <p className="font-bold text-2xl text-center">No question is solved yet</p>
+    )}
+
+</>
   );
 }
 

@@ -5,6 +5,7 @@ const User = require("../models/user");
 const {uploadImageToCloudinary}=require('../util/imageUploader');
 const bcrypt = require("bcrypt");
 const mongoose=require('mongoose');
+const Sheet = require("../models/sheet");
 
 require('dotenv').config();
 
@@ -314,6 +315,24 @@ exports.getAllQuestions = async (req, res) => {
   }
 };
 
+exports.getallsheets=async(req,res)=>{
+  try{
+    const sheets=await Sheet.find({});
+    return res.status(200).json({
+      success:true,
+      message:"sheets retrieved successfully.",
+      data:sheets
+      });
+
+  }
+  catch(e){
+      console.error("error in retireving sheets:",e);
+      return res.status(500).json({
+        success:false,
+        message:"An error occurred while retrieving sheets. Please try again later."
+      });
+  }
+}
 
 exports.getAllCompanies=async(req,res)=>{
   try{

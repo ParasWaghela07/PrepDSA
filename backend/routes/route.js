@@ -4,7 +4,7 @@ const { signup, login, isloggedin, logout, adminlogin, adminsignup, resetpasswor
 const { auth } = require('../middlewares/Auth');
 const { isAdmin } = require('../middlewares/AdminAuth');
 const { addquestion, addcompany, addsheet, addtopic, isAdminloggedin } = require('../controllers/Admin');
-const { bookmark, solved, getAllQuestions, getAllCompanies, getAllTopics, checksolvestatus, checkbookmarkstatus, popfrombookmark, getUserDetail, changeProfile, changepassword, getquestiondetail, gettopicdetail } = require('../controllers/User_fn');
+const { bookmark, solved, getAllQuestions, getAllCompanies, getAllTopics, checksolvestatus, checkbookmarkstatus, popfrombookmark, getUserDetail, changeProfile, changepassword, getquestiondetail, gettopicdetail, getallsheets } = require('../controllers/User_fn');
 
 
 //USER'S ROUTES
@@ -32,7 +32,7 @@ router.post('/changeProfile', auth, changeProfile);
 router.post('/changepassword', auth, changepassword);
 router.post('/getquestiondetail', getquestiondetail);
 router.post('/gettopicdetail', gettopicdetail);
-
+router.get('/gettallsheets',getallsheets);
 
 //ADMIN'S ROUTES
 router.get('/isadminloggedin', isAdmin, isAdminloggedin);

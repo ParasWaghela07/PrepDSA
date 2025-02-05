@@ -1,5 +1,6 @@
 import { Navigate } from 'react-router-dom';
 import { toast } from "react-toastify";
+import Notfound from '../pages/Notfound';
 
 const ProtectedRoute = ({children}) => {
 
@@ -9,7 +10,7 @@ const ProtectedRoute = ({children}) => {
     if(token?.role === "admin")
         return children
     else
-        return toast.error("Only admins can access this feature"),<Navigate to="/" />
+        return <Notfound/>
 
 }
 

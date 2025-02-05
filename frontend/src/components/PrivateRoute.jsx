@@ -8,8 +8,7 @@ const PrivateRoute = ({children}) => {
 
    const token=JSON.parse(localStorage.getItem('token'));
 //    console.log(token);
-    if(token?.role==="admin") return <Navigate to="/adminpanel" />
-    if(token?.role === "user")
+    if(token?.role === "user" || token?.role === "admin")
         return children
     else
         return toast.warn("You need to login first"),<Navigate to="/login" />

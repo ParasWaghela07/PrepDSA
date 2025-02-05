@@ -1,7 +1,7 @@
 import './App.css';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import Landing from './pages/Landing';
 import Profile from './pages/Profile';
 import Question from './pages/Question';
@@ -31,6 +31,7 @@ function App() {
   const [allcompanies, setallcompanies] = useState([]);
   const [alltopics, setalltopics] = useState([]);
   const { loader, user, setuser } = useContext(AppContext)
+  const location=useLocation();
 
   async function getallquestions() {
     try {
@@ -94,9 +95,9 @@ function App() {
     getalltopics();
   },[]);
 
-  useEffect(()=>{
+  useEffect(() => {
     getUserDetail();
-  })
+  }, [user,location.pathname]);
 
   return (
     <div className="w-screen h-screen flex">

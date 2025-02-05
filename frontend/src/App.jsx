@@ -97,7 +97,7 @@ function App() {
 
   useEffect(() => {
     getUserDetail();
-  }, [user,location.pathname]);
+  }, [location.pathname]);
 
   return (
     <div className="w-screen h-screen flex">

@@ -46,7 +46,8 @@ function Profile() {
         transition={{ duration: 1 }}
         className="max-w-6xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg space-y-8"
       >
-        <div className="flex items-center justify-between space-x-4">
+        <h2 className="text-2xl font-bold text-teal-400 -mb-5">Basic Information</h2>
+        <div className="flex  justify-between">
 
           <div>
             <UserInfo userDetails={userDetails} />
@@ -62,11 +63,11 @@ function Profile() {
             />
           )}
 
-          <div className="flex items-center justify-center bg-gray-600  rounded-md px-2 py-1 gap-x-1">
+          <div className="flex items-center justify-center bg-teal-500  rounded-md px-2 py-1 gap-x-1 cursor-pointer"
+          onClick={() => navigate('/changeProfile')}>
             <FaEdit />
             <h1 
-              className="text-sm font-bold text-gray-200 w-fit rounded-md cursor-pointer"
-              onClick={() => navigate('/changeProfile')}
+              className="text-sm font-bold text-white w-fit rounded-md"
             >
               Edit profile
             </h1>

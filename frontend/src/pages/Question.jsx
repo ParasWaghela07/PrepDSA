@@ -6,6 +6,7 @@ import { Solutions } from "../components/Solutions";
 import { Complexities } from "../components/Complexities";
 import { Topics } from "../components/Topics";
 import { ConfirmationModal } from "../components/ConfirmationModal";
+import { toast } from "react-hot-toast";
 
 const platformLogos = {
   leetcode: "https://upload.wikimedia.org/wikipedia/commons/1/19/LeetCode_logo_black.png",
@@ -96,7 +97,7 @@ function checkstatus(){
 }
 
   async function getqstdetail() {
-    setloader(true);
+    const toastid = toast.loading("Fetching question...");
     try {
       const response = await fetch("http://localhost:4000/getquestiondetail", {
         method: "POST",
@@ -116,7 +117,7 @@ function checkstatus(){
     } catch (error) {
       console.error("Error fetching question:", error);
     }
-    setloader(false);
+    toast.dismiss(toastid);
   }
 
   useEffect(() => {

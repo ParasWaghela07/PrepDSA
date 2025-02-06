@@ -19,6 +19,12 @@ const BarChart = ({topicToQst}) =>{
       const options = {
         responsive: true,
         plugins: { legend: { display: false } },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { stepSize: 1 }, // Ensures better spacing
+          }
+        }
       };
     
     return <Bar data={data} options={options} />

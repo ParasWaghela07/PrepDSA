@@ -24,7 +24,7 @@ function UserInfo({ userDetails }) {
         </div>
         </div>
 
-        <p className="font-bold text-xl">Current streak : {userDetails.daily_streak}</p>
+        {/* <p className="font-bold text-xl">Current streak : {userDetails.daily_streak}</p> */}
 
       </div>
       

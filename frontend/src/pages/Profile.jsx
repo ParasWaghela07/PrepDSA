@@ -45,6 +45,7 @@ function Profile() {
         className="max-w-6xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg space-y-8"
       >
         <h2 className="text-2xl font-bold text-teal-400 -mb-5">Basic Information</h2>
+
         <div className="flex  justify-between">
 
           <div>
@@ -74,6 +75,9 @@ function Profile() {
           </div>
         </div>
 
+        <div className="h-[1px] bg-gray-50/[0.2]"></div>
+
+        <p className="text-3xl text-center font-semibold">DSA Progress Overview</p>
         <UserStats userDetails={userDetails} />
 
         <div className="flex gap-x-6 w-fit rounded-lg">

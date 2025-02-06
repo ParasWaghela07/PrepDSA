@@ -3,6 +3,7 @@ import Modal from "../components/Modal";
 import Questionbox from "../components/Questionbox";
 import { AppContext } from "../context/AppContext";
 import { useNavigate, useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 
 function Spectopic() {
 
@@ -17,7 +18,7 @@ function Spectopic() {
   const [fetchedQuestions, setFetchedQuestions] = useState([]);
 
   async function gettopicdetail() {
-    setloader(true);
+    const toastid=toast.loading("Fetching questions...");
     try {
       const response = await fetch("http://localhost:4000/gettopicdetail", {
         method: "POST",
@@ -39,7 +40,7 @@ function Spectopic() {
     } catch (error) {
       console.error("Error fetching question:", error);
     }
-    setloader(false);
+    toast.dismiss(toastid);
   }
 
   useEffect(() => {

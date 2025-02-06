@@ -24,14 +24,15 @@ exports.getQuestions = async (req, res) => {
     const { difficulty, topic } = req.query;
     let filter = {};
 
-    console.log('Received query:', req.query);
+    //console.log('Received query:', req.query);
 
     if (difficulty) filter.difficulty = difficulty;
     if (topic) filter.topic = topic;
 
     try {
         const questions = await AptitudeQuestion.find(filter);
-        console.log('Fetched questions:', questions);
+        // console.log('Fetched questions:', questions);
+        console.log('questions fetched succesfully!!')
         res.status(200).json({ questions });
     } catch (err) {
         console.error('Error fetching questions:', err);

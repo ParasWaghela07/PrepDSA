@@ -26,6 +26,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import { Sidebar } from './components/Sidebar';
 import AptiLanding from './pages/aptiLanding';
 import AptiQuestionDetail from './pages/AptiQuestionDetail';
+import Sheetdisplay from './pages/Sheetdisplay';
 function App() {
   const [allquestions, setallquestions] = useState([]);
   const [allcompanies, setallcompanies] = useState([]);
@@ -123,6 +124,7 @@ function App() {
           <Route path="/topic/:topicid" element={<PrivateRoute><Spectopic /></PrivateRoute>}></Route>
           <Route path="/aptitude" element={<PrivateRoute><AptiLanding /></PrivateRoute>}></Route>
           <Route path="/aptitude/question/:id" element={<PrivateRoute><AptiQuestionDetail /></PrivateRoute>} />
+          <Route path="/displaysheet" element={<Sheetdisplay/>} /> 
         </Routes>
       </div>
 

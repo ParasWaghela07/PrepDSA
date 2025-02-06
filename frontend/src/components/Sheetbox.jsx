@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-
+import Sheetdisplay from "../pages/Sheetdisplay";
+import { useNavigate } from "react-router-dom";
 function Sheetbox() {
     const [sheetlist, setSheetlist] = useState([]);
-  
+    const navigate = useNavigate();
     async function getAllSheets() {
       try {
         const res = await fetch("http://localhost:4000/gettallsheets", {
@@ -43,11 +44,18 @@ function Sheetbox() {
             <p className="text-white">No sheets available.</p>
           ) : (
             sheetlist.map((sheet, index) => (
-              <div
+                <div
                 key={index}
                 className="bg-gray-700 flex justify-between items-center p-6 rounded-lg shadow-lg cursor-pointer"
                 onClick={() => {
-                    
+                  console.log("hello");
+                  navigate("/displaysheet", {
+                    state: {
+                      question: sheet.question_list,
+                      sheetname: sheet.sheet_name,
+                      
+                    },
+                  });
                 }}
               >
                 <h3 className="text-xl font-semibold text-white">{sheet.sheet_name}</h3>

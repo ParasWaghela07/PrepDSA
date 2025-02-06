@@ -33,7 +33,7 @@ router.post('/changepassword', auth, changepassword);
 router.post('/getquestiondetail', getquestiondetail);
 router.post('/gettopicdetail', gettopicdetail);
 router.get('/gettallsheets',getallsheets);
-
+// router.get('/getquestionobject',getquestionobject);
 //ADMIN'S ROUTES
 router.get('/isadminloggedin', isAdmin, isAdminloggedin);
 router.post('/addquestion', isAdmin, addquestion);

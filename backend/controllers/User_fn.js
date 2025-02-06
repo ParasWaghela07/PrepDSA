@@ -317,7 +317,8 @@ exports.getAllQuestions = async (req, res) => {
 
 exports.getallsheets=async(req,res)=>{
   try{
-    const sheets=await Sheet.find({});
+    const sheets=await Sheet.find({}).populate('question_list');
+    console.log(sheets);
     return res.status(200).json({
       success:true,
       message:"sheets retrieved successfully.",
@@ -350,7 +351,18 @@ exports.getAllCompanies=async(req,res)=>{
     });
   }
 };
-
+exports.getquestionobject=async(req,res)=>{
+  try {
+    const qid = req.body;
+    const question = await Question.findById(qid);
+    if (!question) {
+        return res.status(404).json({ message: 'Question not found' });
+    }
+    res.status(200).json({ question });
+} catch (err) {
+    res.status(500).json({ message: 'Error fetching question', error: err.message });
+}  
+}
 exports.getAllTopics=async(req,res)=>{
   try{
     const topics=await Topic.find({}).populate('question_list');

@@ -44,7 +44,7 @@ function Profile() {
         transition={{ duration: 1 }}
         className="max-w-6xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg space-y-8"
       >
-        <h2 className="text-2xl font-bold text-teal-400 -mb-5">Basic Information</h2>
+        {/* <h2 className="text-2xl font-bold text-teal-400 -mb-5">Basic Information</h2> */}
 
         <div className="flex  justify-between">
 

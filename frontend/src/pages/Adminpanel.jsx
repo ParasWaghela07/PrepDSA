@@ -32,7 +32,12 @@ function Adminpanel(){
             <button  onClick={(e)=>{
                 navigate("/addsheet");
             }}>Add sheet</button>
-                        <button  onClick={logout}>Logout</button>
+            <br/>
+            <button  onClick={(e)=>{
+                navigate("/addtechquestion");
+            }}>Add tech question</button>
+            <br/>
+            <button  onClick={logout}>Logout</button>
         </div>
     )
 }

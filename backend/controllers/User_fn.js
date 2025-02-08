@@ -351,6 +351,7 @@ exports.getAllCompanies=async(req,res)=>{
     });
   }
 };
+
 exports.getquestionobject=async(req,res)=>{
   try {
     const qid = req.body;
@@ -363,6 +364,7 @@ exports.getquestionobject=async(req,res)=>{
     res.status(500).json({ message: 'Error fetching question', error: err.message });
 }  
 }
+
 exports.getAllTopics=async(req,res)=>{
   try{
     const topics=await Topic.find({}).populate('question_list');

@@ -2,6 +2,8 @@ const Company = require("../models/company");
 const Topic = require("../models/topic");
 const Question = require("../models/question");
 const Sheet=require('../models/sheet');
+const Tag=require('../models/tags');
+const TechQuestion=require('../models/techquestion');
 
 exports.isAdminloggedin=async(req,res)=>{
   return res.status(200).json({
@@ -63,7 +65,7 @@ exports.addquestion = async (req, res) => {
         message: "An error occurred during question creation. Please try again later.",
       });
     }
-  };
+};
   
 
 exports.addcompany = async (req, res) => {
@@ -166,3 +168,82 @@ exports.addcompany = async (req, res) => {
       });
     }
   }
+
+//   exports.addtag=async(req,res)=>{
+//     try{
+//         const {tagname}=req.body;
+//         const data=await Tag.create({
+//             tag_name:tagname
+//         })
+
+//         return res.status(200).json({
+//             success:true,
+//             message:"Tag created successfully",
+//             data:data
+//         })
+//     }
+//     catch(e){
+//       console.error("Error in tag creation:", error);
+//       return res.status(500).json({
+//         success: false,
+//         message: "An error occurred while creating the tag. Please try again later.",
+//       });
+//     }
+// }
+
+exports.addtechquestion = async (req, res) => {
+  const { question, answers, companies, tags } = req.body;
+
+  try {
+    if (!question || !answers || !tags) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required.",
+      });
+    }
+
+    let tagsarr=[];
+    for (const tagname of tags) {
+      const tag=await Tag.create({ tag_name: tagname });
+      tagsarr.push(tag._id);
+    }
+  
+    const newQst=await TechQuestion.create({
+      question:question,
+      answer:answers,
+      companies:companies||[],
+      tags:tagsarr
+    })
+
+    if (Array.isArray(companies)) {
+      for (const company of companies) {
+        await Company.findByIdAndUpdate(
+          { _id: company },
+          { $push: { techquestions: newQst._id } }
+        );
+      }
+    }
+
+    if (Array.isArray(tagsarr)) {
+      for (const tag of tagsarr) {
+        await Tag.findByIdAndUpdate(
+          { _id: tag },
+          { $push: { question_list: newQst._id } }
+        );
+      }
+    }
+
+
+
+    return res.status(201).json({
+      success: true,
+      message: "Question added successfully and associated with companies.",
+    });
+  } catch (error) {
+    console.error("Error in question creation:", error);
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred during question creation. Please try again later.",
+    });
+  }
+};

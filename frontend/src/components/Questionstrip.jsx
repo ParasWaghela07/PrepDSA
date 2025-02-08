@@ -68,7 +68,7 @@ function Questionstrip({ questionid1, difficulty, title ,role,sheetarray,setshee
                 credentials: "include",
             });
             const res=await response.json();
-            console.log(res);
+            // console.log(res);
             if(res.success) setuser(res.user);
         } catch (error) {
             console.error("Error removing bookmark:", error);
@@ -92,7 +92,7 @@ function Questionstrip({ questionid1, difficulty, title ,role,sheetarray,setshee
     }, [user,questionid1]);
 
     useEffect(()=>{
-        console.log(sheetarray)
+        // console.log(sheetarray)
     },[sheetarray])
 
     return (

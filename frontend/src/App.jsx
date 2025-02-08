@@ -27,6 +27,10 @@ import { Sidebar } from './components/Sidebar';
 import AptiLanding from './pages/aptiLanding';
 import AptiQuestionDetail from './pages/AptiQuestionDetail';
 import Sheetdisplay from './pages/Sheetdisplay';
+import TechLanding from './pages/TechLanding';
+import TechQuestion from './pages/TechQuestion';
+import AddTag from './pages/Addtag';
+import Addtechquestion from './pages/Addtechquestion';
 function App() {
   const [allquestions, setallquestions] = useState([]);
   const [allcompanies, setallcompanies] = useState([]);
@@ -38,7 +42,7 @@ function App() {
     try {
       const response = await fetch("http://localhost:4000/getallquestions");
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       setallquestions(data.data);
     }
     catch (error) {
@@ -50,7 +54,7 @@ function App() {
     try {
       const response = await fetch("http://localhost:4000/getallcompanies");
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       setallcompanies(data.data);
     }
     catch (error) {
@@ -62,7 +66,7 @@ function App() {
     try {
       const response = await fetch("http://localhost:4000/getalltopics");
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       setalltopics(data.data);
     }
     catch (error) {
@@ -78,7 +82,7 @@ function App() {
         credentials: "include",
       });
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       if (data.data) {
         setuser(data.data);
       }
@@ -125,6 +129,10 @@ function App() {
           <Route path="/aptitude" element={<PrivateRoute><AptiLanding /></PrivateRoute>}></Route>
           <Route path="/aptitude/question/:id" element={<PrivateRoute><AptiQuestionDetail /></PrivateRoute>} />
           <Route path="/displaysheet" element={<Sheetdisplay/>} /> 
+          <Route path="/techlanding" element={<PrivateRoute><TechLanding/></PrivateRoute>} /> 
+          <Route path="/techquestion/:qstid" element={<PrivateRoute><TechQuestion /></PrivateRoute>} />
+          <Route path="/addtag" element={<ProtectedRoute><AddTag /></ProtectedRoute>} />
+          <Route path="/addtechquestion" element={<ProtectedRoute><Addtechquestion /></ProtectedRoute>} />
         </Routes>
       </div>
 

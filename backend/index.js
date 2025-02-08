@@ -7,6 +7,7 @@ const cloudinary = require("./config/cloudinary");
 const router = require('./routes/route');
 const fileUpload = require('express-fileupload');
 const aptitudeRoutes = require("./routes/aptitudeRoutes.js"); // ✅ Corrected
+const techRoutes=require('./routes/techquestionRoutes.js');
 require('dotenv').config();
 const PORT = process.env.PORT;
 
@@ -30,6 +31,7 @@ app.use(cookieparser());
 cloudinary.cloudinaryConnect();
 app.use(router);
 app.use('/api/aptitude', aptitudeRoutes);
+app.use(techRoutes);
 
 app.get('/', (req, res) => {
     res.send("Helloooo....")

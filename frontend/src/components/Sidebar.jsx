@@ -12,7 +12,7 @@ export const Sidebar = () => {
     { name: "Profile", path: "/profile", icon: <FaUser /> },
     { name: "DSA", path: "/landing", icon: <FaCode /> },
     { name: "Aptitude", path: "/aptitude", icon: <FaCalculator /> },
-    { name: "Technical Questions", path: "/technical", icon: <FaMicrochip /> },
+    { name: "Technical Questions", path: "/techlanding", icon: <FaMicrochip /> },
     { name: "Mock Interview", path: "/mockinterview", icon: <FaComments /> }
   ];
     const navigate=useNavigate();

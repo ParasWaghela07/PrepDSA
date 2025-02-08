@@ -8,11 +8,6 @@ const TechQst = ({question}) => {
     return (
         <div className='cursor-pointer p-2 text-white bg-gray-800 w-fit h-fit m-2' onClick={()=>{navigate(`/techquestion/${question._id}`)}}>
             <p>{question.question}</p>
-            {/* <div>
-                {question?.answer?.map((ans,index)=>{
-                    return <p>{ans}</p>
-                })}
-            </div> */}
             <div>
                 {question?.companies?.map((company,index)=>{
                     return <p>{company.company_name}</p>

@@ -45,53 +45,55 @@ function Landing({ allquestions, allcompanies, alltopics }) {
     return false;
   }
 
-  function filterQuestions(difficulty, topics, companies) {
+  function filterQuestions(flag=false) {
     
     let filteredQuestions = allquestions;
 
-    for(let i=0;i<difficulty.length;i++){
+    for(let i=0;i<difficulty?.length;i++){
       difficulty[i]=difficulty[i]==="Easy"?1:difficulty[i]==="Medium"?2:3;
     }
 
     console.log(difficulty,topics,companies);
 
-    if (difficulty.length > 0) {
+    if (difficulty?.length > 0) {
       filteredQuestions = filteredQuestions.filter((question) =>
         difficulty.includes(question.difficulty)
       );
     }
 
-    if (topics.length > 0) {
-      filteredQuestions = filteredQuestions.filter((question) =>
+    if (topics?.length > 0) {
+      filteredQuestions = filteredQuestions?.filter((question) =>
         checkTopic(question, topics)
       );
     }
 
-    if (companies.length > 0) {
-      filteredQuestions = filteredQuestions.filter((question) =>
+    if (companies?.length > 0) {
+      filteredQuestions = filteredQuestions?.filter((question) =>
         checkCompany(question, companies)
       );
     }
 
     console.log(filteredQuestions)
 
-    setQuestions(filteredQuestions.length === 0 ? [] : filteredQuestions);
+    setQuestions(filteredQuestions?.length === 0 ? [] : filteredQuestions);
 
-    for(let i=0;i<difficulty.length;i++){
+    for(let i=0;i<difficulty?.length;i++){
       difficulty[i]=difficulty[i]===1?"Easy":difficulty[i]===2?"Medium":"Hard";
     }
+
+    if(flag===true) searchQuestions(filteredQuestions);
     
   }
 
-  const searchQuestions = () => {
-    const filteredQuestions = allquestions.filter((question) =>
+  const searchQuestions = (qsts) => {
+    const filteredQuestions = qsts.filter((question) =>
       question.question_title.toLowerCase().includes(searchInput.toLowerCase())
     );
     setQuestions(filteredQuestions.length === 0 ? [] : filteredQuestions);
   };
 
   useEffect(() => {
-    searchQuestions();
+    filterQuestions(true);
   }, [searchInput]);
 
   return (
@@ -131,7 +133,7 @@ function Landing({ allquestions, allcompanies, alltopics }) {
 
           <button
             className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md shadow-lg w-full sm:w-auto"
-            onClick={() => filterQuestions(difficulty, topics, companies)}
+            onClick={() => filterQuestions()}
           >
             Apply Filters
           </button>

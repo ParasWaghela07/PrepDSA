@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { RxCross1 } from "react-icons/rx";
 
 function Addtechquestion() {
     const [questionTitle, setQuestionTitle] = useState("");
@@ -96,7 +97,9 @@ function Addtechquestion() {
                         {answers.map((ans, index) => (
                             <li key={index} className="flex items-center justify-between bg-gray-700 p-2 rounded-md mt-2">
                                 <span>{ans}</span>
-                                <button onClick={() => removeAnswer(index)} className="text-red-500 hover:text-red-700">✖</button>
+                                <button onClick={() => removeAnswer(index)} className="text-red-500 hover:text-red-700">
+                                <RxCross1 className="font-bold text-xl"/>
+                                </button>
                             </li>
                         ))}
                     </ul>
@@ -122,9 +125,11 @@ function Addtechquestion() {
                     </div>
                     <ul className="mt-2 text-gray-300 flex flex-wrap gap-2">
                         {tags.map((tag, index) => (
-                            <li key={index} className="flex items-center bg-indigo-600 px-3 py-1 rounded-md">
+                            <li key={index} className="flex items-center justify-center bg-indigo-800 px-3 py-1 rounded-md">
                                 <span>{tag}</span>
-                                <button onClick={() => removeTag(index)} className="ml-2 text-white hover:text-red-300">✖</button>
+                                <button onClick={() => removeTag(index)} className="ml-2 text-red-500 hover:text-red-700 text-center">
+                                <RxCross1 className="font-bold text-xl"/>
+                                </button>
                             </li>
                         ))}
                     </ul>

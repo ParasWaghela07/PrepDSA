@@ -32,7 +32,7 @@ exports.getQuestions = async (req, res) => {
     try {
         const questions = await AptitudeQuestion.find(filter);
         // console.log('Fetched questions:', questions);
-        console.log('questions fetched succesfully!!')
+        // console.log('questions fetched succesfully!!')
         res.status(200).json({ questions });
     } catch (err) {
         console.error('Error fetching questions:', err);

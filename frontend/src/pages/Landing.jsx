@@ -96,6 +96,10 @@ function Landing({ allquestions, allcompanies, alltopics }) {
     filterQuestions(true);
   }, [searchInput]);
 
+      useEffect(()=>{
+        filterQuestions();
+      },[difficulty,companies,topics]);
+
   return (
     <div className="min-h-screen w-full bg-gray-900 text-gray-100 overflow-x-hidden">
 
@@ -131,12 +135,12 @@ function Landing({ allquestions, allcompanies, alltopics }) {
             </div>
           </div>
 
-          <button
+          {/* <button
             className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md shadow-lg w-full sm:w-auto"
             onClick={() => filterQuestions()}
           >
             Apply Filters
-          </button>
+          </button> */}
         </div>
       </div>
 

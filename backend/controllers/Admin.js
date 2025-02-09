@@ -204,7 +204,9 @@ exports.addtechquestion = async (req, res) => {
 
     let tagsarr=[];
     for (const tagname of tags) {
-      const tag=await Tag.create({ tag_name: tagname });
+      let tag=await Tag.findOne({tag_name:tagname});
+      if(!tag) tag=await Tag.create({ tag_name: tagname });
+  
       tagsarr.push(tag._id);
     }
   

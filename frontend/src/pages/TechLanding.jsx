@@ -73,6 +73,10 @@ const TechLanding = () => {
         getAllTags();
     },[])
 
+    useEffect(()=>{
+      filterQuestions();
+    },[tags]);
+
     function filterQuestions(flag=false) {
 
         // console.log(tags);
@@ -90,34 +94,38 @@ const TechLanding = () => {
 
 
     return (
-        <div>
-            <div
-            className="relative w-full sm:w-1/2 md:w-1/3 lg:w-1/4 cursor-pointer"
-            onClick={() => setisTagsModelOpen(true)}
-          >
-            <label className="block text-sm font-medium">Tags</label>
-            <div className="block w-full mt-1 p-2 bg-gray-700 text-gray-100 border border-gray-600 rounded-md">
-              Select Tags
-            </div>
+        <div className='min-h-screen w-full bg-gray-900 text-gray-100 overflow-x-hidden'>
+
+          <div className='w-full flex justify-center items-center py-5 gap-x-10 bg-'>
+              <div
+                className="flex justify-center items-center gap-x-5 relative w-full sm:w-1/2 md:w-1/3 lg:w-1/4 cursor-pointer"
+                onClick={() => setisTagsModelOpen(true)}
+              >
+                
+                <div className="flex justify-between items-center w-full bg-gray-700 text-gray-100 border border-gray-600 rounded-md px-2 py-1">
+                  <p>Select Tags</p>
+                </div>
+
+
+              </div>
+
+              <input
+              type="text"
+              value={searchInput}
+              onChange={(e) => setsearchInput(e.target.value)}
+              placeholder="Search question"
+              className="w-[30%] p-2 bg-gray-700 border border-gray-300 rounded-lg focus:outline-none"
+            />
+
           </div>
 
-          <input
-          type="text"
-          value={searchInput}
-          onChange={(e) => setsearchInput(e.target.value)}
-          placeholder="Search question"
-          className="w-[30%] p-2 bg-gray-700 border border-gray-300 rounded-lg focus:outline-none"
-        />
-
-          <button className='p-2 bg-black text-white font-bold text-xl m-2 rounded-md'
-          onClick={filterQuestions}
-          >Filter</button>
-
-            {techquestion?.length>0 ?(
+          <div className='p-5 grid grid-cols-2 gap-5'>
+          {techquestion?.length>0 ?(
                 techquestion?.map((qst,index)=>{
                     return <TechQst question={qst} key={index}/>
                 })
-            ):(<p>No Questions Found</p>)}
+            ):(<p className='font-bold text-2xl'>No Questions Found</p>)}
+          </div>
 
         <Modal
         isOpen={isTagsModelOpen}

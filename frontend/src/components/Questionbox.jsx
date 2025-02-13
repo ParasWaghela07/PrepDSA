@@ -2,7 +2,7 @@ import { useState } from "react";
 import Questionstrip from "./Questionstrip";
 import toast from "react-hot-toast";
 
-function Questionbox({ questions ,role}) {
+function Questionbox({ questions ,role,kahaseayahai}) {
     const [sheetarray,setsheetarray]=useState([]);
     const [sheetname,setsheetname]=useState("");
     async function pushsheet(){
@@ -55,6 +55,7 @@ function Questionbox({ questions ,role}) {
                         role={role}
                         sheetarray={sheetarray} 
                         setsheetarray={setsheetarray}
+                        kahaseayahai={kahaseayahai}
                     />
                 ))}
             </div>

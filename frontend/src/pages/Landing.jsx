@@ -135,12 +135,6 @@ function Landing({ allquestions, allcompanies, alltopics }) {
             </div>
           </div>
 
-          {/* <button
-            className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md shadow-lg w-full sm:w-auto"
-            onClick={() => filterQuestions()}
-          >
-            Apply Filters
-          </button> */}
         </div>
       </div>
 
@@ -175,7 +169,7 @@ function Landing({ allquestions, allcompanies, alltopics }) {
           value={searchInput}
           onChange={(e) => setsearchInput(e.target.value)}
           placeholder="Search question"
-          className="w-[30%] p-2 bg-gray-700 border border-gray-300 rounded-lg focus:outline-none"
+          className="w-[30%] p-2 bg-gray-700  rounded-lg focus:outline-none" autoFocus
         />
       </div>
 

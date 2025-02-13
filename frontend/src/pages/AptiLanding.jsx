@@ -71,10 +71,14 @@ const AptiLanding = () => {
         }
     };
 
+    useEffect(()=>{
+        filterQuestions();
+    },[difficulty,topics,searchQuery])
+
     return (
         <div className="min-h-screen bg-gray-900 text-gray-100">
             <div className="bg-gray-800 py-6 shadow-md">
-                <div className="container mx-auto flex gap-6 justify-center lg:justify-between px-4">
+                <div className="container mx-auto flex gap-6 justify-center lg:justify-around px-4">
                     <div
                         className="relative cursor-pointer"
                         onClick={() => setIsDifficultyModalOpen(true)}
@@ -94,13 +98,6 @@ const AptiLanding = () => {
                             Select Topics
                         </div>
                     </div>
-
-                    <button
-                        className="bg-indigo-500 text-white p-2 rounded-md"
-                        onClick={filterQuestions}
-                    >
-                        Apply Filters
-                    </button>
                 </div>
             </div>
 
@@ -114,11 +111,12 @@ const AptiLanding = () => {
                 />
             </div>
 
-            <div className="container mx-auto p-6">
+            <div className="container mx-auto p-6 w-full h-full">
                 {loading ? (
                     <p className="text-center text-gray-400">Loading questions...</p>
                 ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    questions?.length>0 ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         {questions.map((question) => (
                             <Link
                                 to={`/aptitude/question/${question._id}`}
@@ -140,6 +138,7 @@ const AptiLanding = () => {
                             </Link>
                         ))}
                     </div>
+                    ) : (<p className="h-full flex justify-center items-center font-bold text-2xl text-center">No Questions found</p>)
                 )}
             </div>
 

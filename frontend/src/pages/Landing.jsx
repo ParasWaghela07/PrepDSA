@@ -96,9 +96,9 @@ function Landing({ allquestions, allcompanies, alltopics }) {
     filterQuestions(true);
   }, [searchInput]);
 
-      useEffect(()=>{
-        filterQuestions();
-      },[difficulty,companies,topics]);
+  useEffect(()=>{
+    filterQuestions();
+  },[difficulty,companies,topics]);
 
   return (
     <div className="min-h-screen w-full bg-gray-900 text-gray-100 overflow-x-hidden">

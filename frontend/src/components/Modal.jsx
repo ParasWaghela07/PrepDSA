@@ -1,7 +1,23 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect } from "react";
+import { motion } from "framer-motion";
 
 const Modal = ({ isOpen, onClose, title, options, selectedOptions, toggleOption }) => {
+  
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("keydown", handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen, onClose]); // Re-run effect when `isOpen` changes
 
   const handleToggleOption = (option) => {
     toggleOption(option);
@@ -25,8 +41,8 @@ const Modal = ({ isOpen, onClose, title, options, selectedOptions, toggleOption 
               whileHover={{ scale: 1.02 }}
               className={`p-2 rounded-lg cursor-pointer transition-all duration-150 ${
                 selectedOptions?.includes(option)
-                  ? 'bg-teal-500 text-gray-900'
-                  : 'bg-gray-800 text-gray-100'
+                  ? "bg-teal-500 text-gray-900"
+                  : "bg-gray-800 text-gray-100"
               }`}
               onClick={() => handleToggleOption(option)}
             >

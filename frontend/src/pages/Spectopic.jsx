@@ -59,53 +59,58 @@ function Spectopic() {
 
 
 
-  function filterQuestions(difficulty, companies) {
+  function filterQuestions(flag=false) {
     
     let filteredQuestions = fetchedQuestions;
 
-    for(let i=0;i<difficulty.length;i++){
+    for(let i=0;i<difficulty?.length;i++){
       difficulty[i]=difficulty[i]==="Easy"?1:difficulty[i]==="Medium"?2:3;
     }
 
-    //console.log(difficulty,topics,companies);
+    // console.log(difficulty,topics,companies);
 
-    if (difficulty.length > 0) {
+    if (difficulty?.length > 0) {
       filteredQuestions = filteredQuestions.filter((question) =>
         difficulty.includes(question.difficulty)
       );
     }
 
-    console.log(filteredQuestions)
+    
 
-    setQuestions(filteredQuestions.length === 0 ? [] : filteredQuestions);
+  
 
-    for(let i=0;i<difficulty.length;i++){
+    setQuestions(filteredQuestions?.length === 0 ? [] : filteredQuestions);
+
+    for(let i=0;i<difficulty?.length;i++){
       difficulty[i]=difficulty[i]===1?"Easy":difficulty[i]===2?"Medium":"Hard";
     }
+
+    if(flag===true) searchQuestions(filteredQuestions);
     
   }
 
-  const searchQuestions = () => {
-    const filteredQuestions = fetchedQuestions.filter((question) =>
+  const searchQuestions = (qsts) => {
+    const filteredQuestions = qsts.filter((question) =>
       question.question_title.toLowerCase().includes(searchInput.toLowerCase())
     );
     setQuestions(filteredQuestions.length === 0 ? [] : filteredQuestions);
   };
 
-
-
   useEffect(() => {
-   searchQuestions();
+    filterQuestions(true);
   }, [searchInput]);
 
+  useEffect(()=>{
+    filterQuestions();
+  },[difficulty]);
   return (
     <div className="min-h-screen w-full bg-gray-900 text-gray-100 overflow-x-hidden">
-      <div className="w-full h-52 bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-600 flex gap-x-10 items-center justify-center shadow-lg">
+      {/* <div className="w-full h-52 bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-600 flex gap-x-10 items-center justify-center shadow-lg">
         <h1 className="text-3xl font-bold text-white">Explore Questions</h1>
         <button onClick={() => navigate('/profile')} className="bg-green-500 text-white hover:bg-green-600 px-6 py-2 rounded-lg font-semibold">
           Profile
         </button>
-      </div>
+      </div> */}
 
       <div className="bg-gray-800 py-6 shadow-md">
         <div className="container mx-auto flex flex-wrap gap-6 justify-center lg:justify-between px-4">
@@ -119,12 +124,12 @@ function Spectopic() {
             </div>
           </div>
 
-          <button
+          {/* <button
             className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md shadow-lg w-full sm:w-auto"
-            onClick={() => filterQuestions(difficulty, topics, companies)}
+            onClick={() => filterQuestions(difficulty)}
           >
             Apply Filters
-          </button>
+          </button> */}
         </div>
       </div>
 
@@ -154,6 +159,7 @@ function Spectopic() {
           <Questionbox
             questions={questions}
             searchInput={searchInput}
+            kahaseayahai={"spectopicse"}
           />
         )}
       </div>

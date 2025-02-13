@@ -2,11 +2,12 @@ import { useContext, useEffect, useState } from "react";
 import { IoCheckmarkCircleOutline } from "react-icons/io5";
 import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
+import Spectopic from "../pages/Spectopic";
 function objectbuilder(questionid){
       
 }
 
-function Questionstrip({ questionid1, difficulty, title ,role,sheetarray,setsheetarray}) {
+function Questionstrip({ questionid1, difficulty, title ,role,sheetarray,setsheetarray,kahaseayahai}) {
     const [isBookmarked, setIsBookmarked] = useState(false);
     const navigate=useNavigate();
     const {user,setuser,setloader}=useContext(AppContext);
@@ -110,7 +111,14 @@ function Questionstrip({ questionid1, difficulty, title ,role,sheetarray,setshee
                     }}
                     className="w-6 h-6 cursor-pointer accent-green-500"
                 /> */}
-                <svg
+
+                {/* if(kahaseayahai=="spectopicse"){
+
+                }
+                else{
+                    
+                } */}
+                {kahaseayahai=="spectopicse"?console.log("hello"):<svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill={isBookmarked ? "currentColor" : "none"}
                     viewBox="0 0 24 24"
@@ -134,7 +142,7 @@ function Questionstrip({ questionid1, difficulty, title ,role,sheetarray,setshee
                         strokeLinejoin="round"
                         d="M17.25 3.75H6.75A2.25 2.25 0 004.5 6v15.188c0 .376.41.603.731.398l6.269-4.178a.75.75 0 01.999 0l6.269 4.178c.32.205.731-.022.731-.398V6a2.25 2.25 0 00-2.25-2.25z"
                     />
-                </svg>
+                </svg>}
             </div>
         <div
             className={`h-[8vh] w-full flex justify-between overflow-x-hidden items-center py-2 px-2 rounded-lg shadow-md bg-gray-800 text-gray-300 transition-all hover:shadow-lg cursor-pointer overflow-hidden`}

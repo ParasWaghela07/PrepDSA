@@ -34,6 +34,7 @@ function Sheetdisplay() {
             difficulty={difficulty}
             companies={companies}
             topics={topics}
+            kahaseayahai={"spectopicse"}
           />
         )}
       </div>

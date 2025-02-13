@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import Sheetdisplay from "../pages/Sheetdisplay";
 import { useNavigate } from "react-router-dom";
+import toast from 'react-hot-toast'
 function Sheetbox() {
     const [sheetlist, setSheetlist] = useState([]);
     const navigate = useNavigate();
     async function getAllSheets() {
+      const toastid=toast.loading("Loading sheets..")
       try {
         const res = await fetch("http://localhost:4000/gettallsheets", {
           method: "GET",
@@ -26,15 +28,16 @@ function Sheetbox() {
       } catch (e) {
         console.log("Error fetching sheets:", e);
       }
+      toast.dismiss(toastid);
     }
   
     useEffect(() => {
       getAllSheets();
     }, []);
   
-    useEffect(() => {
-      console.log("Updated sheet list:", sheetlist);
-    }, [sheetlist]);
+    // useEffect(() => {
+    //   console.log("Updated sheet list:", sheetlist);
+    // }, [sheetlist]);
   
     return (
       <div className="space-y-6">

@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-
+import toast from 'react-hot-toast'
 
 function Addquestion({ allcompanies, alltopics }) {
 
     const pushtodatabse = async () => {
-        console.log("Redirect Links:", redirectLinks);
-        console.log("Solution Links:", solution_links);
+        // console.log("Redirect Links:", redirectLinks);
+        // console.log("Solution Links:", solution_links);
+        const toastid=toast.loading("Adding Question...")
 
         const pushtodatabse = await fetch('http://localhost:4000/addquestion', {
             method: 'POST',
@@ -26,10 +27,11 @@ function Addquestion({ allcompanies, alltopics }) {
 
         const res = await pushtodatabse.json();
         if (res.success) {
-            alert('Question added successfully!');
+            toast.success('Question added successfully!');
         } else {
-            alert('Failed to add question.');
+            toast.error('Failed to add question.');
         }
+        toast.dismiss(toastid);
     }
 
     const addLink = () => {

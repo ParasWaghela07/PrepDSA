@@ -2,10 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { IoCheckmarkCircleOutline } from "react-icons/io5";
 import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
-function objectbuilder(questionid){
-      
-}
-
+import toast from 'react-hot-toast'
 function Questionstrip({ questionid1, difficulty, title ,role,sheetarray,setsheetarray}) {
     const [isBookmarked, setIsBookmarked] = useState(false);
     const navigate=useNavigate();
@@ -36,6 +33,7 @@ function Questionstrip({ questionid1, difficulty, title ,role,sheetarray,setshee
     }
 
     async function pushtobookmark() {
+       
         try {
             const response=await fetch("http://localhost:4000/bookmark", {
                 method: "POST",

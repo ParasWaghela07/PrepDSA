@@ -52,6 +52,8 @@ const TechQuestion = () => {
 
                 </div>
 
+                {question?.qstImg && <img src={question.qstImg} className='w-[30%]' />}
+
 
                 <div className='flex flex-col gap-y-3 mt-10'>
                     {question?.answer?.map((ans,index)=>{

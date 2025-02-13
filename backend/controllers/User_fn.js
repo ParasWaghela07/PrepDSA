@@ -318,7 +318,7 @@ exports.getAllQuestions = async (req, res) => {
 exports.getallsheets=async(req,res)=>{
   try{
     const sheets=await Sheet.find({}).populate('question_list');
-    console.log(sheets);
+    // console.log(sheets);
     return res.status(200).json({
       success:true,
       message:"sheets retrieved successfully.",
@@ -399,7 +399,7 @@ exports.getUserDetail=async(req,res)=>{
       data:user
     }); 
   }
-  catch(e){
+  catch(error){
     console.error("Error in finding user:",error);
     return res.status(500).json({
       success:false,

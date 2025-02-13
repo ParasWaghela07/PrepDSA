@@ -50,7 +50,7 @@ const UpdateProfile = () => {
     if (name) formData.append("name", name);
     if (username) formData.append("username", username);
     setMessage("");
-    console.log(formData);
+    // console.log(formData);
     try {
       const response = await fetch("http://localhost:4000/changeProfile", {
         method: "POST",
@@ -58,7 +58,7 @@ const UpdateProfile = () => {
         credentials: "include",
       });
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       if (data.success) {
         setMessage("Profile updated successfully!");
         localStorage.setItem("user", JSON.stringify(data.user));

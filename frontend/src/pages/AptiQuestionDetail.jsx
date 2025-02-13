@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import toast from 'react-hot-toast'
 
 const AptiQuestionDetail = () => {
     const { id } = useParams();
@@ -11,6 +12,7 @@ const AptiQuestionDetail = () => {
     const [showExplanation, setShowExplanation] = useState(false);
 
     useEffect(() => {
+        const toastid=toast.loading("Getting question details..")
         fetch(`http://localhost:4000/api/aptitude/question/${id}`)
             .then((response) => {
                 if (!response.ok) {
@@ -31,6 +33,7 @@ const AptiQuestionDetail = () => {
                 setError("An error occurred while fetching the question.");
                 setLoading(false);
             });
+            toast.dismiss(toastid);
     }, [id]);
 
     const handleAnswerClick = (option) => {

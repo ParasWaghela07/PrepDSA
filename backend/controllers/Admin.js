@@ -4,6 +4,7 @@ const Question = require("../models/question");
 const Sheet=require('../models/sheet');
 const Tag=require('../models/tags');
 const TechQuestion=require('../models/techquestion');
+const { uploadImageToCloudinary } = require("../util/imageUploader");
 
 exports.isAdminloggedin=async(req,res)=>{
   return res.status(200).json({
@@ -194,6 +195,7 @@ exports.addcompany = async (req, res) => {
 exports.addtechquestion = async (req, res) => {
   const { question, answers, companies, tags } = req.body;
 
+  // console.log(tags);
   try {
     if (!question || !answers || !tags) {
       return res.status(400).json({
@@ -209,13 +211,23 @@ exports.addtechquestion = async (req, res) => {
   
       tagsarr.push(tag._id);
     }
+
+    let secureqstImg;
+    if(req.files){
+      const qstImg=req.files.qstImg;
+      const response=await uploadImageToCloudinary(qstImg, process.env.FOLDER_NAME, 200, 80);
+      secureqstImg=response.secure_url;
+    }
   
     const newQst=await TechQuestion.create({
       question:question,
       answer:answers,
       companies:companies||[],
-      tags:tagsarr
+      tags:tagsarr,
+      qstImg:secureqstImg || ""
     })
+
+    // console.log(newQst)
 
     if (Array.isArray(companies)) {
       for (const company of companies) {

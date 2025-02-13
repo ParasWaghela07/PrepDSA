@@ -7,6 +7,7 @@ function Questionbox({ questions ,role}) {
     const [sheetname,setsheetname]=useState("");
     async function pushsheet(){
         try{
+            const toastid=toast.loading("Creating Sheet..");
             const res = await fetch("http://localhost:4000/addsheet",{
                 method:"POST",
                 credentials:"include",
@@ -22,6 +23,7 @@ function Questionbox({ questions ,role}) {
             else{
                 //toast.alert(`Kyu nai ho paa rha developement??`)
             }
+            toast.dismiss(toastid);
         }
         catch(e){
             console.log(e);

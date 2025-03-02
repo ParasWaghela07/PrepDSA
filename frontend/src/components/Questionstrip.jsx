@@ -48,7 +48,7 @@ function Questionstrip({ questionid1, difficulty, title ,role,sheetarray,setshee
                 credentials: "include",
             });
             const res=await response.json();
-            console.log(res);
+            // console.log(res);
             if(res.success) setuser(res.user);
         } catch (error) {
             console.error("Error bookmarking question:", error);
@@ -87,9 +87,13 @@ function Questionstrip({ questionid1, difficulty, title ,role,sheetarray,setshee
         //console.log(sheetarray);
     }
     useEffect(() => {
-        checkstatus();
-        checkbookmarkstatus();
-    }, [user,questionid1]);
+        if(user) {
+            checkstatus();
+            checkbookmarkstatus();
+        }
+    }, [user]);
+    
+    
 
     useEffect(()=>{
         // console.log(sheetarray)
@@ -128,10 +132,8 @@ function Questionstrip({ questionid1, difficulty, title ,role,sheetarray,setshee
                     } hover:text-yellow-300`}
                     onClick={() => {
                         if (!isBookmarked) {
-                            setIsBookmarked(true);
                             {role=="user"?pushtobookmark():addtosheetarray()}
                         } else {
-                            setIsBookmarked(false);
                             {role=="user"?popfrombookmark():popfromsheetarray()}
                         }
                     }}
@@ -145,11 +147,12 @@ function Questionstrip({ questionid1, difficulty, title ,role,sheetarray,setshee
             </div>
         <div
             className={`h-[8vh] w-full flex justify-between overflow-x-hidden items-center py-2 px-2 rounded-lg shadow-md bg-gray-800 text-gray-300 transition-all hover:shadow-lg cursor-pointer overflow-hidden`}
+            onClick={addqstnametoparams}
         >
             <IoCheckmarkCircleOutline className={`${!isChecked && "opacity-0"} text-2xl text-green-500 mr-2`}/>
 
             {/* Title */}
-            <h3 className="flex-grow font-medium"  onClick={addqstnametoparams}>{title}</h3>
+            <h3 className="flex-grow font-medium">{title}</h3>
 
 
             

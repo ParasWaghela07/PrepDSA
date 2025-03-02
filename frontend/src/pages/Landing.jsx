@@ -53,7 +53,7 @@ function Landing({ allquestions, allcompanies, alltopics }) {
       difficulty[i]=difficulty[i]==="Easy"?1:difficulty[i]==="Medium"?2:3;
     }
 
-    console.log(difficulty,topics,companies);
+    // console.log(difficulty,topics,companies);
 
     if (difficulty?.length > 0) {
       filteredQuestions = filteredQuestions.filter((question) =>
@@ -73,7 +73,7 @@ function Landing({ allquestions, allcompanies, alltopics }) {
       );
     }
 
-    console.log(filteredQuestions)
+    // console.log(filteredQuestions)
 
     setQuestions(filteredQuestions?.length === 0 ? [] : filteredQuestions);
 
@@ -182,6 +182,7 @@ function Landing({ allquestions, allcompanies, alltopics }) {
             difficulty={difficulty}
             companies={companies}
             topics={topics}
+            role={"user"}
           />
         )}
       </div>

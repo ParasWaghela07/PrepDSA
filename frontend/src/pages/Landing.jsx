@@ -3,7 +3,7 @@ import Modal from "../components/Modal";
 import Questionbox from "../components/Questionbox";
 import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
-
+import Sheetbox from "../components/Sheetbox";
 
 function Landing({ allquestions, allcompanies, alltopics }) {
   const [difficulty, setDifficulty] = useState([]);
@@ -15,6 +15,7 @@ function Landing({ allquestions, allcompanies, alltopics }) {
   const [isDifficultyModalOpen, setIsDifficultyModalOpen] = useState(false);
   const [isTopicsModalOpen, setIsTopicsModalOpen] = useState(false);
   const [isCompaniesModalOpen, setIsCompaniesModalOpen] = useState(false);
+  
 
 
   useEffect(() => {
@@ -163,7 +164,7 @@ function Landing({ allquestions, allcompanies, alltopics }) {
         toggleOption={(value) => toggleSelection(companies, setCompanies, value)}
       />
 
-      <div className="ml-10 mt-10">
+      <div className="flex items-center justify-between px-10 pt-5">
         <input
           type="text"
           value={searchInput}
@@ -171,6 +172,11 @@ function Landing({ allquestions, allcompanies, alltopics }) {
           placeholder="Search question"
           className="w-[30%] p-2 bg-gray-700  rounded-lg focus:outline-none" autoFocus
         />
+
+           <Sheetbox/>
+          
+
+
       </div>
 
       <div className="container mx-auto p-6">

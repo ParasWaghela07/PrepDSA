@@ -97,14 +97,6 @@ function Profile() {
           >
             Bookmarked
           </p>
-          <p
-            className={`cursor-pointer px-2 py-1 rounded-md text-xl font-bold ${
-              tab === 3 ? "bg-teal-500" : ""
-            } transition duration-300`}
-            onClick={() => setTab(3)}
-          >
-            sheets
-          </p>
         </div>
 
         {/* Corrected Conditional Rendering */}
@@ -114,9 +106,6 @@ function Profile() {
           )}
           {tab === 2 && (
             <BookmarkedQuestions questions={userDetails.bookmarkedquestions} />
-          )}
-          {tab === 3 && (
-            <Sheetbox/>
           )}
         </div>
       </motion.div>

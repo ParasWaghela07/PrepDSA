@@ -26,6 +26,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import { Sidebar } from './components/Sidebar';
 import AptiLanding from './pages/aptiLanding';
 import AptiQuestionDetail from './pages/AptiQuestionDetail';
+import AptiQuiz from './pages/AptiQuiz';
 import Sheetdisplay from './pages/Sheetdisplay';
 import TechLanding from './pages/TechLanding';
 import TechQuestion from './pages/TechQuestion';
@@ -36,7 +37,7 @@ function App() {
   const [allcompanies, setallcompanies] = useState([]);
   const [alltopics, setalltopics] = useState([]);
   const { loader, user, setuser } = useContext(AppContext)
-  const location=useLocation();
+  const location = useLocation();
 
   async function getallquestions() {
     try {
@@ -98,7 +99,7 @@ function App() {
     getallquestions();
     getallcompanies();
     getalltopics();
-  },[]);
+  }, []);
 
   useEffect(() => {
     getUserDetail();
@@ -128,8 +129,9 @@ function App() {
           <Route path="/topic/:topicid" element={<PrivateRoute><Spectopic /></PrivateRoute>}></Route>
           <Route path="/aptitude" element={<PrivateRoute><AptiLanding /></PrivateRoute>}></Route>
           <Route path="/aptitude/question/:id" element={<PrivateRoute><AptiQuestionDetail /></PrivateRoute>} />
-          <Route path="/displaysheet" element={<Sheetdisplay/>} /> 
-          <Route path="/techlanding" element={<PrivateRoute><TechLanding/></PrivateRoute>} /> 
+          <Route path="/aptiquiz" element={<PrivateRoute><AptiQuiz /></PrivateRoute>} />
+          <Route path="/displaysheet" element={<Sheetdisplay />} />
+          <Route path="/techlanding" element={<PrivateRoute><TechLanding /></PrivateRoute>} />
           <Route path="/techquestion/:qstid" element={<PrivateRoute><TechQuestion /></PrivateRoute>} />
           <Route path="/addtag" element={<ProtectedRoute><AddTag /></ProtectedRoute>} />
           <Route path="/addtechquestion" element={<ProtectedRoute><Addtechquestion /></ProtectedRoute>} />

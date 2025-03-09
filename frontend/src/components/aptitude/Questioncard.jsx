@@ -13,4 +13,4 @@ const QuestionCard = ({ question }) => {
     );
 };
 
-export default QuestionCard;  // Default export
+export default QuestionCard;  

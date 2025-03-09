@@ -34,7 +34,7 @@ const aptitudeQuestionSchema = new mongoose.Schema(
             required: true,
         },
         difficulty: {
-            type: String, // Easy, Medium, Hard
+            type: String, 
             required: true,
         },
         topic: {
@@ -43,15 +43,15 @@ const aptitudeQuestionSchema = new mongoose.Schema(
         },
         bookmark: {
             type: Boolean,
-            default: false, // Initially false, can be updated when bookmarked
+            default: false, 
         },
         solved: {
             type: Boolean,
-            default: false, // Initially false, can be updated when solved
+            default: false, 
         },
         explanation: {
             type: String,
-            default: '', // Empty string if no explanation is provided
+            default: '', 
         },
     },
 

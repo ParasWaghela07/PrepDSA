@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Modal from "../components/Modal";
 
 const AptiLanding = () => {
@@ -12,10 +12,11 @@ const AptiLanding = () => {
 
     const [isDifficultyModalOpen, setIsDifficultyModalOpen] = useState(false);
     const [isTopicsModalOpen, setIsTopicsModalOpen] = useState(false);
+    const [isQuizModalOpen, setIsQuizModalOpen] = useState(false);
 
-    const predefinedTopics = [
-        "Arithmetic", "Algebra", "Geometry", "Mathematics"
-    ];
+    const navigate = useNavigate();
+    const predefinedTopics = ["Arithmetic", "Algebra", "Geometry", "Mathematics"];
+    const quizDurations = [15, 25, 30]; // Quiz time options in minutes
 
     useEffect(() => {
         fetchAllQuestions();
@@ -71,14 +72,30 @@ const AptiLanding = () => {
         }
     };
 
-    useEffect(()=>{
+    useEffect(() => {
         filterQuestions();
-    },[difficulty,topics,searchQuery])
+    }, [difficulty, topics, searchQuery]);
+
+    const startQuiz = async (selectedTime) => {
+        setIsQuizModalOpen(false);
+        setLoading(true);
+        try {
+            const filteredQuestions = allQuestions
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 10); // Select 10 random questions
+
+            navigate('/aptiquiz', { state: { questions: filteredQuestions, time: selectedTime } });
+        } catch (error) {
+            console.error("Error starting quiz:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div className="min-h-screen bg-gray-900 text-gray-100">
-            <div className="bg-gray-800 py-6 shadow-md">
-                <div className="container mx-auto flex gap-6 justify-center lg:justify-around px-4">
+            <div className="bg-gray-800 py-6 shadow-md flex justify-between px-10">
+                <div className="flex gap-6">
                     <div
                         className="relative cursor-pointer"
                         onClick={() => setIsDifficultyModalOpen(true)}
@@ -99,6 +116,14 @@ const AptiLanding = () => {
                         </div>
                     </div>
                 </div>
+
+                {/* Take Quiz Button */}
+                <button
+                    onClick={() => setIsQuizModalOpen(true)}
+                    className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg"
+                >
+                    Take Quiz
+                </button>
             </div>
 
             <div className="ml-10 mt-10">
@@ -115,33 +140,33 @@ const AptiLanding = () => {
                 {loading ? (
                     <p className="text-center text-gray-400">Loading questions...</p>
                 ) : (
-                    questions?.length>0 ? (
+                    questions?.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {questions.map((question) => (
-                            <Link
-                                to={`/aptitude/question/${question._id}`}
-                                key={question._id}
-                                className="bg-gray-700 text-gray-100 p-4 rounded-lg shadow-lg"
-                            >
-                                <div className="flex justify-between items-center">
-                                    <h3 className="font-semibold text-lg">{question.question}</h3>
-                                    <span
-                                        className={`${getDifficultyColor(question.difficulty)} text-sm font-medium`}
-                                    >
-                                        {question.difficulty}
-                                    </span>
-                                </div>
-
-                                <div className="mt-2">
-                                    <p className="text-sm text-gray-400">{question.topic}</p>
-                                </div>
-                            </Link>
-                        ))}
-                    </div>
+                            {questions.map((question) => (
+                                <Link
+                                    to={`/aptitude/question/${question._id}`}
+                                    key={question._id}
+                                    className="bg-gray-700 text-gray-100 p-4 rounded-lg shadow-lg"
+                                >
+                                    <div className="flex justify-between items-center">
+                                        <h3 className="font-semibold text-lg">{question.question}</h3>
+                                        <span
+                                            className={`${getDifficultyColor(question.difficulty)} text-sm font-medium`}
+                                        >
+                                            {question.difficulty}
+                                        </span>
+                                    </div>
+                                    <div className="mt-2">
+                                        <p className="text-sm text-gray-400">{question.topic}</p>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
                     ) : (<p className="h-full flex justify-center items-center font-bold text-2xl text-center">No Questions found</p>)
                 )}
             </div>
 
+            {/* Modals */}
             <Modal
                 isOpen={isDifficultyModalOpen}
                 onClose={() => setIsDifficultyModalOpen(false)}
@@ -158,6 +183,14 @@ const AptiLanding = () => {
                 options={predefinedTopics}
                 selectedOptions={topics}
                 toggleOption={(value) => toggleSelection(topics, setTopics, value)}
+            />
+
+            <Modal
+                isOpen={isQuizModalOpen}
+                onClose={() => setIsQuizModalOpen(false)}
+                title="Select Quiz Duration"
+                options={quizDurations.map((time) => `${time} minutes`)}
+                toggleOption={(value) => startQuiz(parseInt(value))}
             />
         </div>
     );

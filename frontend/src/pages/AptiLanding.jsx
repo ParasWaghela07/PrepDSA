@@ -16,7 +16,7 @@ const AptiLanding = () => {
 
     const navigate = useNavigate();
     const predefinedTopics = ["Arithmetic", "Algebra", "Geometry", "Mathematics"];
-    const quizDurations = [15, 25, 30]; // Quiz time options in minutes
+    const quizDurations = [15, 25, 30]; //only mins for now
 
     useEffect(() => {
         fetchAllQuestions();
@@ -82,7 +82,7 @@ const AptiLanding = () => {
         try {
             const filteredQuestions = allQuestions
                 .sort(() => Math.random() - 0.5)
-                .slice(0, 10); // Select 10 random questions
+                .slice(0, 10); //no of ques
 
             navigate('/aptiquiz', { state: { questions: filteredQuestions, time: selectedTime } });
         } catch (error) {
@@ -117,7 +117,6 @@ const AptiLanding = () => {
                     </div>
                 </div>
 
-                {/* Take Quiz Button */}
                 <button
                     onClick={() => setIsQuizModalOpen(true)}
                     className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg"

@@ -65,8 +65,8 @@ const AptiQuiz = () => {
                                 <button
                                     key={index}
                                     className={`w-full text-left p-3 rounded-lg border ${selectedAnswers[questions[currentQuestionIndex]._id] === option
-                                            ? "bg-blue-500 text-white"
-                                            : "bg-gray-700 text-gray-100"
+                                        ? "bg-blue-500 text-white"
+                                        : "bg-gray-700 text-gray-100"
                                         } hover:bg-blue-600 transition-all my-2`}
                                     onClick={() => handleAnswerSelect(questions[currentQuestionIndex]._id, option)}
                                 >
@@ -109,7 +109,7 @@ const AptiQuiz = () => {
 
                     <button
                         className="mt-6 ml-4 bg-blue-500 px-4 py-2 rounded-lg"
-                        onClick={() => navigate("/")}
+                        onClick={() => navigate("/aptitude")}
                     >
                         Back to Home
                     </button>
@@ -126,10 +126,10 @@ const AptiQuiz = () => {
                                             <p
                                                 key={i}
                                                 className={`p-2 rounded ${selectedAnswers[question._id] === option
-                                                        ? option === question.correctAnswer
-                                                            ? "bg-green-500 text-white"
-                                                            : "bg-red-500 text-white"
-                                                        : "bg-gray-600"
+                                                    ? option === question.correctAnswer
+                                                        ? "bg-green-500 text-white"
+                                                        : "bg-red-500 text-white"
+                                                    : "bg-gray-600"
                                                     }`}
                                             >
                                                 {option}

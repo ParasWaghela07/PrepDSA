@@ -6,7 +6,8 @@ const {uploadImageToCloudinary}=require('../util/imageUploader');
 const bcrypt = require("bcrypt");
 const mongoose=require('mongoose');
 const Sheet = require("../models/sheet");
-
+const AptitudeQuestion = require("../models/aptitudeQuestion");
+const TechQuestion=require("../models/techquestion");
 require('dotenv').config();
 
 exports.bookmark = async (req, res) => {
@@ -562,3 +563,73 @@ exports.gettopicdetail = async (req, res) => {
   }
 };
 
+exports.generatemock=async(req,res)=>{
+  try {
+    const company = req.body.company; // Assuming the company is passed in req.body.company
+
+    // Fetch all questions
+    const questions = await Question.find({})
+        .populate('companies')
+        // .populate({
+        //     path: 'topics',
+        //     populate: { path: 'question_list' }
+        // });
+
+    const aptiquestions = await AptitudeQuestion.find({});
+    const techquestions = await TechQuestion.find({}).populate('tags');
+
+    // Helper function to randomly select unique questions based on difficulty
+    const getRandomQuestions = (questions, difficulty, count) => {
+        const filteredQuestions = questions.filter(q => q.difficulty === difficulty);
+        const shuffled = filteredQuestions.sort(() => 0.5 - Math.random()); // Shuffle the array
+        return shuffled.slice(0, count); // Select the first `count` questions
+    };
+
+
+    function filterds(question,company){
+    //  console.log(question,company);
+      for(let i=0;i<question.companies.length;i++){
+        if(question.companies[i].company_name===company) return true ;
+      }
+      return false ;
+    }
+    // Filter DSA questions based on the company
+    const dsaQuestions = questions.filter(question => {
+        // return question.companies.some(comp => comp.company_name == company);
+        return filterds(question,company);
+    });
+    //console.log(dsaQuestions);
+    // Select 1 easy, 1 medium, and 1 hard DSA question (difficulty levels 1, 2, 3)
+    const easyDSA = getRandomQuestions(dsaQuestions, 1, 1);
+    const mediumDSA = getRandomQuestions(dsaQuestions, 2, 1);
+    const hardDSA = getRandomQuestions(dsaQuestions, 3, 1);
+    
+    // Combine DSA questions
+    const selectedDSA = [...easyDSA, ...mediumDSA, ...hardDSA];
+    //console.log(selectedDSA);
+    // Select aptitude questions: 3 easy, 5 medium, 2 hard (difficulty levels as strings)
+    const easyApti = getRandomQuestions(aptiquestions, 'Easy', 3);
+    const mediumApti = getRandomQuestions(aptiquestions, 'Medium', 5);
+    const hardApti = getRandomQuestions(aptiquestions, 'Hard', 2);
+
+    // Combine aptitude questions
+    const selectedApti = [...easyApti, ...mediumApti, ...hardApti];
+
+    // Select technical questions randomly (no difficulty filter specified, so select 5 unique questions)
+    const shuffledTech = techquestions.sort(() => 0.5 - Math.random());
+    const selectedTech = shuffledTech.slice(0, 5);
+
+    // Prepare the response object
+    const response = {
+        dsaQuestions: selectedDSA,
+        aptiquestions: selectedApti,
+        techquestions: selectedTech
+    };
+
+    // Send the response
+    res.status(200).json(response);
+} catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+}   
+}

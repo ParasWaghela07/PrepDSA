@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const AptitudeQuestion = require('../models/AptitudeQuestion');
+const AptitudeQuestion = require('../models/aptitudeQuestion');
 
 exports.createQuestions = async (req, res) => {
     const questions = req.body;

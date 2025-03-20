@@ -23,7 +23,6 @@ const getPlatformDetails = (url) => {
   return { name: "Unknown", logo: null };
 };
 
-
 const RedirectLinks = ({ links }) => {
   return (
     <div className="flex flex-col gap-4">
@@ -35,7 +34,7 @@ const RedirectLinks = ({ links }) => {
             key={index}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center bg-gray-800 text-white rounded-lg shadow-md p-4 gap-4 hover:scale-105 transition-transform"
+            className="flex items-center bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl shadow-lg p-4 gap-4 hover:scale-105 transition-transform"
           >
             {logo ? (
               <img src={logo} alt={name} className="w-10 h-10 object-contain" />
@@ -53,8 +52,7 @@ const RedirectLinks = ({ links }) => {
 };
 
 function Question() {
-
-  const { loader, setloader,user,setuser } = useContext(AppContext);
+  const { loader, setloader, user, setuser } = useContext(AppContext);
   const qstid = useParams();
   const [question, setquestion] = useState({});
   const [isChecked, setIsChecked] = useState(false);
@@ -62,39 +60,38 @@ function Question() {
 
   async function pushtosolved() {
     try {
-        const response=await fetch("http://localhost:4000/solved", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                questionid: qstid.qstid,
-                difficulty: question.difficulty,
-            }),
-            credentials: "include",
-        });
-        const res=await response.json();
-        if(res.success) setuser(res.user),setIsChecked(true);
-
+      const response = await fetch("http://localhost:4000/solved", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          questionid: qstid.qstid,
+          difficulty: question.difficulty,
+        }),
+        credentials: "include",
+      });
+      const res = await response.json();
+      if (res.success) setuser(res.user), setIsChecked(true);
     } catch (error) {
-        console.error("Error marking question as solved:", error);
+      console.error("Error marking question as solved:", error);
     }
     setModal(false);
-}
-
-function cancel(){
-  setModal(false);
-}
-
-function checkstatus(){
-  const user_solved_qsts=user.solved_question_ids;
-  for(let i=0;i<user_solved_qsts?.length;i++){
-      if(user_solved_qsts[i]._id==question._id){
-          setIsChecked(true);
-          break;
-      }
   }
-}
+
+  function cancel() {
+    setModal(false);
+  }
+
+  function checkstatus() {
+    const user_solved_qsts = user.solved_question_ids;
+    for (let i = 0; i < user_solved_qsts?.length; i++) {
+      if (user_solved_qsts[i]._id === question._id) {
+        setIsChecked(true);
+        break;
+      }
+    }
+  }
 
   async function getqstdetail() {
     const toastid = toast.loading("Fetching question...");
@@ -122,60 +119,60 @@ function checkstatus(){
 
   useEffect(() => {
     getqstdetail();
-  },[]);
+  }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     checkstatus();
-  },[user,question])
+  }, [user, question]);
 
   return (
-    <div className="flex flex-col lg:flex-row h-screen bg-gray-900 text-white">
-      {/* Left Section */}
+    <div className="flex flex-col lg:flex-row h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
       <div className="flex-1 p-8 overflow-y-auto">
+       
         {loader ? (
           <p>Loading...</p>
         ) : (
           <div>
-            <div className="flex">
-            <h1 className="text-3xl font-bold mb-4">{question.question_title}</h1>
-            <div>
-              <button onClick={()=>{if(!isChecked) setModal(true)}} className=" flex p-2 m-2 items-center bg-blue-600">
-                {isChecked?"solved":"solve"}
+            <div className="flex justify-between items-center mb-6">
+              <h1 className="text-4xl font-bold">{question.question_title}</h1>
+              <button
+                onClick={() => {
+                  if (!isChecked) setModal(true);
+                }}
+                className={`px-4 py-2 rounded-lg text-sm font-semibold ${
+                  isChecked ? "bg-green-600" : "bg-blue-600 hover:bg-blue-700"
+                } transition-all`}
+              >
+                {isChecked ? "Solved" : "Mark as Solved"}
               </button>
             </div>
-            </div>
-           
-            <p className="text-lg font-medium mb-4">
-              Difficulty: {question.difficulty === 1 ? "Easy" : question.difficulty === 2 ? "Medium" : "Hard"}
-            </p>
-            <div className="mb-4">
-              <Companies companies={question.companies} />
-            </div>
-            <div className="mb-4">
-              <Solutions solutions={question.solution_links} />
-            </div>
-            <div className="mb-4">
-              <Complexities complexities={question.time_complexity} />
-            </div>
-            <div>
-              <Topics topics={question.topics} />
-            </div>
+
+            <p className="text-lg mb-4">Difficulty: <span className="font-semibold">
+              {question.difficulty === 1 ? "Easy" : question.difficulty === 2 ? "Medium" : "Hard"}
+            </span></p>
+            <div className="mb-4"><Companies companies={question.companies} /></div>
+            <div className="mb-4"><Solutions solutions={question.solution_links} /></div>
+            <div className="mb-4"><Complexities complexities={question.time_complexity} /></div>
+            <div className="mb-4"><Topics topics={question.topics} /></div>
           </div>
         )}
       </div>
 
-      {/* Right Section */}
-      <div className="w-full lg:w-80 p-4 bg-gray-800 overflow-y-auto">
+      <div className="w-full lg:w-80 p-6 bg-gray-800">
         <h2 className="text-2xl font-bold mb-4">Redirect Links</h2>
         <RedirectLinks links={question.redirectLinks || []} />
       </div>
-            {modal && <ConfirmationModal
-            title="Are you sure?"
-            desc="Once marked, you won't be able to undo this action. Make sure you're certain!"
-            btn2="Cancel"
-            btn1="Confirm Solve"
-            btn2fn={cancel}
-            btn1fn={pushtosolved}/>}
+
+      {modal && (
+        <ConfirmationModal
+          title="Are you sure?"
+          desc="Once marked, you won't be able to undo this action. Make sure you're certain!"
+          btn2="Cancel"
+          btn1="Confirm Solve"
+          btn2fn={cancel}
+          btn1fn={pushtosolved}
+        />
+      )}
     </div>
   );
 }

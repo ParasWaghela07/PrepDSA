@@ -94,32 +94,31 @@ const TechLanding = () => {
 
 
     return (
-        <div className='min-h-screen w-full bg-gray-900 text-gray-100 overflow-x-hidden'>
+  <div className="min-h-screen w-full bg-gray-900 text-gray-100 px-4 sm:px-6">
+    <div className="w-full flex flex-col sm:flex-row justify-center items-center py-5 gap-4 sm:gap-x-10">
+      <div
+        className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 cursor-pointer"
+        onClick={() => setisTagsModelOpen(true)}
+      >
+        <div className="flex justify-between items-center w-full bg-gray-700 text-gray-100 border border-gray-600 rounded-md px-2 py-2">
+          <p>Select Tags</p>
+        </div>
+      </div>
 
-          <div className='w-full flex justify-center items-center py-5 gap-x-10 bg-'>
-              <div
-                className="flex justify-center items-center gap-x-5 relative w-full sm:w-1/2 md:w-1/3 lg:w-1/4 cursor-pointer"
-                onClick={() => setisTagsModelOpen(true)}
-              >
-                
-                <div className="flex justify-between items-center w-full bg-gray-700 text-gray-100 border border-gray-600 rounded-md px-2 py-1">
-                  <p>Select Tags</p>
-                </div>
+      <input
+        type="text"
+        value={searchInput}
+        onChange={(e) => setsearchInput(e.target.value)}
+        placeholder="Search question"
+        className="w-full sm:w-[50%] md:w-[30%] p-2 bg-gray-700 border border-gray-300 rounded-lg focus:outline-none"
+      />
+    </div>
 
 
-              </div>
 
-              <input
-              type="text"
-              value={searchInput}
-              onChange={(e) => setsearchInput(e.target.value)}
-              placeholder="Search question"
-              className="w-[30%] p-2 bg-gray-700 border border-gray-300 rounded-lg focus:outline-none"
-            />
+          {/* HERE */}
 
-          </div>
-
-          <div className='p-5 grid grid-cols-2 gap-5'>
+          <div className='p-5 grid grid-cols-1 sm:grid-cols-2 gap-5'>
           {techquestion?.length>0 ?(
                 techquestion?.map((qst,index)=>{
                     return <TechQst question={qst} key={index}/>

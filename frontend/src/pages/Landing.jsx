@@ -1,8 +1,6 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import Modal from "../components/Modal";
 import Questionbox from "../components/Questionbox";
-import { AppContext } from "../context/AppContext";
-import { useNavigate } from "react-router-dom";
 import Sheetbox from "../components/Sheetbox";
 
 function Landing({ allquestions, allcompanies, alltopics }) {
@@ -11,16 +9,14 @@ function Landing({ allquestions, allcompanies, alltopics }) {
   const [topics, setTopics] = useState([]);
   const [questions, setQuestions] = useState(allquestions);
   const [loading, setLoading] = useState(false);
-  const [searchInput, setsearchInput] = useState("");
+  const [searchInput, setSearchInput] = useState("");
   const [isDifficultyModalOpen, setIsDifficultyModalOpen] = useState(false);
   const [isTopicsModalOpen, setIsTopicsModalOpen] = useState(false);
   const [isCompaniesModalOpen, setIsCompaniesModalOpen] = useState(false);
-  
-
 
   useEffect(() => {
     setQuestions(allquestions);
-  },[allquestions]);
+  }, [allquestions]);
 
   const toggleSelection = (arr, setArray, value) => {
     setArray((prev) =>
@@ -28,117 +24,78 @@ function Landing({ allquestions, allcompanies, alltopics }) {
     );
   };
 
-  function checkTopic(question, topics) {
-    for (let i = 0; i < question.topics.length; i++) {
-      if (topics.includes(question.topics[i].topic_name)) {
-        return true;
-      }
-    }
-    return false;
-  }
+  const checkTopic = (question, topics) => {
+    return question.topics.some((topic) => topics.includes(topic.topic_name));
+  };
 
-  function checkCompany(question, companies) {
-    for (let i = 0; i < question.companies.length; i++) {
-      if (companies.includes(question.companies[i].company_name)) {
-        return true;
-      }
-    }
-    return false;
-  }
+  const checkCompany = (question, companies) => {
+    return question.companies.some((company) => companies.includes(company.company_name));
+  };
 
-  function filterQuestions(flag=false) {
-    
+  const filterQuestions = (flag = false) => {
     let filteredQuestions = allquestions;
 
-    for(let i=0;i<difficulty?.length;i++){
-      difficulty[i]=difficulty[i]==="Easy"?1:difficulty[i]==="Medium"?2:3;
-    }
+    const difficultyMap = { Easy: 1, Medium: 2, Hard: 3 };
+    const mappedDifficulty = difficulty.map((diff) => difficultyMap[diff]);
 
-    // console.log(difficulty,topics,companies);
-
-    if (difficulty?.length > 0) {
+    if (mappedDifficulty.length) {
       filteredQuestions = filteredQuestions.filter((question) =>
-        difficulty.includes(question.difficulty)
+        mappedDifficulty.includes(question.difficulty)
       );
     }
 
-    if (topics?.length > 0) {
-      filteredQuestions = filteredQuestions?.filter((question) =>
-        checkTopic(question, topics)
-      );
+    if (topics.length) {
+      filteredQuestions = filteredQuestions.filter((question) => checkTopic(question, topics));
     }
 
-    if (companies?.length > 0) {
-      filteredQuestions = filteredQuestions?.filter((question) =>
-        checkCompany(question, companies)
-      );
+    if (companies.length) {
+      filteredQuestions = filteredQuestions.filter((question) => checkCompany(question, companies));
     }
 
-    // console.log(filteredQuestions)
+    setQuestions(filteredQuestions.length ? filteredQuestions : []);
 
-    setQuestions(filteredQuestions?.length === 0 ? [] : filteredQuestions);
-
-    for(let i=0;i<difficulty?.length;i++){
-      difficulty[i]=difficulty[i]===1?"Easy":difficulty[i]===2?"Medium":"Hard";
-    }
-
-    if(flag===true) searchQuestions(filteredQuestions);
-    
-  }
+    if (flag) searchQuestions(filteredQuestions);
+  };
 
   const searchQuestions = (qsts) => {
     const filteredQuestions = qsts.filter((question) =>
       question.question_title.toLowerCase().includes(searchInput.toLowerCase())
     );
-    setQuestions(filteredQuestions.length === 0 ? [] : filteredQuestions);
+    setQuestions(filteredQuestions.length ? filteredQuestions : []);
   };
 
   useEffect(() => {
     filterQuestions(true);
   }, [searchInput]);
 
-  useEffect(()=>{
+  useEffect(() => {
     filterQuestions();
-  },[difficulty,companies,topics]);
+  }, [difficulty, companies, topics]);
 
   return (
-    <div className="min-h-screen w-full bg-gray-900 text-gray-100 overflow-x-hidden">
-
-      <div className="bg-gray-800 py-6 shadow-md">
+    <div className="min-h-screen w-full bg-gray-900 text-gray-100 px-4 sm:px-0">
+      <div className="bg-gray-800 py-4 sm:py-6 shadow-md">
         <div className="container mx-auto flex flex-wrap gap-6 justify-center lg:justify-between px-4">
-          <div
-            className="relative w-full sm:w-1/2 md:w-1/3 lg:w-1/4 cursor-pointer"
-            onClick={() => setIsDifficultyModalOpen(true)}
-          >
-            <label className="block text-sm font-medium">Difficulty</label>
-            <div className="block w-full mt-1 p-2 bg-gray-700 text-gray-100 border border-gray-600 rounded-md">
-              Select Difficulty
+          {[
+            { label: "Difficulty", onClick: () => setIsDifficultyModalOpen(true) },
+            { label: "Topics", onClick: () => setIsTopicsModalOpen(true) },
+            { label: "Companies", onClick: () => setIsCompaniesModalOpen(true) },
+          ].map((filter, index) => (
+            <div
+              key={index}
+              className="relative w-full sm:w-1/2 md:w-1/3 lg:w-1/4 cursor-pointer"
+              onClick={filter.onClick}
+            >
+              <label className="block text-sm font-medium">{filter.label}</label>
+              <div className="block w-full mt-1 p-2 bg-gray-700 text-gray-100 border border-gray-600 rounded-md">
+                Select {filter.label}
+              </div>
             </div>
-          </div>
-
-          <div
-            className="relative w-full sm:w-1/2 md:w-1/3 lg:w-1/4 cursor-pointer"
-            onClick={() => setIsTopicsModalOpen(true)}
-          >
-            <label className="block text-sm font-medium">Topics</label>
-            <div className="block w-full mt-1 p-2 bg-gray-700 text-gray-100 border border-gray-600 rounded-md">
-              Select Topics
-            </div>
-          </div>
-
-          <div
-            className="relative w-full sm:w-1/2 md:w-1/3 lg:w-1/4 cursor-pointer"
-            onClick={() => setIsCompaniesModalOpen(true)}
-          >
-            <label className="block text-sm font-medium">Companies</label>
-            <div className="block w-full mt-1 p-2 bg-gray-700 text-gray-100 border border-gray-600 rounded-md">
-              Select Companies
-            </div>
-          </div>
-
+          ))}
         </div>
       </div>
 
+      {/* Modals */}
       <Modal
         isOpen={isDifficultyModalOpen}
         onClose={() => setIsDifficultyModalOpen(false)}
@@ -164,32 +121,25 @@ function Landing({ allquestions, allcompanies, alltopics }) {
         toggleOption={(value) => toggleSelection(companies, setCompanies, value)}
       />
 
-      <div className="flex items-center justify-between px-10 pt-5">
+      {/* Search Bar & Sheetbox */}
+      <div className="flex flex-col sm:flex-row items-center justify-between px-4 sm:px-10 pt-5 gap-4">
         <input
           type="text"
           value={searchInput}
-          onChange={(e) => setsearchInput(e.target.value)}
+          onChange={(e) => setSearchInput(e.target.value)}
           placeholder="Search question"
-          className="w-[30%] p-2 bg-gray-700  rounded-lg focus:outline-none" autoFocus
+          className="w-full sm:w-[30%] p-2 bg-gray-700 rounded-lg focus:outline-none"
+          autoFocus
         />
-
-           <Sheetbox/>
-          
-
-
+        <Sheetbox />
       </div>
 
+      {/* Question Box */}
       <div className="container mx-auto p-6">
         {loading ? (
           <p className="text-center text-gray-400">Loading questions...</p>
         ) : (
-          <Questionbox
-            questions={questions}
-            difficulty={difficulty}
-            companies={companies}
-            topics={topics}
-            role={"user"}
-          />
+          <Questionbox questions={questions} difficulty={difficulty} companies={companies} topics={topics} role={"user"} />
         )}
       </div>
     </div>

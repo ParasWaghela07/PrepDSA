@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 export const ChangePassword = () => {
   const { setloader } = useContext(AppContext);
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -31,7 +31,7 @@ export const ChangePassword = () => {
     }
 
     setloader(true);
-    
+
     try {
       const response = await fetch("http://localhost:4000/changepassword", {
         method: "POST",
@@ -44,7 +44,7 @@ export const ChangePassword = () => {
         setMessage("Password changed successfully!");
         localStorage.setItem("user", JSON.stringify(data.user));
         toast.success(data.message);
-        navigate('/profile');
+        navigate("/profile");
       } else {
         setMessage(data.message || "Failed to change password.");
         toast.error(data.message || "Failed to change password.");
@@ -58,106 +58,52 @@ export const ChangePassword = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-r from-gray-900 to-gray-800 text-gray-100 p-8 flex justify-center items-center">
+    <div className="min-h-screen w-full bg-gradient-to-r from-gray-900 to-gray-800 text-gray-100 px-4 sm:px-8 flex justify-center items-center">
       <motion.div
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
-        className="w-[30%] h-full max-w-4xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg space-y-8"
+        className="w-full max-w-md sm:max-w-lg md:max-w-xl bg-gray-800 p-6 sm:p-8 rounded-lg shadow-lg space-y-6"
       >
-        <h2 className="text-3xl font-bold text-teal-400 text-center">Change Password</h2>
+        <h2 className="text-2xl sm:text-3xl font-bold text-teal-400 text-center">Change Password</h2>
 
-        {message && (
-          <p className="text-center text-lg font-medium text-teal-300">{message}</p>
-        )}
+        {message && <p className="text-center text-sm sm:text-lg font-medium text-teal-300">{message}</p>}
 
-        <form onSubmit={handleSubmit} className="space-y-6 h-full">
-          {/* Old Password Field */}
-          <div className="relative">
-            <label htmlFor="oldPassword" className="text-lg font-semibold text-teal-300">
-              Old Password
-            </label>
-            <input
-              type={eyeOld ? "password" : "text"}
-              id="oldPassword"
-              value={oldPassword}
-              onChange={(e) => setOldPassword(e.target.value)}
-              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400"
-              required
-            />
-            {eyeOld ? (
-              <IoMdEye
-                className="absolute right-3 top-10 text-gray-400 cursor-pointer"
-                onClick={() => setEyeOld(false)}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Password Fields */}
+          {[
+            { label: "Old Password", value: oldPassword, setValue: setOldPassword, eye: eyeOld, setEye: setEyeOld, id: "oldPassword" },
+            { label: "New Password", value: newPassword, setValue: setNewPassword, eye: eyeNew, setEye: setEyeNew, id: "newPassword" },
+            { label: "Confirm New Password", value: confirmPassword, setValue: setConfirmPassword, eye: eyeConfirm, setEye: setEyeConfirm, id: "confirmPassword" }
+          ].map(({ label, value, setValue, eye, setEye, id }) => (
+            <div className="relative" key={id}>
+              <label htmlFor={id} className="text-sm sm:text-lg font-semibold text-teal-300 block">{label}</label>
+              <input
+                type={eye ? "password" : "text"}
+                id={id}
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400"
+                required
               />
-            ) : (
-              <IoMdEyeOff
-                className="absolute right-3 top-10 text-gray-400 cursor-pointer"
-                onClick={() => setEyeOld(true)}
-              />
-            )}
-          </div>
+              {eye ? (
+                <IoMdEye className="absolute right-3 top-9 sm:top-10 text-gray-400 cursor-pointer" onClick={() => setEye(false)} />
+              ) : (
+                <IoMdEyeOff className="absolute right-3 top-9 sm:top-10 text-gray-400 cursor-pointer" onClick={() => setEye(true)} />
+              )}
+            </div>
+          ))}
 
-          {/* New Password Field */}
-          <div className="relative">
-            <label htmlFor="newPassword" className="text-lg font-semibold text-teal-300">
-              New Password
-            </label>
-            <input
-              type={eyeNew ? "password" : "text"}
-              id="newPassword"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400"
-              required
-            />
-            {eyeNew ? (
-              <IoMdEye
-                className="absolute right-3 top-10 text-gray-400 cursor-pointer"
-                onClick={() => setEyeNew(false)}
-              />
-            ) : (
-              <IoMdEyeOff
-                className="absolute right-3 top-10 text-gray-400 cursor-pointer"
-                onClick={() => setEyeNew(true)}
-              />
-            )}
-          </div>
-
-          {/* Confirm New Password Field */}
-          <div className="relative">
-            <label htmlFor="confirmPassword" className="text-lg font-semibold text-teal-300">
-              Confirm New Password
-            </label>
-            <input
-              type={eyeConfirm ? "password" : "text"}
-              id="confirmPassword"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400"
-              required
-            />
-            {eyeConfirm ? (
-              <IoMdEye
-                className="absolute right-3 top-10 text-gray-400 cursor-pointer"
-                onClick={() => setEyeConfirm(false)}
-              />
-            ) : (
-              <IoMdEyeOff
-                className="absolute right-3 top-10 text-gray-400 cursor-pointer"
-                onClick={() => setEyeConfirm(true)}
-              />
-            )}
-          </div>
-
-          <p className="text-teal-400 hover:text-teal-300 font-bold text-center cursor-pointer" onClick={()=>{navigate('/sendmail2');localStorage.setItem('isLogin',true)}}>Forget password ?</p>
+          <p className="text-teal-400 hover:text-teal-300 font-bold text-center cursor-pointer" onClick={() => { navigate('/sendmail2'); localStorage.setItem('isLogin', true); }}>
+            Forget password?
+          </p>
 
           {/* Submit Button */}
           <div className="flex justify-center">
             <motion.button
               whileHover={{ scale: 1.02 }}
               type="submit"
-              className="bg-teal-400 text-gray-900 px-6 py-3 rounded-lg text-lg font-semibold shadow-lg"
+              className="bg-teal-400 text-gray-900 px-6 py-3 rounded-lg text-lg font-semibold shadow-lg w-full sm:w-auto"
             >
               Update Password
             </motion.button>

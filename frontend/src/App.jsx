@@ -32,6 +32,7 @@ import TechLanding from './pages/TechLanding';
 import TechQuestion from './pages/TechQuestion';
 import AddTag from './pages/Addtag';
 import Addtechquestion from './pages/Addtechquestion';
+import Mockinterview from './pages/Mockinterview';
 function App() {
   const [allquestions, setallquestions] = useState([]);
   const [allcompanies, setallcompanies] = useState([]);
@@ -133,8 +134,10 @@ function App() {
           <Route path="/displaysheet" element={<Sheetdisplay />} />
           <Route path="/techlanding" element={<PrivateRoute><TechLanding /></PrivateRoute>} />
           <Route path="/techquestion/:qstid" element={<PrivateRoute><TechQuestion /></PrivateRoute>} />
+          <Route path="/mockinterview" element={<PrivateRoute> <Mockinterview/> </PrivateRoute>} />
           <Route path="/addtag" element={<ProtectedRoute><AddTag /></ProtectedRoute>} />
           <Route path="/addtechquestion" element={<ProtectedRoute><Addtechquestion /></ProtectedRoute>} />
+
         </Routes>
       </div>
 

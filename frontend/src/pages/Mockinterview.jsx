@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 
 function Mockinterview() {
   const [company, setCompany] = useState("");
@@ -13,11 +12,13 @@ function Mockinterview() {
   const [responses, setResponses] = useState({});
   const [score, setScore] = useState(0);
   const [interviewEnded, setInterviewEnded] = useState(false);
+  const [maxScore, setMaxScore] = useState(0); // Maximum possible score
+  const [resultsSummary, setResultsSummary] = useState([]); // Detailed summary of results
 
   // Load saved state from local storage on component mount
   useEffect(() => {
     const savedState = JSON.parse(localStorage.getItem("mockInterviewState"));
-    if (savedState) {
+    if (savedState && !savedState.interviewEnded) {
       setCompany(savedState.company);
       setInterviewStarted(savedState.interviewStarted);
       setTimeLeft(savedState.timeLeft);
@@ -25,12 +26,13 @@ function Mockinterview() {
       setResponses(savedState.responses);
       setScore(savedState.score);
       setInterviewEnded(savedState.interviewEnded);
+      calculateMaxScore(savedState.questions); // Calculate max score for saved state
     }
   }, []);
 
-  // Save state to local storage whenever state changes
+  // Save state to local storage whenever state changes (only if interview is ongoing)
   useEffect(() => {
-    if (interviewStarted) {
+    if (interviewStarted && !interviewEnded) {
       const stateToSave = {
         company,
         interviewStarted,
@@ -44,14 +46,47 @@ function Mockinterview() {
     }
   }, [company, interviewStarted, timeLeft, questions, responses, score, interviewEnded]);
 
-  // Fetch questions from the backend
+  // Fetch questions from the backend using fetch
   const fetchQuestions = async () => {
     try {
-      const response = await axios.post("http://localhost:4000/generatemock", { company });
-      setQuestions(response.data);
+      const response = await fetch("http://localhost:4000/generatemock", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ company }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch questions");
+      }
+      const data = await response.json();
+      setQuestions(data);
+      calculateMaxScore(data); // Calculate maximum possible score after fetching questions
     } catch (error) {
       console.error("Error fetching questions:", error);
     }
+  };
+
+  // Calculate maximum possible score
+  const calculateMaxScore = (questions) => {
+    let totalMaxScore = 0;
+
+    // DSA: Easy (10), Medium (20), Hard (30)
+    questions.dsaQuestions.forEach((q) => {
+      totalMaxScore += q.difficulty === 1 ? 10 : q.difficulty === 2 ? 20 : 30;
+    });
+
+    // Aptitude: Easy (5), Medium (10), Hard (15)
+    questions.aptiquestions.forEach((q) => {
+      totalMaxScore += q.difficulty === "Easy" ? 5 : q.difficulty === "Medium" ? 10 : 15;
+    });
+
+    // Technical: Each question (10)
+    questions.techquestions.forEach(() => {
+      totalMaxScore += 10;
+    });
+
+    setMaxScore(totalMaxScore); // Update maxScore state
   };
 
   // Start the interview
@@ -91,9 +126,10 @@ function Mockinterview() {
     }));
   };
 
-  // Calculate the final score
+  // Calculate the final score and generate results summary
   const calculateScore = () => {
     let totalScore = 0;
+    const summary = [];
 
     // Scoring scheme:
     // DSA: Easy (10), Medium (20), Hard (30)
@@ -101,24 +137,46 @@ function Mockinterview() {
     // Technical: Each question (10)
 
     questions.dsaQuestions.forEach((q) => {
+      const marks = q.difficulty === 1 ? 10 : q.difficulty === 2 ? 20 : 30;
       if (responses[q._id] === "solved") {
-        totalScore += q.difficulty === 1 ? 10 : q.difficulty === 2 ? 20 : 30;
+        totalScore += marks;
       }
+      summary.push({
+        section: "DSA",
+        question: q.question_title,
+        status: responses[q._id] || "Not solved",
+        marks: responses[q._id] === "solved" ? marks : 0,
+      });
     });
 
     questions.aptiquestions.forEach((q) => {
+      const marks = q.difficulty === "Easy" ? 5 : q.difficulty === "Medium" ? 10 : 15;
       if (responses[q._id] === "solved") {
-        totalScore += q.difficulty === "Easy" ? 5 : q.difficulty === "Medium" ? 10 : 15;
+        totalScore += marks;
       }
+      summary.push({
+        section: "Aptitude",
+        question: q.question,
+        status: responses[q._id] || "Not solved",
+        marks: responses[q._id] === "solved" ? marks : 0,
+      });
     });
 
     questions.techquestions.forEach((q) => {
+      const marks = 10;
       if (responses[q._id] === "solved") {
-        totalScore += 10;
+        totalScore += marks;
       }
+      summary.push({
+        section: "Technical",
+        question: q.question,
+        status: responses[q._id] || "Not solved",
+        marks: responses[q._id] === "solved" ? marks : 0,
+      });
     });
 
     setScore(totalScore);
+    setResultsSummary(summary);
   };
 
   // Render a single question with options
@@ -126,7 +184,7 @@ function Mockinterview() {
     return (
       <div key={question._id} className="mb-6 p-4 bg-white shadow-md rounded-lg">
         <h4 className="text-lg font-semibold mb-2">
-          {section == "dsa" ? question.question_title : question.question}
+          {section === "dsa" ? question.question_title : question.question}
         </h4>
         <div className="flex space-x-4">
           <button
@@ -164,23 +222,20 @@ function Mockinterview() {
     );
   };
 
-  // Render the interview sections
-  const renderInterview = () => {
+  // Render the results summary
+  const renderResultsSummary = () => {
     return (
-      <div className="space-y-8">
-        <div>
-          <h2 className="text-2xl font-bold mb-4">DSA Questions</h2>
-          {questions.dsaQuestions.map((q) => renderQuestion(q, "dsa"))}
-        </div>
-
-        <div>
-          <h2 className="text-2xl font-bold mb-4">Aptitude Questions</h2>
-          {questions.aptiquestions.map((q) => renderQuestion(q, "apti"))}
-        </div>
-
-        <div>
-          <h2 className="text-2xl font-bold mb-4">Technical Questions</h2>
-          {questions.techquestions.map((q) => renderQuestion(q, "tech"))}
+      <div className="mt-8">
+        <h2 className="text-2xl font-bold mb-4">Test Summary</h2>
+        <div className="space-y-4">
+          {resultsSummary.map((result, index) => (
+            <div key={index} className="bg-white p-4 rounded-lg shadow-md">
+              <p className="font-semibold">{result.question}</p>
+              <p>Section: {result.section}</p>
+              <p>Status: {result.status}</p>
+              <p>Marks: {result.marks}</p>
+            </div>
+          ))}
         </div>
       </div>
     );
@@ -207,6 +262,14 @@ function Mockinterview() {
               Start Interview
             </button>
           </div>
+        ) : interviewEnded ? (
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <h2 className="text-2xl font-bold mb-4">Interview Ended!</h2>
+            <h3 className="text-xl">
+              Your Score: <span className="font-bold">{score}</span> out of {maxScore}
+            </h3>
+            {renderResultsSummary()}
+          </div>
         ) : (
           <div className="bg-white p-6 rounded-lg shadow-md">
             <div className="flex justify-between items-center mb-6">
@@ -221,15 +284,25 @@ function Mockinterview() {
                 End Interview
               </button>
             </div>
+            {/* Render questions only if the interview is ongoing */}
+            {!interviewEnded && (
+              <div className="space-y-8">
+                <div>
+                  <h2 className="text-2xl font-bold mb-4">DSA Questions</h2>
+                  {questions.dsaQuestions.map((q) => renderQuestion(q, "dsa"))}
+                </div>
 
-            {renderInterview()}
-          </div>
-        )}
+                <div>
+                  <h2 className="text-2xl font-bold mb-4">Aptitude Questions</h2>
+                  {questions.aptiquestions.map((q) => renderQuestion(q, "apti"))}
+                </div>
 
-        {interviewEnded && (
-          <div className="bg-white p-6 rounded-lg shadow-md text-center mt-8">
-            <h2 className="text-2xl font-bold mb-4">Interview Ended!</h2>
-            <h3 className="text-xl">Your Score: <span className="font-bold">{score}</span></h3>
+                <div>
+                  <h2 className="text-2xl font-bold mb-4">Technical Questions</h2>
+                  {questions.techquestions.map((q) => renderQuestion(q, "tech"))}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

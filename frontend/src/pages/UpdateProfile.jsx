@@ -2,6 +2,7 @@ import React, { useState, useRef, useContext, useEffect } from "react";
 import { motion } from "framer-motion";
 import { AppContext } from "../context/AppContext";
 import { useNavigate } from 'react-router-dom';
+import {toast} from 'react-hot-toast';
 const UpdateProfile = () => {
   const [image, setImage] = useState(null);
   const [name, setName] = useState("");
@@ -41,7 +42,8 @@ const UpdateProfile = () => {
     e.preventDefault();
     setloader(true);
     if (!image && !name && !username) {
-      setMessage("Please provide at least one update.");
+     toast.error("Please provide at least one update.");
+      setloader(false);
       return;
     }
 
@@ -76,73 +78,68 @@ const UpdateProfile = () => {
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-r from-gray-900 to-gray-800 text-gray-100 p-8 flex justify-center items-center">
-      <motion.div
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-        className="w-[30%] h-full max-w-4xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg space-y-8"
+<motion.div
+  initial={{ opacity: 0, y: -50 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 1 }}
+  className="w-full sm:w-[60%] md:w-[50%] lg:w-[30%] max-w-4xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg space-y-8"
+>
+  <h2 className="text-3xl font-bold text-teal-400 text-center">Update Profile</h2>
+  {message && (
+    <p className="text-center text-lg font-medium text-teal-300">{message}</p>
+  )}
+  <form onSubmit={handleSubmit} className="space-y-6">
+    <div
+      onDrop={handleDrop}
+      onDragOver={handleDragOver}
+      onClick={handleDropzoneClick}
+      className="flex items-center justify-center border-2 border-dashed border-gray-600 rounded-lg p-6 cursor-pointer"
+    >
+      {preview ? (
+        <img
+          src={preview}
+          alt="Preview"
+          className="w-[150px] h-[150px] sm:w-[180px] sm:h-[180px] md:w-[200px] md:h-[200px] rounded-full border-2 border-teal-400 object-cover"
+        />
+      ) : (
+        <p className="text-gray-300 text-center">Drag & drop or click to select</p>
+      )}
+    </div>
+    <input type="file" accept="image/*" onChange={handleFileInputChange} ref={fileInputRef} className="hidden" />
+    <input
+      type="text"
+      placeholder="Enter your new name"
+      value={name}
+      onChange={(e) => setName(e.target.value)}
+      className="w-full px-4 py-2 bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400"
+    />
+    <input
+      type="text"
+      placeholder="Enter your new username"
+      value={username}
+      onChange={(e) => setUsername(e.target.value)}
+      className="w-full px-4 py-2 bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400"
+    />
+    <div className="flex flex-col sm:flex-row justify-between gap-4">
+      <motion.button
+        whileHover={{ scale: 1.1 }}
+        type="submit"
+        disabled={loader}
+        className="w-full sm:w-auto bg-teal-400 text-gray-900 px-6 py-3 rounded-lg text-lg font-semibold shadow-lg"
       >
-        <h2 className="text-3xl font-bold text-teal-400 text-center">
-          Update Profile
-        </h2>
-        {message && (
-          <p className="text-center text-lg font-medium text-teal-300">
-            {message}
-          </p>
-        )}
-        <form onSubmit={handleSubmit} className="space-y-6 h-full">
-          <div
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            onClick={handleDropzoneClick}
-            className="flex items-center h-full justify-center border-2 border-dashed border-gray-600 rounded-lg p-6 cursor-pointer"
-          >
-            {preview ? (
-              <img
-                src={preview}
-                alt="Preview"
-                className="w-[200px] h-[200px] rounded-full border-2 border-teal-400 object-cover"
-              />
-            ) : (
-              <p className="text-gray-300">
-                Drag and drop an image here or click to select
-              </p>
-            )}
-          </div>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileInputChange}
-            ref={fileInputRef}
-            className="hidden"
-          />
-          <input
-            type="text"
-            placeholder="Enter your new name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full px-4 py-2 bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400"
-          />
-          <input
-            type="text"
-            placeholder="Enter your new username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="w-full px-4 py-2 bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400"
-          />
-          <div className="flex justify-center">
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              type="submit"
-              disabled={loader}
-              className="bg-teal-400 text-gray-900 px-6 py-3 rounded-lg text-lg font-semibold shadow-lg"
-              
-            >
-              {loader ? "Uploading..." : "Update"}
-            </motion.button>
-          </div>
-        </form>
+        Update
+      </motion.button>
+      <motion.div
+        whileHover={{ scale: 1.1 }}
+        onClick={() => navigate('/changePassword')}
+        className="w-full sm:w-auto bg-teal-400 text-gray-900 px-6 py-3 rounded-lg text-lg font-semibold shadow-lg cursor-pointer text-center"
+      >
+        Change Password
       </motion.div>
+    </div>
+  </form>
+</motion.div>
+
     </div>
   );
 };

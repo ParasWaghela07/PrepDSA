@@ -125,56 +125,76 @@ function Question() {
     checkstatus();
   }, [user, question]);
 
-  return (
-    <div className="flex flex-col lg:flex-row h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
-      <div className="flex-1 p-8 overflow-y-auto">
-       
-        {loader ? (
-          <p>Loading...</p>
-        ) : (
-          <div>
-            <div className="flex justify-between items-center mb-6">
-              <h1 className="text-4xl font-bold">{question.question_title}</h1>
-              <button
-                onClick={() => {
-                  if (!isChecked) setModal(true);
-                }}
-                className={`px-4 py-2 rounded-lg text-sm font-semibold ${
-                  isChecked ? "bg-green-600" : "bg-blue-600 hover:bg-blue-700"
-                } transition-all`}
-              >
-                {isChecked ? "Solved" : "Mark as Solved"}
-              </button>
-            </div>
-
-            <p className="text-lg mb-4">Difficulty: <span className="font-semibold">
-              {question.difficulty === 1 ? "Easy" : question.difficulty === 2 ? "Medium" : "Hard"}
-            </span></p>
-            <div className="mb-4"><Companies companies={question.companies} /></div>
-            <div className="mb-4"><Solutions solutions={question.solution_links} /></div>
-            <div className="mb-4"><Complexities complexities={question.time_complexity} /></div>
-            <div className="mb-4"><Topics topics={question.topics} /></div>
+return (
+  <div className="flex flex-col lg:flex-row min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
+    {/* Main Question Section */}
+    <div className="flex-1 p-8 overflow-y-auto">
+      {loader ? (
+        <p className="text-center text-lg">Loading...</p>
+      ) : (
+        <div>
+          {/* Title & Solve Button */}
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-4xl font-bold text-teal-400">{question.question_title}</h1>
+            <button
+              onClick={() => !isChecked && setModal(true)}
+              className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all shadow-md ${
+                isChecked
+                  ? "bg-green-600 cursor-default"
+                  : "bg-blue-600 hover:bg-blue-700 hover:scale-105"
+              }`}
+            >
+              {isChecked ? "Solved" : "Mark as Solved"}
+            </button>
           </div>
-        )}
-      </div>
 
-      <div className="w-full lg:w-80 p-6 bg-gray-800">
-        <h2 className="text-2xl font-bold mb-4">Redirect Links</h2>
-        <RedirectLinks links={question.redirectLinks || []} />
-      </div>
+          {/* Difficulty Level */}
+          <p className="text-lg mb-4">
+            Difficulty:{" "}
+            <span
+              className={`font-semibold px-3 py-1 rounded-md ${
+                question.difficulty === 1
+                  ? "text-green-400"
+                  : question.difficulty === 2
+                  ? "text-yellow-500"
+                  : "text-red-500"
+              }`}
+            >
+              {question.difficulty === 1 ? "Easy" : question.difficulty === 2 ? "Medium" : "Hard"}
+            </span>
+          </p>
 
-      {modal && (
-        <ConfirmationModal
-          title="Are you sure?"
-          desc="Once marked, you won't be able to undo this action. Make sure you're certain!"
-          btn2="Cancel"
-          btn1="Confirm Solve"
-          btn2fn={cancel}
-          btn1fn={pushtosolved}
-        />
+          {/* Related Information */}
+          <div className="mb-6 space-y-4">
+            <Companies companies={question.companies} />
+            <Solutions solutions={question.solution_links} />
+            <Complexities complexities={question.time_complexity} />
+            <Topics topics={question.topics} />
+          </div>
+        </div>
       )}
     </div>
-  );
+
+    {/* Sidebar - Redirect Links */}
+    <div className="w-full lg:w-80 p-6 bg-gray-800 rounded-t-xl lg:rounded-none lg:border-l border-gray-700 shadow-lg">
+      <h2 className="text-2xl font-bold mb-4 text-gray-200">Redirect Links</h2>
+      <RedirectLinks links={question.redirectLinks || []} />
+    </div>
+
+    {/* Solve Confirmation Modal */}
+    {modal && (
+      <ConfirmationModal
+        title="Are you sure?"
+        desc="Once marked, you won't be able to undo this action. Make sure you're certain!"
+        btn2="Cancel"
+        btn1="Confirm Solve"
+        btn2fn={cancel}
+        btn1fn={pushtosolved}
+      />
+    )}
+  </div>
+);
+
 }
 
 export default Question;

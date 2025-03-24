@@ -16,7 +16,7 @@ function HomePage() {
           className="space-y-6"
         >
           <h1 className="text-5xl md:text-7xl font-extrabold leading-tight">
-            Welcome to <span className="text-teal-400">PrepDsa</span>
+            Welcome to <span className="text-teal-400">InterWin</span>
           </h1>
           <p className="text-lg md:text-xl font-medium text-gray-300">
             Building a better future with solid foundations.

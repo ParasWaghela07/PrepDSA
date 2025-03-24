@@ -104,7 +104,7 @@ function Questionstrip({ questionid1, difficulty, title, role, sheetarray, setsh
         onClick={addqstnametoparams}
       >
         <IoCheckmarkCircleOutline className={`${!isChecked && "opacity-0"} text-2xl text-green-500 mr-2`} />
-        <h3 className="flex-grow font-medium text-xs sm:text-sm md:text-base truncate">{title}</h3>
+        <h3 className="flex-grow font-medium text-xs sm:text-sm md:text-base truncate">{title.length > 20 ? title.substr(0,20) +"...":title}</h3>
         <p className={`text-xs sm:text-sm font-semibold ${difficulty === 3 ? "text-red-500" : difficulty === 2 ? "text-yellow-500" : "text-green-500"}`}>
           {difficulty === 3 ? "Hard" : difficulty === 2 ? "Medium" : "Easy"}
         </p>

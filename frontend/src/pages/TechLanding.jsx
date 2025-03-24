@@ -118,13 +118,14 @@ const TechLanding = () => {
 
           {/* HERE */}
 
-          <div className='p-5 grid grid-cols-1 sm:grid-cols-2 gap-5'>
-          {techquestion?.length>0 ?(
-                techquestion?.map((qst,index)=>{
-                    return <TechQst question={qst} key={index}/>
-                })
-            ):(<p className='font-bold text-2xl'>No Questions Found</p>)}
-          </div>
+          <div className='p-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5'>
+  {techquestion?.length > 0 ? (
+    techquestion?.map((qst, index) => <TechQst question={qst} key={index} />)
+  ) : (
+    <p className='font-bold text-2xl'>No Questions Found</p>
+  )}
+</div>
+
 
         <Modal
         isOpen={isTagsModelOpen}

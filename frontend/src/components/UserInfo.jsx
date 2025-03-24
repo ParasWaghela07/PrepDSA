@@ -15,7 +15,7 @@ function UserInfo({ userDetails }) {
             <p className="text-sm sm:text-md font-semibold">{userDetails.email}</p>
           </div>
 
-          <div className="bg-gray-50/[0.1] p-3 sm:py-2 sm:px-4 rounded-lg">
+          <div className="bg-gray-50/[0.1] p-3 sm:py-2 sm:px-4 rounded-lg flex flex-col justify-around">
             <p className="text-lg sm:text-xl font-bold">Joined at</p>
             <p className="text-sm sm:text-md font-semibold">{formattedDate}</p>
           </div>

@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Mockinterview() {
+  const navigate= useNavigate();
+
   const [company, setCompany] = useState("");
   const [interviewStarted, setInterviewStarted] = useState(false);
   const [timeLeft, setTimeLeft] = useState(3600); // 1 hour in seconds
@@ -9,6 +12,7 @@ function Mockinterview() {
     aptiquestions: [],
     techquestions: [],
   });
+   
   const [responses, setResponses] = useState({});
   const [score, setScore] = useState(0);
   const [interviewEnded, setInterviewEnded] = useState(false);
@@ -178,11 +182,20 @@ function Mockinterview() {
     setScore(totalScore);
     setResultsSummary(summary);
   };
-
+  
   // Render a single question with options
   const renderQuestion = (question, section) => {
     return (
-      <div key={question._id} className="mb-6 p-4 bg-white shadow-md rounded-lg">
+      <div onClick={()=>{
+        if(section==="dsa"){
+            navigate(`/question/${question._id}`)
+        } else if(section==="tech"){
+            navigate(`/techquestion/${question._id}`);
+        }
+        else{
+            navigate(`/aptitude/question/${question._id}`);
+        }
+      }}  key={question._id} className="mb-6 p-4 bg-white shadow-md rounded-lg">
         <h4 className="text-lg font-semibold mb-2">
           {section === "dsa" ? question.question_title : question.question}
         </h4>
@@ -240,7 +253,7 @@ function Mockinterview() {
       </div>
     );
   };
-
+  
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="max-w-4xl mx-auto">

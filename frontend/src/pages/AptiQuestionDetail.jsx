@@ -38,7 +38,7 @@ const AptiQuestionDetail = () => {
 
   const handleAnswerClick = (option) => {
     setSelectedAnswer(option);
-    setFeedback(option === question.correctAnswer ? "✅ Correct answer!" : "❌ Wrong answer! Try again.");
+
   };
 
   const toggleExplanation = () => {
@@ -65,15 +65,14 @@ const AptiQuestionDetail = () => {
             <button
               key={index}
               onClick={() => handleAnswerClick(option)}
-              className={`block w-full text-left p-4 rounded-md mt-2 transition-all duration-300 ease-in-out transform hover:scale-105 text-sm sm:text-base ${
-                selectedAnswer
-                  ? option === question.correctAnswer
-                    ? "bg-green-500"
-                    : option === selectedAnswer
+              className={`block w-full text-left p-4 rounded-md mt-2 transition-all duration-300 ease-in-out transform hover:scale-105 text-sm sm:text-base ${selectedAnswer
+                ? option === question.correctAnswer
+                  ? "bg-green-500"
+                  : option === selectedAnswer
                     ? "bg-red-500"
                     : "bg-gray-600"
-                  : "bg-gray-700 hover:bg-gray-600"
-              }`}
+                : "bg-gray-700 hover:bg-gray-600"
+                }`}
               disabled={selectedAnswer}
             >
               {option}

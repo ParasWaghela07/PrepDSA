@@ -16,7 +16,7 @@ const AptiLanding = () => {
 
   const navigate = useNavigate();
   const predefinedTopics = ["Numbers", "Mixture and Alligation", "Ratio and Proportion", "Trigonometry",
-    "Height and Distance", "Probability"];
+    "Height and Distance", "Probability", "Permutation and Combination(PnC)"];
   const quizDurations = [15, 25, 30];
 
   useEffect(() => {

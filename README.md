@@ -46,7 +46,7 @@ cd interwin
 ### Backend Setup
 
 ```sh
-cd server
+cd backend
 npm install
 ```
 
@@ -79,7 +79,7 @@ npm run dev
 ### Frontend Setup
 
 ```sh
-cd client
+cd frontend
 npm install
 ```
 

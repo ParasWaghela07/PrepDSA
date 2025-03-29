@@ -39,8 +39,8 @@ Ensure you have the following installed:
 ### Clone Repository
 
 ```sh
-git clone https://github.com/yourusername/interwin.git
-cd interwin
+git clone https://github.com/ParasWaghela07/PrepDSA.git
+cd PrepDSA
 ```
 
 ### Backend Setup
@@ -52,7 +52,7 @@ npm install
 
 ### Configure Environment Variables
 
-Create a `.env` file in the `server` directory and add the following details:
+Create a `.env` file in the `backend` directory and add the following details:
 
 ```env
 PORT=4000
@@ -93,11 +93,11 @@ npm run dev
 
 Open two terminals:
 
-1. Navigate to the `server` directory and run:
+1. Navigate to the `backend` directory and run:
    ```sh
    npm run dev
    ```
-2. Navigate to the `client` directory and run:
+2. Navigate to the `frontend` directory and run:
    ```sh
    npm run dev
    ```
@@ -107,4 +107,6 @@ Open two terminals:
 - **Frontend** is deployed on [Vercel](https://vercel.com)
 - **Backend** is deployed on [Render](https://render.com)
 - **Media storage** is managed via [Cloudinary](https://cloudinary.com)
+
+**Video Demonstration Link**: https://drive.google.com/file/d/126N2tSYv6QaysXl-kNL458NjZTlItEpJ/view?usp=drive_link 
 

@@ -108,3 +108,5 @@ Open two terminals:
 - **Backend** is deployed on [Render](https://render.com)
 - **Media storage** is managed via [Cloudinary](https://cloudinary.com)
 
+Video Demonstration Link: https://drive.google.com/file/d/126N2tSYv6QaysXl-kNL458NjZTlItEpJ/view?usp=drive_link 
+

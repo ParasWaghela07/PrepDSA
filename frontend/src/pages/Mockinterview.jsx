@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion } from 'framer-motion';
 
 function Mockinterview() {
-  const navigate= useNavigate();
+  const navigate = useNavigate();
 
+  const [isCompaniesModalOpen, setIsCompaniesModalOpen] = useState(false);
   const [company, setCompany] = useState("");
+  const [companies, setCompanies] = useState([]);
+
   const [interviewStarted, setInterviewStarted] = useState(false);
   const [timeLeft, setTimeLeft] = useState(3600); // 1 hour in seconds
   const [questions, setQuestions] = useState({
@@ -16,8 +20,8 @@ function Mockinterview() {
   const [responses, setResponses] = useState({});
   const [score, setScore] = useState(0);
   const [interviewEnded, setInterviewEnded] = useState(false);
-  const [maxScore, setMaxScore] = useState(0); // Maximum possible score
-  const [resultsSummary, setResultsSummary] = useState([]); // Detailed summary of results
+  const [maxScore, setMaxScore] = useState(0);
+  const [resultsSummary, setResultsSummary] = useState([]);
 
   // Load saved state from local storage on component mount
   useEffect(() => {
@@ -30,11 +34,11 @@ function Mockinterview() {
       setResponses(savedState.responses);
       setScore(savedState.score);
       setInterviewEnded(savedState.interviewEnded);
-      calculateMaxScore(savedState.questions); // Calculate max score for saved state
+      calculateMaxScore(savedState.questions);
     }
   }, []);
 
-  // Save state to local storage whenever state changes (only if interview is ongoing)
+  // Save state to local storage whenever state changes
   useEffect(() => {
     if (interviewStarted && !interviewEnded) {
       const stateToSave = {
@@ -50,7 +54,7 @@ function Mockinterview() {
     }
   }, [company, interviewStarted, timeLeft, questions, responses, score, interviewEnded]);
 
-  // Fetch questions from the backend using fetch
+  // Fetch questions from the backend
   const fetchQuestions = async () => {
     try {
       const response = await fetch("http://localhost:4000/generatemock", {
@@ -65,38 +69,50 @@ function Mockinterview() {
       }
       const data = await response.json();
       setQuestions(data);
-      calculateMaxScore(data); // Calculate maximum possible score after fetching questions
+      calculateMaxScore(data);
     } catch (error) {
       console.error("Error fetching questions:", error);
     }
   };
 
+  async function getallcompanies() {
+    try {
+      const response = await fetch("http://localhost:4000/getallcompanies");
+      const data = await response.json();
+      setCompanies(data.data);
+    }
+    catch (error) {
+      console.error("Error fetching companies:", error);
+    }
+  }
+
+  useEffect(() => {
+    getallcompanies();
+  }, []);
+
   // Calculate maximum possible score
   const calculateMaxScore = (questions) => {
     let totalMaxScore = 0;
 
-    // DSA: Easy (10), Medium (20), Hard (30)
     questions.dsaQuestions.forEach((q) => {
       totalMaxScore += q.difficulty === 1 ? 10 : q.difficulty === 2 ? 20 : 30;
     });
 
-    // Aptitude: Easy (5), Medium (10), Hard (15)
     questions.aptiquestions.forEach((q) => {
       totalMaxScore += q.difficulty === "Easy" ? 5 : q.difficulty === "Medium" ? 10 : 15;
     });
 
-    // Technical: Each question (10)
     questions.techquestions.forEach(() => {
       totalMaxScore += 10;
     });
 
-    setMaxScore(totalMaxScore); // Update maxScore state
+    setMaxScore(totalMaxScore);
   };
 
   // Start the interview
   const startInterview = () => {
     if (!company) {
-      alert("Please enter a company name!");
+      alert("Please select a company first!");
       return;
     }
     fetchQuestions();
@@ -107,7 +123,25 @@ function Mockinterview() {
   const endInterview = () => {
     calculateScore();
     setInterviewEnded(true);
-    localStorage.removeItem("mockInterviewState"); // Clear saved state
+    localStorage.removeItem("mockInterviewState");
+  };
+
+  // Reset interview state
+  const resetInterview = () => {
+    setCompany("");
+    setInterviewStarted(false);
+    setInterviewEnded(false);
+    setTimeLeft(3600);
+    setQuestions({
+      dsaQuestions: [],
+      aptiquestions: [],
+      techquestions: [],
+    });
+    setResponses({});
+    setScore(0);
+    setMaxScore(0);
+    setResultsSummary([]);
+    localStorage.removeItem("mockInterviewState");
   };
 
   // Timer logic
@@ -134,11 +168,6 @@ function Mockinterview() {
   const calculateScore = () => {
     let totalScore = 0;
     const summary = [];
-
-    // Scoring scheme:
-    // DSA: Easy (10), Medium (20), Hard (30)
-    // Aptitude: Easy (5), Medium (10), Hard (15)
-    // Technical: Each question (10)
 
     questions.dsaQuestions.forEach((q) => {
       const marks = q.difficulty === 1 ? 10 : q.difficulty === 2 ? 20 : 30;
@@ -186,47 +215,59 @@ function Mockinterview() {
   // Render a single question with options
   const renderQuestion = (question, section) => {
     return (
-      <div onClick={()=>{
-        if(section==="dsa"){
+      <div 
+        onClick={() => {
+          if (section === "dsa") {
             navigate(`/question/${question._id}`)
-        } else if(section==="tech"){
+          } else if (section === "tech") {
             navigate(`/techquestion/${question._id}`);
-        }
-        else{
+          } else {
             navigate(`/aptitude/question/${question._id}`);
-        }
-      }}  key={question._id} className="mb-6 p-4 bg-white shadow-md rounded-lg">
-        <h4 className="text-lg font-semibold mb-2">
+          }
+        }}  
+        key={question._id} 
+        className="mb-6 p-4 bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-600/[0.8] transition-colors"
+      >
+        <h4 className="text-lg font-semibold mb-2 text-teal-400">
           {section === "dsa" ? question.question_title : question.question}
         </h4>
-        <div className="flex space-x-4">
+        <div className="flex flex-wrap gap-2">
           <button
-            className={`px-4 py-2 rounded ${
+            className={`px-3 py-1 rounded-md text-sm ${
               responses[question._id] === "solved"
-                ? "bg-green-500 text-white"
-                : "bg-gray-200"
+                ? "bg-green-600 text-white"
+                : "bg-gray-600 text-gray-200"
             }`}
-            onClick={() => handleResponse(question._id, "solved")}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleResponse(question._id, "solved");
+            }}
           >
             Solved
           </button>
           <button
-            className={`px-4 py-2 rounded ${
+            className={`px-3 py-1 rounded-md text-sm ${
               responses[question._id] === "attempted"
-                ? "bg-yellow-500 text-white"
-                : "bg-gray-200"
+                ? "bg-yellow-600 text-white"
+                : "bg-gray-600 text-gray-200"
             }`}
-            onClick={() => handleResponse(question._id, "attempted")}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleResponse(question._id, "attempted");
+            }}
           >
-            Attempted but not solved
+            Attempted
           </button>
           <button
-            className={`px-4 py-2 rounded ${
+            className={`px-3 py-1 rounded-md text-sm ${
               responses[question._id] === "not-solved"
-                ? "bg-red-500 text-white"
-                : "bg-gray-200"
+                ? "bg-red-600 text-white"
+                : "bg-gray-600 text-gray-200"
             }`}
-            onClick={() => handleResponse(question._id, "not-solved")}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleResponse(question._id, "not-solved");
+            }}
           >
             Not solved
           </button>
@@ -239,83 +280,178 @@ function Mockinterview() {
   const renderResultsSummary = () => {
     return (
       <div className="mt-8">
-        <h2 className="text-2xl font-bold mb-4">Test Summary</h2>
+        <h2 className="text-2xl font-bold mb-4 text-teal-400">Test Summary</h2>
         <div className="space-y-4">
           {resultsSummary.map((result, index) => (
-            <div key={index} className="bg-white p-4 rounded-lg shadow-md">
-              <p className="font-semibold">{result.question}</p>
-              <p>Section: {result.section}</p>
-              <p>Status: {result.status}</p>
-              <p>Marks: {result.marks}</p>
+            <div key={index} className="bg-gray-800 p-4 rounded-lg">
+              <p className="font-semibold text-gray-100">{result.question}</p>
+              <p className="text-gray-400">Section: {result.section}</p>
+              <p className="text-gray-400">Status: {result.status}</p>
+              <p className="text-gray-400">Marks: {result.marks}</p>
             </div>
           ))}
         </div>
       </div>
     );
   };
-  
-  return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-center mb-8">Mock Interview</h1>
 
-        {!interviewStarted ? (
-          <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <input
-              type="text"
-              placeholder="Enter company name"
-              value={company}
-              onChange={(e) => setCompany(e.target.value)}
-              className="w-full px-4 py-2 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+  const SingleSelectModal = ({ isOpen, onClose, title, options, selectedOption, setSelectedOption }) => {
+    useEffect(() => {
+      const handleKeyDown = (event) => {
+        if (event.key === "Escape") {
+          onClose();
+        }
+      };
+
+      if (isOpen) {
+        document.addEventListener("keydown", handleKeyDown);
+      }
+
+      return () => {
+        document.removeEventListener("keydown", handleKeyDown);
+      };
+    }, [isOpen, onClose]);
+
+    const handleSelect = (option) => {
+      setSelectedOption(option);
+      onClose();
+    };
+
+    if (!isOpen) return null;
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center px-4 overflow-y-auto z-50">
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.3 }}
+          className="bg-gray-800 rounded-lg shadow-lg w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl p-6 max-h-[80vh] overflow-y-auto"
+        >
+          <h2 className="text-xl sm:text-2xl font-bold text-teal-400 mb-4">{title}</h2>
+          <div className="flex flex-wrap gap-2">
+            {options?.map((option) => (
+              <motion.div
+                key={option.company_name}
+                whileHover={{ scale: 1.02 }}
+                className={`p-2 text-sm sm:text-base rounded-lg cursor-pointer transition-all duration-150 ${
+                  selectedOption === option.company_name ? "bg-teal-500 text-gray-900" : "bg-gray-700 text-gray-100"
+                }`}
+                onClick={() => handleSelect(option.company_name)}
+              >
+                {option.company_name}
+              </motion.div>
+            ))}
+          </div>
+          <div className="mt-6 text-right">
             <button
-              onClick={startInterview}
-              className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+              className="bg-teal-500 text-gray-900 px-4 py-2 rounded-lg font-semibold hover:bg-teal-600 w-full sm:w-auto"
+              onClick={onClose}
             >
-              Start Interview
+              Close
             </button>
           </div>
+        </motion.div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-900 text-gray-100 p-4 md:p-8">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-2xl md:text-3xl font-bold text-center mb-6 md:mb-8 text-teal-400">Mock Interview</h1>
+
+        {!interviewStarted ? (
+          <div className="bg-gray-800 p-6 rounded-lg shadow-md text-center">
+            <div className="flex flex-col items-center justify-center min-h-[50vh]">
+              <p className="text-lg mb-6">
+                {company ? (
+                  <span>Selected Company: <span className="text-teal-400 font-bold">{company}</span></span>
+                ) : (
+                  "Please select a company to start the interview"
+                )}
+              </p>
+              <button
+                onClick={() => setIsCompaniesModalOpen(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg mb-4 w-full max-w-xs"
+              >
+                {company ? "Change Company" : "Select Company"}
+              </button>
+              {company && (
+                <button
+                  onClick={startInterview}
+                  className="bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-lg w-full max-w-xs"
+                >
+                  Start Interview
+                </button>
+              )}
+            </div>
+
+            {companies && 
+              <SingleSelectModal
+                isOpen={isCompaniesModalOpen}
+                onClose={() => setIsCompaniesModalOpen(false)}
+                title="Select a Company"
+                options={companies}
+                selectedOption={company}
+                setSelectedOption={setCompany}
+              />
+            }
+          </div>
         ) : interviewEnded ? (
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-2xl font-bold mb-4">Interview Ended!</h2>
-            <h3 className="text-xl">
-              Your Score: <span className="font-bold">{score}</span> out of {maxScore}
-            </h3>
+          <div className="bg-gray-800 p-6 rounded-lg shadow-md">
+            <div className="flex justify-between items-start mb-4">
+              <div>
+                <h2 className="text-2xl font-bold text-teal-400">Interview Ended!</h2>
+                <h3 className="text-xl mb-6">
+                  Your Score: <span className="font-bold text-teal-400">{score}</span> out of {maxScore}
+                </h3>
+              </div>
+              <button
+                onClick={resetInterview}
+                className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg"
+              >
+                Start New Interview
+              </button>
+            </div>
             {renderResultsSummary()}
           </div>
         ) : (
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <div className="flex justify-between items-center mb-6">
-              <div className="text-xl font-semibold">
+          <div className="bg-gray-800 p-4 md:p-6 rounded-lg shadow-md">
+            <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+              <div className="text-xl font-semibold bg-gray-700 px-4 py-2 rounded-lg">
                 Time Left: {Math.floor(timeLeft / 60)}:
                 {timeLeft % 60 < 10 ? `0${timeLeft % 60}` : timeLeft % 60}
               </div>
               <button
                 onClick={endInterview}
-                className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg w-full md:w-auto"
               >
                 End Interview
               </button>
             </div>
-            {/* Render questions only if the interview is ongoing */}
-            {!interviewEnded && (
-              <div className="space-y-8">
+            
+            <div className="space-y-8">
+              {questions.dsaQuestions.length > 0 && (
                 <div>
-                  <h2 className="text-2xl font-bold mb-4">DSA Questions</h2>
+                  <h2 className="text-xl md:text-2xl font-bold mb-4 text-teal-400">DSA Questions</h2>
                   {questions.dsaQuestions.map((q) => renderQuestion(q, "dsa"))}
                 </div>
+              )}
 
+              {questions.aptiquestions.length > 0 && (
                 <div>
-                  <h2 className="text-2xl font-bold mb-4">Aptitude Questions</h2>
+                  <h2 className="text-xl md:text-2xl font-bold mb-4 text-teal-400">Aptitude Questions</h2>
                   {questions.aptiquestions.map((q) => renderQuestion(q, "apti"))}
                 </div>
+              )}
 
+              {questions.techquestions.length > 0 && (
                 <div>
-                  <h2 className="text-2xl font-bold mb-4">Technical Questions</h2>
+                  <h2 className="text-xl md:text-2xl font-bold mb-4 text-teal-400">Technical Questions</h2>
                   {questions.techquestions.map((q) => renderQuestion(q, "tech"))}
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         )}
       </div>

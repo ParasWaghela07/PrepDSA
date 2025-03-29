@@ -39,7 +39,7 @@ Ensure you have the following installed:
 ### Clone Repository
 
 ```sh
-git clone https://github.com/{your_username}/PrepDSA.git
+git clone https://github.com/ParasWaghela07/PrepDSA.git
 cd PrepDSA
 ```
 

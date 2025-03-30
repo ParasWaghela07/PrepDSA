@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Modal from "../components/Modal";
+import {AppContext} from "../context/AppContext";
 
 const AptiLanding = () => {
   const [questions, setQuestions] = useState([]);
@@ -13,6 +14,7 @@ const AptiLanding = () => {
   const [isDifficultyModalOpen, setIsDifficultyModalOpen] = useState(false);
   const [isTopicsModalOpen, setIsTopicsModalOpen] = useState(false);
   const [isQuizModalOpen, setIsQuizModalOpen] = useState(false);
+  const {setloader}=useContext(AppContext);
 
   const navigate = useNavigate();
   const predefinedTopics = ["Numbers", "Mixture and Alligation", "Ratio and Proportion", "Trigonometry",
@@ -24,7 +26,7 @@ const AptiLanding = () => {
   }, []);
 
   const fetchAllQuestions = async () => {
-    setLoading(true);
+    setloader(true)
     try {
       const response = await fetch(`http://localhost:4000/api/aptitude/questions`);
       const data = await response.json();
@@ -33,7 +35,7 @@ const AptiLanding = () => {
     } catch (error) {
       console.error("Error fetching questions:", error);
     } finally {
-      setLoading(false);
+      setloader(false);
     }
   };
 

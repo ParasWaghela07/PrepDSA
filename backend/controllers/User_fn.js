@@ -589,7 +589,7 @@ exports.generatemock=async(req,res)=>{
     function filterds(question,company){
     //  console.log(question,company);
       for(let i=0;i<question.companies.length;i++){
-        if(question.companies[i].company_name===company) return true ;
+        if(question.companies[i].company_name===company || !company) return true ;
       }
       return false ;
     }

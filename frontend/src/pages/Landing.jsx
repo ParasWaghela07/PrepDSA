@@ -75,7 +75,7 @@ function Landing({ allquestions, allcompanies, alltopics }) {
   return (
     <div className="min-h-screen w-full bg-gray-900 text-gray-100 px-4 sm:px-0">
       <div className="bg-gray-800 py-4 sm:py-6 shadow-md">
-        <div className="container mx-auto flex flex-wrap gap-6 justify-center lg:justify-between px-4">
+        <div className="container mx-auto flex flex-wrap gap-6 justify-center lg:justify-around px-4">
           {[
             { label: "Difficulty", onClick: () => setIsDifficultyModalOpen(true) },
             { label: "Topics", onClick: () => setIsTopicsModalOpen(true) },

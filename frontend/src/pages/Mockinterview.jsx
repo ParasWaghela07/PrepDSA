@@ -1,14 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from 'framer-motion';
+import { AppContext } from "../context/AppContext";
+
+// Helper function to get stored end time
+const getStoredEndTime = () => {
+  const storedEndTime = localStorage.getItem('mockInterviewEndTime');
+  return storedEndTime ? parseInt(storedEndTime) : null;
+};
 
 function Mockinterview() {
   const navigate = useNavigate();
+  const { setloader } = useContext(AppContext);
 
   const [isCompaniesModalOpen, setIsCompaniesModalOpen] = useState(false);
   const [company, setCompany] = useState("");
   const [companies, setCompanies] = useState([]);
-
   const [interviewStarted, setInterviewStarted] = useState(false);
   const [timeLeft, setTimeLeft] = useState(3600); // 1 hour in seconds
   const [questions, setQuestions] = useState({
@@ -16,25 +23,35 @@ function Mockinterview() {
     aptiquestions: [],
     techquestions: [],
   });
-   
   const [responses, setResponses] = useState({});
   const [score, setScore] = useState(0);
   const [interviewEnded, setInterviewEnded] = useState(false);
   const [maxScore, setMaxScore] = useState(0);
   const [resultsSummary, setResultsSummary] = useState([]);
+  const [timerInterval, setTimerInterval] = useState(null);
 
   // Load saved state from local storage on component mount
   useEffect(() => {
     const savedState = JSON.parse(localStorage.getItem("mockInterviewState"));
-    if (savedState && !savedState.interviewEnded) {
+    const storedEndTime = getStoredEndTime();
+
+    if (savedState && !savedState.interviewEnded && storedEndTime) {
+      const remainingSeconds = Math.max(0, Math.floor((storedEndTime - Date.now()) / 1000));
+      
       setCompany(savedState.company);
       setInterviewStarted(savedState.interviewStarted);
-      setTimeLeft(savedState.timeLeft);
+      setTimeLeft(remainingSeconds);
       setQuestions(savedState.questions);
       setResponses(savedState.responses);
       setScore(savedState.score);
       setInterviewEnded(savedState.interviewEnded);
       calculateMaxScore(savedState.questions);
+
+      if (remainingSeconds > 0 && !interviewEnded) {
+        startTimer(remainingSeconds);
+      } else {
+        endInterview();
+      }
     }
   }, []);
 
@@ -54,8 +71,37 @@ function Mockinterview() {
     }
   }, [company, interviewStarted, timeLeft, questions, responses, score, interviewEnded]);
 
+  // Timer logic with persistent storage
+  const startTimer = (durationSeconds) => {
+    const endTime = Date.now() + durationSeconds * 1000;
+    localStorage.setItem('mockInterviewEndTime', endTime.toString());
+
+    // Clear existing interval if any
+    if (timerInterval) clearInterval(timerInterval);
+
+    const interval = setInterval(() => {
+      const remainingSeconds = Math.max(0, Math.floor((endTime - Date.now()) / 1000));
+      setTimeLeft(remainingSeconds);
+
+      if (remainingSeconds <= 0) {
+        clearInterval(interval);
+        endInterview();
+      }
+    }, 1000);
+
+    setTimerInterval(interval);
+  };
+
+  // Clean up interval on unmount
+  useEffect(() => {
+    return () => {
+      if (timerInterval) clearInterval(timerInterval);
+    };
+  }, [timerInterval]);
+
   // Fetch questions from the backend
   const fetchQuestions = async () => {
+    setloader(true);
     try {
       const response = await fetch("http://localhost:4000/generatemock", {
         method: "POST",
@@ -70,8 +116,10 @@ function Mockinterview() {
       const data = await response.json();
       setQuestions(data);
       calculateMaxScore(data);
+      setloader(false);
     } catch (error) {
       console.error("Error fetching questions:", error);
+      setloader(false);
     }
   };
 
@@ -80,8 +128,7 @@ function Mockinterview() {
       const response = await fetch("http://localhost:4000/getallcompanies");
       const data = await response.json();
       setCompanies(data.data);
-    }
-    catch (error) {
+    } catch (error) {
       console.error("Error fetching companies:", error);
     }
   }
@@ -110,12 +157,9 @@ function Mockinterview() {
   };
 
   // Start the interview
-  const startInterview = () => {
-    if (!company) {
-      alert("Please select a company first!");
-      return;
-    }
-    fetchQuestions();
+  const startInterview = async () => {
+    await fetchQuestions();
+    startTimer(3600); // 1 hour
     setInterviewStarted(true);
   };
 
@@ -123,7 +167,9 @@ function Mockinterview() {
   const endInterview = () => {
     calculateScore();
     setInterviewEnded(true);
+    if (timerInterval) clearInterval(timerInterval);
     localStorage.removeItem("mockInterviewState");
+    localStorage.removeItem("mockInterviewEndTime");
   };
 
   // Reset interview state
@@ -141,20 +187,10 @@ function Mockinterview() {
     setScore(0);
     setMaxScore(0);
     setResultsSummary([]);
+    if (timerInterval) clearInterval(timerInterval);
     localStorage.removeItem("mockInterviewState");
+    localStorage.removeItem("mockInterviewEndTime");
   };
-
-  // Timer logic
-  useEffect(() => {
-    if (interviewStarted && timeLeft > 0) {
-      const timer = setInterval(() => {
-        setTimeLeft((prev) => prev - 1);
-      }, 1000);
-      return () => clearInterval(timer);
-    } else if (timeLeft === 0) {
-      endInterview();
-    }
-  }, [interviewStarted, timeLeft]);
 
   // Handle user response for each question
   const handleResponse = (questionId, status) => {
@@ -218,7 +254,7 @@ function Mockinterview() {
       <div 
         onClick={() => {
           if (section === "dsa") {
-            navigate(`/question/${question._id}`)
+            window.open(question.redirectLinks[0], "_blank");
           } else if (section === "tech") {
             navigate(`/techquestion/${question._id}`);
           } else {
@@ -372,18 +408,26 @@ function Mockinterview() {
               </p>
               <button
                 onClick={() => setIsCompaniesModalOpen(true)}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg mb-4 w-full max-w-xs"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg mb-4 w-full max-w-xs font-semibold"
               >
                 {company ? "Change Company" : "Select Company"}
               </button>
               {company && (
                 <button
                   onClick={startInterview}
-                  className="bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-lg w-full max-w-xs"
+                  className="bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 mb-4 rounded-lg w-full max-w-xs font-semibold"
                 >
                   Start Interview
                 </button>
               )}
+
+              <p className="text-teal-400 font-bold text-xl mb-4">OR</p>
+              <button
+                onClick={startInterview}
+                className="bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-lg w-full max-w-xs font-semibold"
+              >
+                Random Interview
+              </button>
             </div>
 
             {companies && 

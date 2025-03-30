@@ -19,7 +19,7 @@ function UserStats({ userDetails }) {
     <>
       {count > 0 ? (
         <div className="w-full flex flex-col lg:flex-row lg:justify-around justify-between gap-y-16 sm:gap-y-32 px-4 sm:px-6">
-          <div className="w-full lg:w-[30%] flex flex-col h-[200px] items-center gap-y-5">
+          <div className="w-full lg:w-[30%] flex flex-col scale-75 sm:h-[200px] sm:scale-100 items-center gap-y-5">
             <DoughnutChart
               easy={userDetails.easy_question_count}
               medium={userDetails.medium_question_count}
@@ -41,7 +41,7 @@ function UserStats({ userDetails }) {
             </div>
           </div>
 
-          <div className="w-full lg:w-[60%] flex justify-center items-center h-[300px] sm:h-[400px]">
+          <div className="hidden w-full lg:w-[60%] sm:flex justify-center items-center h-[300px] sm:h-[400px]">
             <BarChart topicToQst={topicToQst} />
           </div>
         </div>

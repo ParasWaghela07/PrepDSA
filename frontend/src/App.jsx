@@ -2,6 +2,7 @@ import './App.css';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { matchPath } from 'react-router-dom';
 import Landing from './pages/Landing';
 import Profile from './pages/Profile';
 import Question from './pages/Question';
@@ -13,7 +14,6 @@ import { useContext, useEffect, useState } from 'react';
 import Addquestion from './pages/Addquestion';
 import Sendmail from './pages/Sendmail';
 import UpdatePassword from './pages/Updatepassword';
-import Loader from './components/Loader';
 import { AppContext } from './context/AppContext';
 import Addsheet from './pages/Addsheet';
 import UpdateProfile from './pages/UpdateProfile';
@@ -24,7 +24,7 @@ import PrivateRoute from './components/PrivateRoute';
 import OpenRoute from './components/OpenRoute';
 import ProtectedRoute from './components/ProtectedRoute';
 import { Sidebar } from './components/Sidebar';
-import AptiLanding from './pages/aptiLanding';
+import AptiLanding from './pages/AptiLanding';
 import AptiQuestionDetail from './pages/AptiQuestionDetail';
 import AptiQuiz from './pages/AptiQuiz';
 import Sheetdisplay from './pages/Sheetdisplay';
@@ -33,12 +33,24 @@ import TechQuestion from './pages/TechQuestion';
 import AddTag from './pages/Addtag';
 import Addtechquestion from './pages/Addtechquestion';
 import Mockinterview from './pages/Mockinterview';
+import Loader2 from './components/Loader2';
+
 function App() {
   const [allquestions, setallquestions] = useState([]);
   const [allcompanies, setallcompanies] = useState([]);
   const [alltopics, setalltopics] = useState([]);
   const { loader, user, setuser } = useContext(AppContext)
   const location = useLocation();
+
+  const hideSidebarRoutes = [
+    "/mockinterview",
+    "/techquestion/:qstid",
+    "/aptitude/question/:id"
+  ];
+
+  const shouldHideSidebar = hideSidebarRoutes.some(pattern => 
+    matchPath(pattern, location.pathname)
+  );
 
   async function getallquestions() {
     try {
@@ -108,7 +120,7 @@ function App() {
 
   return (
     <div className="w-screen h-screen flex">
-      {token && <Sidebar />}
+     {token && !shouldHideSidebar && <Sidebar />}
       <div className='w-full h-full overflow-y-auto'>
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -141,7 +153,7 @@ function App() {
         </Routes>
       </div>
 
-      {loader && <div className="fixed top-0 right-0 left-0  flex justify-center items-center h-full bg-black bg-opacity-50 z-50"><Loader /></div>}
+      {loader && <div className="fixed top-0 right-0 left-0  flex justify-center items-center h-full bg-black bg-opacity-50 z-50"><Loader2/></div>}
     </div>
   );
 }

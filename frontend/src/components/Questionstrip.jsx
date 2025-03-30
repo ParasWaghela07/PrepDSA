@@ -68,7 +68,7 @@ function Questionstrip({ questionid1, difficulty, title, role, sheetarray, setsh
   }, [user]);
 
   return (
-    <div className="flex items-center gap-x-2 w-full px-2 sm:px-4">
+    <div className="flex items-center gap-x-2 w-full sm:px-4">
       {/* Bookmark */}
       <div className="flex items-center">
         {kahaseayahai !== "spectopicse" && (

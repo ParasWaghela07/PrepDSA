@@ -19,7 +19,9 @@ function Addtechquestion() {
 
     const addTag = () => {
         if (tagTemp.trim() !== "") {
-            const formattedTag = tagTemp.charAt(0).toUpperCase() + tagTemp.slice(1);
+            const formattedTag = tagTemp.trim().split(' ').map(word => 
+                word.charAt(0).toUpperCase() + word.slice(1)
+            ).join(' ');
             setTags([...tags, formattedTag]);
             setTagTemp("");
         }
@@ -38,32 +40,59 @@ function Addtechquestion() {
     };
 
     const pushToDatabase = async () => {
-        const toastid=toast.loading("Adding Question..");
-        const formData = new FormData();
-    
-        formData.append("question", questionTitle);
-    
-        // Append multiple answers
-        answers.forEach((answer) => {
-            formData.append("answers", answer);
-        });
-    
-        // Append multiple tags
-        tags.forEach((tag) => {
-            formData.append("tags", tag);
-        });
-    
-        if (image) {
-            formData.append("qstImg", image);
+        if (!questionTitle || answers.length === 0 || tags.length === 0) {
+            toast.error("Please fill all required fields");
+            return;
         }
-    
-        const response = await fetch("http://localhost:4000/addtechquestion", {
-            method: "POST",
-            body: formData,
-            credentials: "include"
-        });
-    
-        const res = await response.json();
+
+        const toastid = toast.loading("Adding Question..");
+        
+        try {
+            // Create a proper JSON payload instead of FormData
+            const payload = {
+                question: questionTitle,
+                answers: answers,
+                tags: tags
+            };
+
+            // If there's an image, use FormData
+            if (image) {
+                const formData = new FormData();
+                formData.append("question", questionTitle);
+                formData.append("answers", JSON.stringify(answers));
+                formData.append("tags", JSON.stringify(tags));
+                formData.append("qstImg", image);
+
+                const response = await fetch("http://localhost:4000/addtechquestion", {
+                    method: "POST",
+                    body: formData,
+                    credentials: "include"
+                });
+                
+                const res = await response.json();
+                handleResponse(res, toastid);
+            } else {
+                // Without image, send as JSON
+                const response = await fetch("http://localhost:4000/addtechquestion", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                    credentials: "include"
+                });
+                
+                const res = await response.json();
+                handleResponse(res, toastid);
+            }
+        } catch (error) {
+            toast.dismiss(toastid);
+            toast.error("Network error. Please try again.");
+            console.error("Error:", error);
+        }
+    };
+
+    const handleResponse = (res, toastid) => {
         toast.dismiss(toastid);
         if (res.success) {
             toast.success("Question added successfully!");
@@ -72,11 +101,9 @@ function Addtechquestion() {
             setTags([]);
             setImage(null);
         } else {
-            toast.error("Failed to add question.");
+            toast.error(res.message || "Failed to add question.");
         }
     };
-    
-    
 
     return (
         <div className="bg-gray-900 min-h-screen py-8 px-4">
@@ -84,12 +111,13 @@ function Addtechquestion() {
                 <h1 className="text-2xl font-semibold text-white mb-6 text-center">Add New Question</h1>
 
                 <div className="mb-6">
-                    <label className="block text-sm font-medium text-gray-300">Question Title</label>
+                    <label className="block text-sm font-medium text-gray-300">Question Title*</label>
                     <input
                         type="text"
                         className="w-full mt-2 p-3 bg-gray-700 text-gray-100 border border-gray-600 rounded-md"
                         value={questionTitle}
                         onChange={(e) => setQuestionTitle(e.target.value)}
+                        required
                     />
                 </div>
 
@@ -104,7 +132,7 @@ function Addtechquestion() {
                 </div>
 
                 <div className="mb-6">
-                    <label className="block text-sm font-medium text-gray-300">Answers</label>
+                    <label className="block text-sm font-medium text-gray-300">Answers*</label>
                     <div className="flex space-x-2">
                         <input
                             type="text"
@@ -112,12 +140,13 @@ function Addtechquestion() {
                             value={answerTemp}
                             onChange={(e) => setAnswerTemp(e.target.value)}
                             placeholder="Type an answer"
+                            onKeyDown={(e) => e.key === "Enter" && addAnswer()}
                         />
                         <button
                             onClick={addAnswer}
                             className="px-6 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
                         >
-                            Add Answer
+                            Add
                         </button>
                     </div>
                     <ul className="mt-2 text-gray-300">
@@ -133,7 +162,7 @@ function Addtechquestion() {
                 </div>
 
                 <div className="mb-6">
-                    <label className="block text-sm font-medium text-gray-300">Tags</label>
+                    <label className="block text-sm font-medium text-gray-300">Tags*</label>
                     <div className="flex space-x-2">
                         <input
                             type="text"
@@ -141,12 +170,13 @@ function Addtechquestion() {
                             value={tagTemp}
                             onChange={(e) => setTagTemp(e.target.value)}
                             placeholder="Type a tag"
+                            onKeyDown={(e) => e.key === "Enter" && addTag()}
                         />
                         <button
                             onClick={addTag}
                             className="px-6 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
                         >
-                            Add Tag
+                            Add
                         </button>
                     </div>
                     <ul className="mt-2 text-gray-300 flex flex-wrap gap-2">
@@ -164,7 +194,8 @@ function Addtechquestion() {
                 <div className="mt-8">
                     <button
                         onClick={pushToDatabase}
-                        className="w-full p-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                        className="w-full p-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50"
+                        disabled={!questionTitle || answers.length === 0 || tags.length === 0}
                     >
                         Add Question
                     </button>

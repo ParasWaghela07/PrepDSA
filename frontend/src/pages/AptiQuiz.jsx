@@ -31,7 +31,7 @@ const AptiQuiz = () => {
         }
     };
 
-    const finishQuiz = () => {
+    const finishQuiz = async() => {
         if (Object.keys(selectedAnswers).length < questions.length) {
             alert("Please answer all questions before finishing the quiz.");
             return;
@@ -45,6 +45,30 @@ const AptiQuiz = () => {
         });
         setScore(finalScore);
         setQuizCompleted(true);
+
+        try{
+            const response = await fetch("http://localhost:4000/endquiz", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    quiz_duration: time,
+                    quiz_score: finalScore,
+                    quiz_total_marks: questions.length
+                }),
+            });
+            const data = await response.json();
+            if (data.success) {
+                console.log("Quiz results saved successfully.");
+            } else {
+                console.error("Error saving quiz results:", data.message);
+            }
+        }
+        catch (error) {
+            console.error("Error saving quiz results:", error);
+        }
     };
 
     return (

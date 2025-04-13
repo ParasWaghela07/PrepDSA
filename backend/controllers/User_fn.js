@@ -8,6 +8,7 @@ const mongoose=require('mongoose');
 const Sheet = require("../models/sheet");
 const AptitudeQuestion = require("../models/aptitudeQuestion");
 const TechQuestion=require("../models/techquestion");
+const Quiz=require("../models/quiz");
 require('dotenv').config();
 
 exports.bookmark = async (req, res) => {
@@ -392,8 +393,8 @@ exports.getUserDetail=async(req,res)=>{
     ).populate({
       path:'bookmarkedquestions',
       populate:{path:'companies topics'}
-    }
-    );
+    })
+    .populate('quizzes');
     return res.status(200).json({
       success:true,
       message:"User details retrieved successfully.",
@@ -632,4 +633,33 @@ exports.generatemock=async(req,res)=>{
     console.error(error);
     res.status(500).json({ message: 'Internal Server Error' });
 }   
+}
+
+exports.endquiz=async(req,res)=>{
+  try{
+    const {quiz_duration,quiz_total_marks,quiz_score}=req.body;
+    const userId=req.payload.id;
+
+    const new_quiz=await Quiz.create({
+      duration:quiz_duration+" Minutes",
+      quiz_marks:quiz_total_marks,
+      quiz_score:quiz_score
+    });
+
+    await User.findByIdAndUpdate(userId,{$push:{quizzes:new_quiz._id}});
+
+    return res.status(200).json({
+      success:true,
+      message:"Quiz ended successfully.",
+      data:new_quiz
+    });
+
+  }
+  catch(e){
+    console.error("Error in ending quiz:",e);
+    return res.status(500).json({
+      success:false,
+      message:"An error occurred while ending quiz. Please try again later."
+    });
+  }
 }

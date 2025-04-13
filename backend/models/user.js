@@ -12,12 +12,15 @@ const userSchema = new mongoose.Schema(
       match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
     },
     userImg: { type: String, required: true },
+
     easy_question_count: { type: Number, default: 0 },
     medium_question_count: { type: Number, default: 0 },
     hard_question_count: { type: Number, default: 0 },
     daily_streak: { type: Number, default: 0 },
     solved_question_ids: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Question' }],
     bookmarkedquestions:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Question' }],
+
+    quizzes:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Quiz' }],
     resetToken: { type: String },
     resetTokenExpiration: { type: Date },
   },

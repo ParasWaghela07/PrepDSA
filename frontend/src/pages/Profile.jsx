@@ -3,10 +3,11 @@ import { AppContext } from "../context/AppContext";
 import { motion } from "framer-motion";
 import UserInfo from "../components/UserInfo";
 import UserStats from "../components/UserStats";
-import SolvedQuestions from "../components/SolvedQuestions";
-import BookmarkedQuestions from "../components/BookmarkedQuestions";
+import ListQuizzes from "../components/ListQuizzes";
 import { useNavigate } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
+import ListQuestions from "../components/ListQuestions";
+import UserQuizProgress from "../components/UserQuizProgress";
 
 function Profile() {
   const { user } = useContext(AppContext);
@@ -20,6 +21,7 @@ function Profile() {
   }
 
   const { userImg } = userDetails;
+  console.log(userDetails);
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-gray-900 to-gray-800 text-gray-100 px-4 sm:px-8 py-8">
@@ -71,8 +73,14 @@ function Profile() {
         <p className="text-2xl sm:text-3xl text-center font-semibold">DSA Progress Overview</p>
         <UserStats userDetails={userDetails} />
 
+        <div className="h-[1px] bg-gray-50/[0.2]"></div>
+        <p className="text-2xl sm:text-3xl text-center font-semibold">Aptitude Progress Overview</p>
+        <UserQuizProgress userDetails={userDetails} />
+
+        <div className="h-[1px] bg-gray-50/[0.2]"></div>
+
         <div className="flex gap-x-4 sm:gap-x-6 w-fit rounded-lg">
-          {["Solved", "Bookmarked"].map((text, index) => (
+          {["Solved", "Bookmarked","Quiz"].map((text, index) => (
             <p
               key={index}
               className={`cursor-pointer px-3 sm:px-4 py-1 rounded-md text-lg sm:text-xl font-bold transition duration-300 ${
@@ -86,8 +94,9 @@ function Profile() {
         </div>
 
         <div>
-          {tab === 1 && <SolvedQuestions questions={userDetails.solved_question_ids} />}
-          {tab === 2 && <BookmarkedQuestions questions={userDetails.bookmarkedquestions} />}
+          {tab === 1 && <ListQuestions questions={userDetails.solved_question_ids} />}
+          {tab === 2 && <ListQuestions  questions={userDetails.bookmarkedquestions} />}
+          {tab === 3 && <ListQuizzes quizzes={userDetails.quizzes} />}
         </div>
       </motion.div>
     </div>

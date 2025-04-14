@@ -10,6 +10,7 @@ const AptitudeQuestion = require("../models/aptitudeQuestion");
 const TechQuestion=require("../models/techquestion");
 const Quiz=require("../models/quiz");
 require('dotenv').config();
+const Interview=require('../models/interview');
 
 exports.bookmark = async (req, res) => {
   const { questionid } = req.body; 
@@ -394,7 +395,9 @@ exports.getUserDetail=async(req,res)=>{
       path:'bookmarkedquestions',
       populate:{path:'companies topics'}
     })
-    .populate('quizzes');
+    .populate('quizzes')
+    .populate('interviews');
+
     return res.status(200).json({
       success:true,
       message:"User details retrieved successfully.",
@@ -660,6 +663,40 @@ exports.endquiz=async(req,res)=>{
     return res.status(500).json({
       success:false,
       message:"An error occurred while ending quiz. Please try again later."
+    });
+  }
+}
+
+exports.endinterview=async(req,res)=>{
+  try{
+    const {time,company,score,maxScore}=req.body;
+    
+    const userId=req.payload.id;
+
+    const secondsTaken=3600-Number(time);
+    const MinutesTaken=Math.ceil((secondsTaken/60));
+    
+    const newinterview=await Interview.create({
+      interview_marks:maxScore,
+      interview_score:score,
+      company:company || null,
+      duration:MinutesTaken+' Minutes'
+    })
+
+    await User.findByIdAndUpdate(userId,{$push:{interviews:newinterview._id}});
+
+    return res.status(200).json({
+      success:true,
+      message:"Interview ended successfully.",
+      data:newinterview
+    });
+
+  }
+  catch(e){
+    console.error("Error in ending interview:",e);
+    return res.status(500).json({
+      success:false,
+      message:"An error occurred while ending interview. Please try again later."
     });
   }
 }

@@ -1,7 +1,10 @@
-function ListQuestions({ questions }) {
+function ListQuestions({ questions,title }) {
   const diff = ["Easy", "Medium", "Hard"];
   return (
     <div className="space-y-6 px-4 md:px-8 lg:px-16">
+      {questions?.length > 0 ? (<p className="font-medium text-lg">Total {title} Problems : {questions?.length}</p>) : (<p className="font-medium text-lg">No {title} Questions Found</p>)}
+
+
       <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {questions?.map((question, index) => (
           <div

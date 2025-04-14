@@ -19,6 +19,7 @@ function UserStats({ userDetails }) {
     <>
       {count > 0 ? (
         <div className="w-full flex flex-col lg:flex-row lg:justify-around justify-between gap-y-16 sm:gap-y-32 px-4 sm:px-6">
+          
           <div className="w-full lg:w-[30%] flex flex-col scale-75 sm:h-[200px] sm:scale-100 items-center gap-y-5">
             <DoughnutChart
               easy={userDetails.easy_question_count}

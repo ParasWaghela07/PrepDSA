@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema(
     bookmarkedquestions:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Question' }],
 
     quizzes:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Quiz' }],
+    interviews:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Interview' }],
     resetToken: { type: String },
     resetTokenExpiration: { type: Date },
   },

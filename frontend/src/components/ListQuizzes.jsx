@@ -2,6 +2,9 @@ function ListQuizzes({ quizzes }) {
     
     return (
       <div className="space-y-6 px-4 md:px-8 lg:px-16">
+        {quizzes?.length > 0 ? (<p className="font-medium text-lg">Total quiz attended : {quizzes?.length}</p>) : (<p className="font-medium text-lg">No quiz attended</p>)}
+
+        
         <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {quizzes?.map((quiz, index) => (
             <div

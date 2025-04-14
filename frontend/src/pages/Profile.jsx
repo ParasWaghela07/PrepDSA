@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import ListQuestions from "../components/ListQuestions";
 import UserQuizProgress from "../components/UserQuizProgress";
+import ListInterviews from "../components/ListInterviews";
+
 
 function Profile() {
   const { user } = useContext(AppContext);
@@ -79,12 +81,12 @@ function Profile() {
 
         <div className="h-[1px] bg-gray-50/[0.2]"></div>
 
-        <div className="flex gap-x-4 sm:gap-x-6 w-fit rounded-lg">
-          {["Solved", "Bookmarked","Quiz"].map((text, index) => (
+        <div className="flex gap-x-4 sm:gap-x-6 w-fit rounded-lg flex-wrap gap-y-4 justify-center sm:justify-start">
+          {["Solved", "Bookmarked","Quiz","Mock Interview"].map((text, index) => (
             <p
               key={index}
               className={`cursor-pointer px-3 sm:px-4 py-1 rounded-md text-lg sm:text-xl font-bold transition duration-300 ${
-                tab === index + 1 ? "bg-teal-500" : ""
+                tab === index + 1 ? "text-teal-500" : ""
               }`}
               onClick={() => setTab(index + 1)}
             >
@@ -94,9 +96,10 @@ function Profile() {
         </div>
 
         <div>
-          {tab === 1 && <ListQuestions questions={userDetails.solved_question_ids} />}
-          {tab === 2 && <ListQuestions  questions={userDetails.bookmarkedquestions} />}
+          {tab === 1 && <ListQuestions title="Solved" questions={userDetails.solved_question_ids} />}
+          {tab === 2 && <ListQuestions title="Bookmarked"  questions={userDetails.bookmarkedquestions} />}
           {tab === 3 && <ListQuizzes quizzes={userDetails.quizzes} />}
+          {tab === 4 && <ListInterviews interviews={userDetails.interviews} />}
         </div>
       </motion.div>
     </div>

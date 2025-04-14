@@ -164,12 +164,15 @@ function Mockinterview() {
   };
 
   // End the interview
-  const endInterview = () => {
+  const endInterview =() => {
     calculateScore();
     setInterviewEnded(true);
     if (timerInterval) clearInterval(timerInterval);
     localStorage.removeItem("mockInterviewState");
     localStorage.removeItem("mockInterviewEndTime");
+
+    // console.log(time,company,score,maxScore);
+  
   };
 
   // Reset interview state
@@ -206,46 +209,83 @@ function Mockinterview() {
     const summary = [];
 
     questions.dsaQuestions.forEach((q) => {
-      const marks = q.difficulty === 1 ? 10 : q.difficulty === 2 ? 20 : 30;
+      const fullMarks = q.difficulty === 1 ? 10 : q.difficulty === 2 ? 20 : 30;
+      let marks = 0;
+      
       if (responses[q._id] === "solved") {
-        totalScore += marks;
+        marks = fullMarks;
+      } else if (responses[q._id] === "attempted") {
+        marks = Math.floor(fullMarks * 0.5); // 50% of marks for attempted
       }
+      
+      totalScore += marks;
       summary.push({
         section: "DSA",
         question: q.question_title,
         status: responses[q._id] || "Not solved",
-        marks: responses[q._id] === "solved" ? marks : 0,
+        marks: marks,
       });
     });
 
     questions.aptiquestions.forEach((q) => {
-      const marks = q.difficulty === "Easy" ? 5 : q.difficulty === "Medium" ? 10 : 15;
+      const fullMarks = q.difficulty === "Easy" ? 5 : q.difficulty === "Medium" ? 10 : 15;
+      let marks = 0;
+      
       if (responses[q._id] === "solved") {
-        totalScore += marks;
+        marks = fullMarks;
+      } else if (responses[q._id] === "attempted") {
+        marks = Math.floor(fullMarks * 0.5); // 50% of marks for attempted
       }
+      
+      totalScore += marks;
       summary.push({
         section: "Aptitude",
         question: q.question,
         status: responses[q._id] || "Not solved",
-        marks: responses[q._id] === "solved" ? marks : 0,
+        marks: marks,
       });
     });
 
     questions.techquestions.forEach((q) => {
-      const marks = 10;
+      const fullMarks = 10;
+      let marks = 0;
+      
       if (responses[q._id] === "solved") {
-        totalScore += marks;
+        marks = fullMarks;
+      } else if (responses[q._id] === "attempted") {
+        marks = Math.floor(fullMarks * 0.5); // 50% of marks for attempted
       }
+      
+      totalScore += marks;
       summary.push({
         section: "Technical",
         question: q.question,
         status: responses[q._id] || "Not solved",
-        marks: responses[q._id] === "solved" ? marks : 0,
+        marks: marks,
       });
     });
 
     setScore(totalScore);
     setResultsSummary(summary);
+
+    try{
+      fetch("http://localhost:4000/endinterview", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials:'include',
+        body: JSON.stringify({
+          time:timeLeft,
+          company,
+          score:totalScore,
+          maxScore
+        }),
+      })
+    }
+    catch(e){
+      console.log(e);
+    }
   };
   
   // Render a single question with options

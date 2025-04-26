@@ -94,9 +94,9 @@ export const ChangePassword = () => {
             </div>
           ))}
 
-          <p className="text-teal-400 hover:text-teal-300 font-bold text-center cursor-pointer" onClick={() => { navigate('/sendmail2'); localStorage.setItem('isLogin', true); }}>
+          {/* <p className="text-teal-400 hover:text-teal-300 font-bold text-center cursor-pointer" onClick={() => { navigate('/sendmail2'); localStorage.setItem('isLogin', true); }}>
             Forget password?
-          </p>
+          </p> */}
 
           {/* Submit Button */}
           <div className="flex justify-center">

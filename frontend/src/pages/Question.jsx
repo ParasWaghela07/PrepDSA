@@ -168,7 +168,8 @@ return (
           <div className="mb-6 space-y-4">
             <Companies companies={question.companies} />
             <Solutions solutions={question.solution_links} />
-            <Complexities complexities={question.time_complexity} />
+            <Complexities complexities={question.time_complexity} name="Time" />
+            <Complexities complexities={question.space_complexity} name="Space" />
             <Topics topics={question.topics} />
           </div>
         </div>

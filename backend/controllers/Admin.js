@@ -12,11 +12,15 @@ exports.isAdminloggedin=async(req,res)=>{
     message:"User Logged In"
   })
 };
+
+
+
+
 exports.addquestion = async (req, res) => {
-    const { question_title, difficulty, companies, redirect_links, solution_links,time_complexity,topics } = req.body;
+    const { question_title, difficulty, companies, redirect_links, solution_links,time_complexity,space_complexity,topics } = req.body;
   
     try {
-      if (!question_title || !difficulty || !redirect_links || !solution_links||!time_complexity ||!topics) {
+      if (!question_title || !difficulty || !redirect_links || !solution_links||!time_complexity||!space_complexity ||!topics) {
         return res.status(400).json({
           success: false,
           message: "All fields are required.",
@@ -30,6 +34,7 @@ exports.addquestion = async (req, res) => {
         redirectLinks:redirect_links,
         solution_links,
         time_complexity,
+        space_complexity,
         topics: topics || [],
       });
   
@@ -101,9 +106,9 @@ exports.addcompany = async (req, res) => {
         message: "An error occurred while creating the company. Please try again later.",
       });
     }
-  };
+};
 
-  exports.addtopic = async (req, res) => {
+exports.addtopic = async (req, res) => {
     try {
       const { topic_name, question_list } = req.body;
   
@@ -135,13 +140,13 @@ exports.addcompany = async (req, res) => {
         message: "An error occurred while creating the topic. Please try again later.",
       });
     }
-  };
+};
   
 
-  exports.addsheet=async(req,res)=>{
+exports.addsheet=async(req,res)=>{
     try{
       const {sheetname,questions}=req.body;
-      console.log(questions);
+      // console.log(questions);
       if(!sheetname || !questions){
         return res.status(400).json({
           success:false,
@@ -168,7 +173,7 @@ exports.addcompany = async (req, res) => {
         message: "An error occurred while creating the sheet. Please try again later.",
       });
     }
-  }
+}
 
 //   exports.addtag=async(req,res)=>{
 //     try{

@@ -1,7 +1,7 @@
-export const Complexities = ({ complexities }) => {
+export const Complexities = ({ complexities,name }) => {
   return (
     <div>
-      <h3 className="text-lg font-semibold text-gray-300 mb-2">Time Complexity</h3>
+      <h3 className="text-lg font-semibold text-gray-300 mb-2">{name} Complexity</h3>
       {complexities?.length > 0 ? (
         <div className="flex flex-wrap gap-2">
           {complexities.map((comp, index) => (

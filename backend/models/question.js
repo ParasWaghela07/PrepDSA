@@ -7,6 +7,7 @@ const questionSchema = new mongoose.Schema({
     redirectLinks: [{ type: String, required: true }],
     solution_links: [{ type: String, required: true }],
     time_complexity:[{type:String,required:true}],
+    space_complexity:[{type:String,required:true}],
     topics:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Topic'}],
 });
 const Question = mongoose.model('Question', questionSchema);

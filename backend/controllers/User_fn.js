@@ -646,7 +646,8 @@ exports.endquiz=async(req,res)=>{
     const new_quiz=await Quiz.create({
       duration:quiz_duration+" Minutes",
       quiz_marks:quiz_total_marks,
-      quiz_score:quiz_score
+      quiz_score:quiz_score,
+      given_by:userId
     });
 
     await User.findByIdAndUpdate(userId,{$push:{quizzes:new_quiz._id}});
@@ -680,7 +681,8 @@ exports.endinterview=async(req,res)=>{
       interview_marks:maxScore,
       interview_score:score,
       company:company || null,
-      duration:MinutesTaken+' Minutes'
+      duration:MinutesTaken+' Minutes',
+      given_by:userId
     })
 
     await User.findByIdAndUpdate(userId,{$push:{interviews:newinterview._id}});

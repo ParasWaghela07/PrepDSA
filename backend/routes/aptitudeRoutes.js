@@ -3,8 +3,9 @@
 const express = require('express');
 const router = express.Router();
 const aptitudeController = require('../controllers/aptitudeController');
+const { isAdmin } = require('../middlewares/AdminAuth');
 
-router.post('/create', aptitudeController.createQuestions);
+router.post('/create',isAdmin, aptitudeController.createQuestions);
 
 router.get('/questions', aptitudeController.getQuestions);
 

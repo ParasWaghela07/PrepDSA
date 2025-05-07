@@ -65,7 +65,7 @@ function Questionstrip({ questionid1, difficulty, title, role, sheetarray, setsh
       checkstatus();
       checkbookmarkstatus();
     }
-  }, [user]);
+  },[user,questionid1]);
 
   return (
     <div className="flex items-center gap-x-2 w-full sm:px-4">

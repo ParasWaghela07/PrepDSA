@@ -128,14 +128,14 @@ function App() {
           <Route path="/landing" element={<PrivateRoute><Landing allquestions={allquestions} allcompanies={allcompanies} alltopics={alltopics} /></PrivateRoute>} />
           <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
           <Route path="/Question/:qstid" element={<PrivateRoute><Question /></PrivateRoute>} />
-          {/* <Route path="/adminlogin" element={<Adminlogin />} />
+          <Route path="/adminlogin" element={<Adminlogin />} />
           <Route path="/adminpanel" element={<ProtectedRoute><Adminpanel /></ProtectedRoute>} />
-          <Route path="/addquestion" element={<ProtectedRoute><Addquestion allcompanies={allcompanies} allquestions={allquestions} alltopics={alltopics} /></ProtectedRoute>} /> */}
+          <Route path="/addquestion" element={<ProtectedRoute><Addquestion allcompanies={allcompanies} allquestions={allquestions} alltopics={alltopics} /></ProtectedRoute>} />
           <Route path="/" element={<OpenRoute><HomePage /></OpenRoute>} />
           <Route path="/sendmail" element={<Sendmail />} />
           <Route path="/sendmail2" element={<PrivateRoute><Sendmail2 /></PrivateRoute>} />
           <Route path="/update-password/:token" element={<UpdatePassword />} />
-          {/* <Route path="/addsheet" element={<ProtectedRoute><Addsheet allquestions={allquestions} allcompanies={allcompanies} alltopics={alltopics} /></ProtectedRoute>} /> */}
+          <Route path="/addsheet" element={<ProtectedRoute><Addsheet allquestions={allquestions} allcompanies={allcompanies} alltopics={alltopics} /></ProtectedRoute>} />
           <Route path="/changeProfile" element={<PrivateRoute><UpdateProfile /></PrivateRoute>} />
           <Route path="/changepassword" element={<PrivateRoute><ChangePassword /></PrivateRoute>} />
           <Route path="*" element={<NotFound />} />
@@ -147,8 +147,8 @@ function App() {
           <Route path="/techlanding" element={<PrivateRoute><TechLanding /></PrivateRoute>} />
           <Route path="/techquestion/:qstid" element={<PrivateRoute><TechQuestion /></PrivateRoute>} />
           <Route path="/mockinterview" element={<PrivateRoute> <Mockinterview/> </PrivateRoute>} />
-          {/* <Route path="/addtag" element={<ProtectedRoute><AddTag /></ProtectedRoute>} />
-          <Route path="/addtechquestion" element={<ProtectedRoute><Addtechquestion /></ProtectedRoute>} /> */}
+          <Route path="/addtag" element={<ProtectedRoute><AddTag /></ProtectedRoute>} />
+          <Route path="/addtechquestion" element={<ProtectedRoute><Addtechquestion /></ProtectedRoute>} />
 
         </Routes>
       </div>

@@ -20,6 +20,7 @@ function Addquestion({ allcompanies, alltopics }) {
                 redirect_links: redirectLinks, 
                 solution_links: solution_links,
                 time_complexity: time_complexity,
+                space_complexity:space_complexity,
                 topics: topics, 
             }),
             credentials: "include"
@@ -62,6 +63,7 @@ function Addquestion({ allcompanies, alltopics }) {
     const [redirectLinks, setRedirectLinks] = useState([]);  // Store redirect links
     const [solution_links, setsolution_links] = useState([]);  // Store solution links
     const [time_complexity, settime_complexity] = useState("");
+    const [space_complexity, setspace_complexity] = useState("");
     const [topics, setTopics] = useState([]);  // Stores the selected topic _id(s)
     const [linkTemp, setLinkTemp] = useState("");
     const [solutionTemp, setsolutionTemp] = useState("");
@@ -92,6 +94,18 @@ function Addquestion({ allcompanies, alltopics }) {
                         className="w-full mt-2 p-3 bg-gray-700 text-gray-100 border border-gray-600 rounded-md focus:ring-indigo-500"
                         value={time_complexity}
                         onChange={(e) => settime_complexity(e.target.value)}
+                    />
+                </div>
+
+                {/* space Complexity */}
+                <div className="mb-6">
+                    <label htmlFor="time_complexity" className="block text-sm font-medium text-gray-300">Space Complexity</label>
+                    <input
+                        type="text"
+                        id="time_complexity"
+                        className="w-full mt-2 p-3 bg-gray-700 text-gray-100 border border-gray-600 rounded-md focus:ring-indigo-500"
+                        value={space_complexity}
+                        onChange={(e) => setspace_complexity(e.target.value)}
                     />
                 </div>
 

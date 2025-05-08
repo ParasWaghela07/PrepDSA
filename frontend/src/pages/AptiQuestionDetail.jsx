@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 const AptiQuestionDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [question, setQuestion] = useState(null);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [feedback, setFeedback] = useState(null);
@@ -43,6 +44,9 @@ const AptiQuestionDetail = () => {
 
   const toggleExplanation = () => {
     setShowExplanation(!showExplanation);
+  };
+  const handleGoBack = () => {
+    navigate("/aptitude"); // This takes the user back to the AptiLanding page
   };
 
   if (loading) return <p className="text-center text-gray-400">Loading...</p>;
@@ -101,6 +105,14 @@ const AptiQuestionDetail = () => {
           <span>
             <strong>Topic:</strong> {question.topic}
           </span>
+        </div>
+        <div className="mt-6">
+          <button
+            onClick={handleGoBack}
+            className="w-full p-3 mt-4 bg-blue-500 hover:bg-blue-400 text-white rounded-md transition duration-200"
+          >
+            Go Back
+          </button>
         </div>
       </div>
     </div>

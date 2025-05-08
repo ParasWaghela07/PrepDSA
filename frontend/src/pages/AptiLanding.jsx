@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Modal from "../components/Modal";
-import {AppContext} from "../context/AppContext";
+import { AppContext } from "../context/AppContext";
 
 const AptiLanding = () => {
   const [questions, setQuestions] = useState([]);
@@ -14,11 +14,12 @@ const AptiLanding = () => {
   const [isDifficultyModalOpen, setIsDifficultyModalOpen] = useState(false);
   const [isTopicsModalOpen, setIsTopicsModalOpen] = useState(false);
   const [isQuizModalOpen, setIsQuizModalOpen] = useState(false);
-  const {setloader}=useContext(AppContext);
+  const { setloader } = useContext(AppContext);
 
   const navigate = useNavigate();
   const predefinedTopics = ["Numbers", "Mixture and Alligation", "Ratio and Proportion", "Trigonometry",
-    "Height and Distance", "Probability", "Permutation and Combination(PnC)"];
+    "Height and Distance", "Probability", "Permutation and Combination", "Pipes and Cisterns", "Profit and Loss", "Time and Work"
+    , "Age"];
   const quizDurations = [15, 25, 30];
 
   useEffect(() => {

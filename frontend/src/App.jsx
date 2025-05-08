@@ -48,7 +48,7 @@ function App() {
     "/aptitude/question/:id"
   ];
 
-  const shouldHideSidebar = hideSidebarRoutes.some(pattern => 
+  const shouldHideSidebar = hideSidebarRoutes.some(pattern =>
     matchPath(pattern, location.pathname)
   );
 
@@ -120,7 +120,7 @@ function App() {
 
   return (
     <div className="w-screen h-screen flex">
-     {token && !shouldHideSidebar && <Sidebar />}
+      {token && !shouldHideSidebar && <Sidebar />}
       <div className='w-full h-full overflow-y-auto'>
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -146,14 +146,14 @@ function App() {
           <Route path="/displaysheet" element={<Sheetdisplay />} />
           <Route path="/techlanding" element={<PrivateRoute><TechLanding /></PrivateRoute>} />
           <Route path="/techquestion/:qstid" element={<PrivateRoute><TechQuestion /></PrivateRoute>} />
-          <Route path="/mockinterview" element={<PrivateRoute> <Mockinterview/> </PrivateRoute>} />
+          <Route path="/mockinterview" element={<PrivateRoute> <Mockinterview /> </PrivateRoute>} />
           <Route path="/addtag" element={<ProtectedRoute><AddTag /></ProtectedRoute>} />
           <Route path="/addtechquestion" element={<ProtectedRoute><Addtechquestion /></ProtectedRoute>} />
 
         </Routes>
       </div>
 
-      {loader && <div className="fixed top-0 right-0 left-0  flex justify-center items-center h-full bg-black bg-opacity-50 z-50"><Loader2/></div>}
+      {loader && <div className="fixed top-0 right-0 left-0  flex justify-center items-center h-full bg-black bg-opacity-50 z-50"><Loader2 /></div>}
     </div>
   );
 }

@@ -15,7 +15,7 @@ const topicsEnum = [
     'Trigonometry, Height, and Distance',
     'Geometry',
     'Probability',
-    'Permutation and Combination(PnC)',
+    'Permutation and Combination',
     'Age'
 ];
 
@@ -34,7 +34,7 @@ const aptitudeQuestionSchema = new mongoose.Schema(
             required: true,
         },
         difficulty: {
-            type: String, 
+            type: String,
             required: true,
         },
         topic: {
@@ -43,15 +43,15 @@ const aptitudeQuestionSchema = new mongoose.Schema(
         },
         bookmark: {
             type: Boolean,
-            default: false, 
+            default: false,
         },
         solved: {
             type: Boolean,
-            default: false, 
+            default: false,
         },
         explanation: {
             type: String,
-            default: '', 
+            default: '',
         },
     },
 
